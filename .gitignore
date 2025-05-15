@@ -33,3 +33,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Ignore node_modules for both frontend and backend
+frontend/node_modules/
+backend/node_modules/
+
+# ignore next file 
+frontend/.next/
+
+
+# Ignore environment files
+frontend/.env
+backend/.env
+
+frontend/yarn.lock
+backend/yarn.lock

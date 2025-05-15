@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "module": "NodeNext",
+      "moduleResolution": "NodeNext",
+      "baseUrl": ".",
+      "outDir": "dist",
+      "resolveJsonModule": true,
+      "sourceMap": true,
+      "noImplicitAny": true
+    },
+    "include": ["src/index.ts"]
+  }
+  
