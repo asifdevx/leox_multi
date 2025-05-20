@@ -2,11 +2,10 @@ import React from 'react'
 
 const index = () => {
   return (
-    <>
-      <div>hero</div>
-    </>
+    <div>
+      
+    </div>
   )
 }
 
 export default index
-

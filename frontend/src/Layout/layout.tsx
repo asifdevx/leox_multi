@@ -1,26 +1,14 @@
-import "aos/dist/aos.css";
-import { useEffect } from "react";
-import AOS from "aos";
-import Header from "@/components/Header/header";
 import Footer from "@/components/footer/Footer";
-
+import Header from "@/components/Header";
 
 const Layout = (props: any) => {
-  useEffect(() => {
-    AOS.init({
-      duration: 900,
-      easing: "ease-in-sine",
-      // delay: 100,
-    });
-  }, []);
-
   return (
-    <div className="">
-      <Header/>
-        {props.children}
-     <Footer/>
+    <div className="w-screen min-h-screen flex flex-col bg-[#ffffff] text-black">
+      <Header />
+      <div className="mt-20 ">{props.children}</div>
     </div>
   );
 };
 
 export default Layout;
+

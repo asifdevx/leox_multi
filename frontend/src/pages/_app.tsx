@@ -4,7 +4,9 @@ import type { AppProps } from "next/app";
 import { useEffect, useState } from "react";
 import Layout from "../Layout/layout";
 import { useRouter } from "next/router";
-import { ThemeProvider } from "@/Layout/themeProvider";
+import { Web3Provider } from "@/context/web3model";
+import { Provider } from "react-redux";
+import { store } from "@/components/store/store";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [ready, setReady] = useState(false);
@@ -15,11 +17,13 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       {ready ? (
-        <ThemeProvider attribute="class" defaultTheme="dark">
+        <Web3Provider>
+          <Provider store={store}>
           <Layout pathname={pathname}>
             <Component {...pageProps} />
           </Layout>
-        </ThemeProvider>
+          </Provider>
+        </Web3Provider>
       ) : null}
     </>
   );

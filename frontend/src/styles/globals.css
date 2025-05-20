@@ -7,9 +7,44 @@
     padding: 0;
     box-sizing: border-box;
 }
+.fi{
+    filter: opacity(30);
+}
+h1 {
+    font-size: 64px;
+}
 
+h2 {
+    font-size: 48px;
 
+}
+
+h3 {
+    font-size: 36px;
+}
+
+h4 {
+    font-size: 30px;
+}
+
+h5 {
+    font-size: 24px;
+}
+
+h6 {
+    font-size: 20px;
+}
+.blue-glassmorphism {
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  
+  }
+  
 @layer utilities{
-    
+    .section_paddung{
+        @apply px-10 md:px-20 xl:px-0
+    }
+    .section_size {
+        @apply max-w-xl md:max-w-5xl xl:max-w-7xl w-full mx-auto
+    }
 }
 

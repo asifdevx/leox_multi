@@ -1,32 +1,23 @@
-export const HeaderLists = [
-    {
-        name: "Home",
-        link: "/",
-        islink: false,
-        isDivlink:false,
-        icon:"home.svg"
-      },
-      {
-        name: "Create Your Own NFT",
-        link: "/Nftai",
-        islink: false,
-        isDivlink:false,
-        icon:"NFT.svg"
-      },
-      {
-        name: "How its Work?",
-        link: "/Work",
-        islink: false,
-        isDivlink:false,
-        icon:"home.svg"
-      },
-      {
-        name: "FaQs",
-        link: "/faq",
-        islink: false,
-        isDivlink:false,
-        icon:"faq.svg"
-      },
-   
-    
-  ]
+interface HeaderLists {
+  name: string,
+  link?: string,
+  islink: boolean, 
+}
+
+export const HeaderLists:HeaderLists[] = [
+  {
+    name: "Home",
+    link: "/",
+    islink: true,
+  },
+  {
+    name: "Create",
+    link: "/createNft",
+    islink: true,
+  },
+  {
+    name: "Buy",
+    link: "/buy",
+    islink: true,
+  },
+];

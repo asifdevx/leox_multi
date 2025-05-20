@@ -5,6 +5,7 @@ const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",
+    "./src/Layout/**/*.{js,ts,jsx,tsx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -12,47 +13,64 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'blue': '#1fb6ff',
-        'purple': '#7e5bef',
-        'orange': '#ff7849',
-        'yellow': '#ffc82c',
-        'gray-dark': '#273444',
-        'gray': '#8492a6',
-        'gray-light': '#d3dce6',
-         "grayDark":' #0E1823',
-         "darkbg":"#090F15",
-         "grayborder":"#DCDCDC",
-         "darktext":"#667D94",
-         "loadbg":"#9d9d9d",
-         "darkbox":"#0C1621",
-         "black":"#000000",
-         "darkGraytext":"#667D94",
-         "lightGray":"#A5BBD0"
+        blue: "#1fb6ff",
+        purple: "#7e5bef",
+        orange: "#ff7849",
+        yellow: "#ffc82c",
+        "gray-dark": "#273444",
+        gray: {
+          50: "#fafafa",
+          100: "#f4f4f5",
+          200: "#e4e4e7",
+          300: "#d4d4d8",
+          400: "#a1a1aa",
+          500: "#71717a",
+          600: "#52525b",
+          700: "#3f3f46",
+          800: "#27272a",
+          900: "#18181b",
+          950: "#0a0a0b"
+        },
+        darkbg: "#090F15",
+
+        darktext: "#667D94",
+        loadbg: "#9d9d9d",
+        darkbox: "#0C1621",
+        black: "#000000",
       },
       screens: {
-        'smPro': {'min': '430px'},
-        'phone': {'max': '500px'},
-        'minphone': {'min': '500px'},
-        'middlePro': {'max': '350px'},
-        'middllarge': {'max': '380px'},
-        'doublesm': {'max': '340px'},
-        'sm': {'min': '640px', 'max': '767px'},
-         'mdPro':{'min': '640px'},
-        'esm': {'max': '767px'},
-        'gridBox': {'min': '1110px'},
-        'bigPhone':{'max': '770px'},
-         'md': '768px',
-          'lg': '1024px',
-        'sxl':{'max': '1020px'},
-        'xl': '1280px',
-        '2xl': '1300px',
-        "bigPc":{'min': '1700px'}
+        small: "500px",
+        lg: "1000px",
+        "2xl": "1400px",
+      },
+      blur: {
+        3: "30px",
+      },
+      boxShadow: {
+        header: "0 0px 5px rgba(0,0,0,.2)",
+      },
+      animation: {
+        widthIncrease: "widthIncrease 0.3s ease-in-out",
+      },
+      keyframes: {
+        widthIncrease: {
+          "0%": { width: "0%" },
+          "100%": { width: "100%" },
+        },
+      },
+      aspectRatio: {
+        "4/2": "4 / 2",
       },
 
-      animation: {},
-      keyframes: {},
-
-      backgroundImage: {},
+      backgroundImage: {
+        connectButton:
+          "linear-gradient(0deg, rgba(159,149,231,1) 37%, rgba(59,181,226,1) 100%)",
+        mobileBg:
+          "linear-gradient(0deg, rgba(255,254,254,0.6015424164524421) 33%, rgba(255,255,255,0.7069408740359897) 37%)",
+      },
+    },
+    fontFamily: {
+      ponomar: ["Ponomar", "system-ui"],
     },
   },
   plugins: [],
