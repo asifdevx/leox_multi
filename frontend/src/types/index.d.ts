@@ -39,6 +39,17 @@ interface InputProps  {
   icon?: ReactNode | string;
 };
 
+
+type FormInputProps = {
+  label: string;
+  placeholder: string;
+  type?: string;
+  value?: string;
+  icon?: string;
+  inputClass?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
 interface NFT {
   tokenId: number;
   name: string;

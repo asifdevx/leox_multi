@@ -12,7 +12,7 @@ export const HeaderLists:HeaderLists[] = [
   },
   {
     name: "Create",
-    link: "/createNft",
+    link: "/createNFT",
     islink: true,
   },
   {

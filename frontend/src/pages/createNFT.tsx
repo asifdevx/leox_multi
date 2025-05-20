@@ -11,8 +11,9 @@ import { IoMdClose } from "react-icons/io";
 import PreviewNFT from "@/components/HelperCom/PreviewNFT";
 import Input from "@/components/ui/Input";
 import { createNFT } from "@/reducer/nftSlice";
+import FormInput from "@/components/HelperCom/FormInput";
 
-const Index = () => {
+const createNft = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -21,7 +22,7 @@ const Index = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [supply,setSupply] =useState("")
+  const [supply, setSupply] = useState("");
   const { address, isConnected } = useAccount();
   const { connectAsync, connectors } = useConnect();
 
@@ -45,7 +46,11 @@ const Index = () => {
       if (!tokenURI) throw new Error("Failed to generate metadata URI");
 
       const response = await dispatch(
-        createNFT({ tokenURI,supply:parseFloat(supply), price: parseFloat(price) })
+        createNFT({
+          tokenURI,
+          supply: parseFloat(supply),
+          price: parseFloat(price),
+        })
       ).unwrap();
 
       setPreview(null);
@@ -81,6 +86,7 @@ const Index = () => {
       console.error("Connection failed:", error);
     }
   }
+  const fee = 2.5/100;
   return (
     <div className="min-h-screen max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-4xl bg-white mx-auto flex flex-col gap-4">
       {!isConnected ? (
@@ -158,57 +164,63 @@ const Index = () => {
                   )}
                 </div>
 
-                <div className="w-full flex flex-col gap-2">
-                  <label htmlFor="price">Price</label>
-                  <Input
-                    placeholder="Enter price"
-                    type="text"
-                    inputClass="w-full bg-[#e8eeee] rounded-lg"
-                    handleChange={(e) => {
-                      const value = e.target.value.replace(/[^0-9.]/g, "");
-                      if ((value.match(/\./g) || []).length <= 1) {
-                        setPrice(value);
-                      }
-                    }}
-                    value={price}
-                    icon="ETH"
-                  />
+                <FormInput
+                  label="Price"
+                  placeholder="Enter price"
+                  type="text"
+                  value={price}
+                  icon="ETH"
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^0-9.]/g, "");
+                    if ((value.match(/\./g) || []).length <= 1) {
+                      setPrice(value);
+                    }
+                  }}
+                />
+                <div className="w-full border border-[#d9dddd] rounded-xl p-3 flex flex-col gap-4">
+                  <div className="flex items-center justify-between ">
+                    <p className="text-[rgb(141, 141, 159)]">Price</p>
+                    <p>{price ? `${parseFloat(price)} ETH` : "-"}</p>
+                  </div>
+                  <div className="flex items-center justify-between ">
+                    <p className="text-[rgb(141, 141, 159)]" >Leox fee ?</p>
+                    <p>2.5%</p>
+                  </div>
+                  <div className="w-full h-[2px] bg-[#e8eeee] rounded-3xl" />
+                  <div className="flex items-center justify-between">
+                    <p className="text-[rgb(141, 141, 159)]">You will receive</p>
+                    <p>
+                      {price
+                        ? `${parseFloat(price) - (parseFloat(price) * fee) } ETH`
+                        : "—"}
+                    </p>
+                  </div>
                 </div>
-                <div className="w-full flex flex-col gap-2">
-                  <label htmlFor="price">Supply</label>
-                  <Input
-                    placeholder="10"
-                    type="text"
-                    inputClass="w-full bg-[#e8eeee] rounded-lg"
-                    handleChange={(e) => {
-                      const value = e.target.value.replace(/[^0-9.]/g, "");
-                      if ((value.match(/\./g) || []).length <= 1) {
-                        setSupply(value);
-                      }
-                    }}
-                    value={supply}
-                    
-                  />
-                </div>
-                <div className="w-full flex flex-col gap-2">
-                  <label htmlFor="Name">Name</label>
-                  <Input
-                    placeholder='e.g. "Redeemable T-Shirt with logo"'
-                    type="text"
-                    inputClass="w-full bg-[#e8eeee] rounded-lg"
-                    handleChange={(e) => setName(e.target.value)}
-                  />
-                </div>
+                <FormInput
+                  label="Supply"
+                  placeholder="10"
+                  type="text"
+                  value={supply}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^0-9.]/g, "");
+                    if ((value.match(/\./g) || []).length <= 1) {
+                      setSupply(value);
+                    }
+                  }}
+                />
 
-                <div className="w-full flex flex-col gap-2">
-                  <label htmlFor="description">Description</label>
-                  <Input
-                    placeholder='e.g. "After purchasing, you will receive a real T-Shirt"'
-                    type="text"
-                    inputClass="w-full bg-[#e8eeee] rounded-lg"
-                    handleChange={(e) => setDescription(e.target.value)}
-                  />
-                </div>
+                <FormInput
+                  label="Name"
+                  placeholder='e.g. "Redeemable T-Shirt with logo"'
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <FormInput
+                  label="Description"
+                  placeholder='e.g. "After purchasing, you will receive a real T-Shirt"'
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
 
                 <button
                   type="button"
@@ -230,4 +242,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default createNft;
