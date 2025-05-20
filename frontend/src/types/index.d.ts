@@ -65,8 +65,7 @@ interface NFTState {
   nfts: NFT[];
   loading: boolean;
 }
-
-declare type MobileSideBar={
+interface MobileSideBar {
   open:boolean,
   setOpen:Dispatch<SetStateAction<boolean>>
 }

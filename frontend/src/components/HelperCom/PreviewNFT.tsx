@@ -5,17 +5,16 @@ const PreviewNFT = ({ preview, name, price }: PreviewNFTProps) => {
   function shortName(name: string) {
     return name.length > 15 ? `${name.slice(0, 15)}...` : name;
   }
-const min = 0.00001;
-const max = 100000;
+  const min = 0.00001;
+  const max = 100000;
 
-const formatPrice = (price: number) => {
-  if (price === 0) return "0";
-  if (price < min) return `<${min}`;
-  if (price > max) return `>${max}`;
-  return Number(price).toString();
-  
-  }
-   return preview ? (
+  const formatPrice = (price: number) => {
+    if (price === 0) return "0";
+    if (price < min) return `<${min}`;
+    if (price > max) return `>${max}`;
+    return Number(price).toString();
+  };
+  return preview ? (
     <div className="border rounded-lg p-4 bg-grayborder w-64 shadow-lg">
       <p>Preview</p>
 
@@ -35,10 +34,9 @@ const formatPrice = (price: number) => {
           <div className="flex flex-col">
             <p className="text-sm text-gray-500">Price</p>
 
-<p className="text-[13px] font-medium">
-  {formatPrice(price)} ETH
-</p>
-
+            <p className="text-[13px] font-medium">
+              {formatPrice(parseFloat(price))} ETH
+            </p>
           </div>
           <div className="text-right">
             <p className="text-sm text-gray-500">Highest bid</p>

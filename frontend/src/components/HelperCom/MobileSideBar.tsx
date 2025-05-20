@@ -3,7 +3,8 @@ import Link from "next/link";
 import React from "react";
 import { FaArrowRightFromBracket } from "react-icons/fa6";
 import { motion } from "framer-motion";
-import { MobileSideBar } from "@/types";
+import type { MobileSideBar } from "@/types";
+
 
 const MobileSideBar = ({ open, setOpen }: MobileSideBar) => {
   function toggleBtn() {

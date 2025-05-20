@@ -42,6 +42,52 @@ export const createNFT = createAsyncThunk(
     }
   }
 );
+export const fetchNFT = createAsyncThunk("nft/fetchNFT", async () => {
+  const contract = await createEthContract();
+  const nftsRaw = await contract?.getAllListed();
+
+  if (!nftsRaw) return [];
+
+  const nftsArray = Array.from(nftsRaw);
+  console.log("nftsArray Data:", nftsArray);
+
+  const tokens = await Promise.all(
+    nftsArray.map(async (nft: any) => {
+      const tokenId = nft[0].toString();
+      let metadata = { name: "", description: "", image: "" };
+
+      try {
+        const tokenURI = await contract?.tokenURI(tokenId);
+
+        if (tokenURI) {
+          const ipfsHash = tokenURI.replace("ipfs://", "");
+          const metaRes = await axios.get(`https://ipfs.io/ipfs/${ipfsHash}`);
+          metadata = metaRes.data;
+          
+        }
+      } catch (error) {
+        console.error(`Error fetching metadata for token ${tokenId}:`, error);
+      }
+
+      const imageURL = metadata.image
+        ? `https://ipfs.io/ipfs/${metadata.image.replace("ipfs://", "")}`
+        : "https://ipfs.io/ipfs/QmV3TTBR8ZGSxWx4c9wTCybozP5nknpk3m3jDkPzcnhXhZ";
+
+      return {
+        tokenId,
+        name: metadata.name || `Token #${tokenId}`,
+        description: metadata.description || "No description available",
+        image: imageURL,
+        price: ethers.formatEther(nft[3]),
+        owner: nft[1],
+        seller: nft[2],
+        isSold: nft[4],
+      };
+    })
+  );
+
+  return tokens;
+});
 
 const initialState = {
   nfts:[],
