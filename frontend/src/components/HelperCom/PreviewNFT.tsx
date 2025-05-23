@@ -1,5 +1,5 @@
-import { PreviewNFTProps } from "@/types";
 import React from "react";
+import { PreviewNFTProps } from "@/types";
 
 const PreviewNFT = ({ preview, name, price }: PreviewNFTProps) => {
   function shortName(name: string) {

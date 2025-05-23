@@ -1,20 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
-import { useDispatch } from "react-redux";
-
-import { AppDispatch } from "@/components/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/components/store/store";
 import { shortenAddress } from "@/components/ui/ShortenAddress";
 import { useAccount, useConnect } from "wagmi";
 import { uploadMetadataToIPFS, uploadToIPFS } from "@/utils/uploadIpfs";
-import { IoMdClose } from "react-icons/io";
 import PreviewNFT from "@/components/HelperCom/PreviewNFT";
-import Input from "@/components/ui/Input";
-import { createNFT } from "@/reducer/nftSlice";
+import { createNFT, getMarketplaceFee } from "@/reducer/nftSlice";
 import FormInput from "@/components/HelperCom/FormInput";
+import { IoCloseSharp } from "react-icons/io5";
 
 const createNft = () => {
+  const feeRedux = useSelector((state: RootState) => state.nft.fee);
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {}, []);
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -25,10 +27,9 @@ const createNft = () => {
   const [supply, setSupply] = useState("");
   const { address, isConnected } = useAccount();
   const { connectAsync, connectors } = useConnect();
-
+  const [fee, setFee] = useState(feeRedux);
   const handleCreateNFT = async () => {
     if (!isConnected) return;
-
     setLoading(true);
     setError(null);
 
@@ -86,7 +87,7 @@ const createNft = () => {
       console.error("Connection failed:", error);
     }
   }
-  const fee = 2.5/100;
+
   return (
     <div className="min-h-screen max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-4xl bg-white mx-auto flex flex-col gap-4">
       {!isConnected ? (
@@ -144,7 +145,7 @@ const createNft = () => {
                         alt="NFT Preview"
                         className="w-full h-full rounded-lg"
                       />
-                      <IoMdClose
+                      <IoCloseSharp
                         size={24}
                         onClick={() => setPreview(null)}
                         className="cursor-pointer"
@@ -183,15 +184,20 @@ const createNft = () => {
                     <p>{price ? `${parseFloat(price)} ETH` : "-"}</p>
                   </div>
                   <div className="flex items-center justify-between ">
-                    <p className="text-[rgb(141, 141, 159)]" >Leox fee ?</p>
-                    <p>2.5%</p>
+                    <p className="text-[rgb(141, 141, 159)]">Leox fee ?</p>
+                    <p>{fee !== null && fee !== undefined ? `${fee}%` : "—"}</p>
                   </div>
                   <div className="w-full h-[2px] bg-[#e8eeee] rounded-3xl" />
                   <div className="flex items-center justify-between">
-                    <p className="text-[rgb(141, 141, 159)]">You will receive</p>
+                    <p className="text-[rgb(141, 141, 159)]">
+                      You will receive
+                    </p>
                     <p>
-                      {price
-                        ? `${parseFloat(price) - (parseFloat(price) * fee) } ETH`
+                      {price && fee !== undefined
+                        ? `${(
+                            parseFloat(price) -
+                            parseFloat(price) * (fee / 100)
+                          ).toFixed(4)} ETH`
                         : "—"}
                     </p>
                   </div>
