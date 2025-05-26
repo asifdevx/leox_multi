@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import * as ethers from "ethers";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import abi from "@/components/ABI/abi.json";
-import { CreateNFTArgs } from "@/types";
+import { CreateNFTArgs, NftState } from "@/types";
 
 dotenv.config();
 
@@ -40,80 +40,77 @@ export const createNFT = createAsyncThunk(
   }
 );
 
-export const fetchNFT = createAsyncThunk("nft/fetchNFT", async () => {
-  const contract = await createEthContract();
-  const nftsRaw = await contract?.getAllListed();
-  if (!nftsRaw) return [];
+export const fetchNFT = createAsyncThunk(
+  "nft/fetchNFT",
+  async ({ start, limit }: { start: number; limit: number }, thunkAPI) => {
+    const contract = await createEthContract();
+    const nftsRaw = await contract?.getPaginatedListed(start, limit);
+    if (!nftsRaw) return [];
 
-  const tokens = await Promise.all(
-    Array.from(nftsRaw).map(async (nft: any) => {
-      const tokenId = nft[0].toString();
-      let metadata = { name: "", description: "", image: "" };
+    const tokens = await Promise.all(
+      Array.from(nftsRaw).map(async (nft: any) => {
+        const tokenId = nft[0].toString();
+        let metadata = { name: "", description: "", image: "" };
 
-      try {
-        const tokenURI = await contract?.uri(tokenId);
-        const ipfsCID = tokenURI.replace("ipfs://", "");
-        const metaRes = await axios.get(
-          `https://nftstorage.link/ipfs/${ipfsCID}`
-        );
+        try {
+          const tokenURI = await contract?.uri(tokenId);
+          const ipfsCID = tokenURI.replace("ipfs://", "");
+          const metaRes = await axios.get(
+            `https://nftstorage.link/ipfs/${ipfsCID}`
+          );
 
-        metadata = metaRes.data;
-      } catch (error) {
-        console.error(`Error fetching metadata for token ${tokenId}:`, error);
-      }
-      const imageUrl = metadata.image?.startsWith("ipfs://")
-        ? `https://nftstorage.link/ipfs/${metadata.image.replace(
-            "ipfs://",
-            ""
-          )}`
-        : metadata.image || "";
-      console.log("nft", nft);
+          metadata = metaRes.data;
+        } catch (error) {
+          console.error(`Error fetching metadata for token ${tokenId}:`, error);
+        }
+        const imageUrl = metadata.image?.startsWith("ipfs://")
+          ? `https://nftstorage.link/ipfs/${metadata.image.replace(
+              "ipfs://",
+              ""
+            )}`
+          : metadata.image || "";
+        console.log("nft", nft);
 
-      return {
-        tokenId,
-        name: `${metadata.name} ${tokenId}` || `Token #${tokenId}`,
-        description: metadata.description || "No description available",
-        image: imageUrl,
-        creator: nft[1],
-        seller: nft[2],
-        price: ethers.formatEther(nft[3]),
-        supply: nft[4].toString(),
-        remainingSupply: nft[5].toString(),
-        isListed: nft[6],
-        saleType: nft[7] === 0n ? "Fixed" : "Auction",
-        auctionEndTime: nft[8].toString(),
-        highestBidder: nft[9],
-        highestBid: ethers.formatEther(nft[10]),
-        claimed: nft[11],
-      };
-    })
-  );
+        return {
+          tokenId: Number(tokenId),
+          name: `${metadata.name} ${tokenId}` || `Token #${tokenId}`,
+          description: metadata.description || "No description available",
+          image: imageUrl,
+          creator: nft[1],
+          seller: nft[2],
+          price: ethers.formatEther(nft[3]),
+          supply: nft[4].toString(),
+          remainingSupply: Number(nft[5]),
+          isListed: nft[6],
+          saleType: Number(nft[7]),
+          auctionEndTime: Number(nft[8]),
+          highestBidder: nft[9],
+          highestBid: ethers.formatEther(nft[10]),
+          claimed: nft[11],
+        };
+      })
+    );
 
-  return tokens;
-});
+    return tokens;
+  }
+);
 export const getMarketplaceFee = createAsyncThunk("nft/fee", async () => {
   const contract = await createEthContract();
-
   try {
     const feeBigNumber = await contract?.marketplaceFee();
-
-    const fee = feeBigNumber.toString();
-
-    return parseFloat(fee) / 10;
+    return Number(feeBigNumber) / 10;
   } catch (error) {
     console.log("couldn't find fee", error);
   }
 });
 
-interface NFTState {
-  nfts: any[];
-  loading: boolean;
-  fee: number | undefined;
-}
-
-const initialState: NFTState = {
-  nfts: [],
+const initialState: NftState = {
+  listings: [],
   loading: false,
+  error: null,
+  hasMore: true,
+  page: 0,
+  limit: 2,
   fee: 0,
 };
 
@@ -134,13 +131,29 @@ const nftSlice = createSlice({
       })
       .addCase(fetchNFT.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchNFT.fulfilled, (state, action) => {
         state.loading = false;
-        state.nfts = action.payload;
+        if (action.payload.length < state.limit) {
+          state.hasMore = false;
+        }
+
+        // Use "tokenId-seller" as the unique key
+        const existingKeys = new Set(
+          state.listings.map((item) => `${item.tokenId}-${item.seller}`)
+        );
+
+        const newUniqueListings = action.payload.filter(
+          (item) => !existingKeys.has(`${item.tokenId}-${item.seller}`)
+        );
+
+        state.listings.push(...newUniqueListings);
+        state.page += newUniqueListings.length;
       })
       .addCase(fetchNFT.rejected, (state) => {
         state.loading = false;
+        state.error = "Failed to fetch listings";
       })
       .addCase(getMarketplaceFee.fulfilled, (state, action) => {
         state.fee = action.payload;

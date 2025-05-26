@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,11 +12,15 @@ import FormInput from "@/components/HelperCom/FormInput";
 import { IoCloseSharp } from "react-icons/io5";
 
 const createNft = () => {
-  const feeRedux = useSelector((state: RootState) => state.nft.fee);
+  const fee = useSelector((state: RootState) => state.nft.fee);
   const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {}, []);
-
+  const feePercent = useMemo(() => (fee ? fee / 10 : 0), [fee]);
+  useEffect(() => {
+    console.log(feePercent);
+    
+    dispatch(getMarketplaceFee());
+  }, []);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -27,7 +31,7 @@ const createNft = () => {
   const [supply, setSupply] = useState("");
   const { address, isConnected } = useAccount();
   const { connectAsync, connectors } = useConnect();
-  const [fee, setFee] = useState(feeRedux);
+  
   const handleCreateNFT = async () => {
     if (!isConnected) return;
     setLoading(true);
