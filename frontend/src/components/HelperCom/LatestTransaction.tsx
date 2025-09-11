@@ -35,7 +35,7 @@ export default function LatestTransaction() {
             <div
               key={index}
               className="border border-[black]/20 rounded-lg  overflow-hidden hover:shadow-xl transition-all duration-300 p-3"
-            >
+             >
               <div className="w-full bg-gray-200 flex items-center justify-center overflow-hidden rounded-lg">
                 <img
                   src={items.image}

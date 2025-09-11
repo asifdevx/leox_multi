@@ -42,6 +42,7 @@ const config: Config = {
         small: "500px",
         lg: "1000px",
         "2xl": "1400px",
+      
       },
       blur: {
         3: "30px",

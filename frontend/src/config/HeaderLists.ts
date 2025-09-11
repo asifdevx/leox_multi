@@ -20,4 +20,10 @@ export const HeaderLists:HeaderLists[] = [
     link: "/buy",
     islink: true,
   },
+  {
+    name: "drops",
+    link: "/drops",
+    islink: true,
+  },
+ 
 ];

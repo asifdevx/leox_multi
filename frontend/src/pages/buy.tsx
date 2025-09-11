@@ -8,7 +8,7 @@ const buy = () => {
 
   return (
     <div>
-            <LatestTransaction/>
+        
     </div>
   )
 }

@@ -72,9 +72,10 @@ const index = () => {
                 <div key={idx}>
                   <Link
                     href={items.link || ""}
-                    className={`text-lg font-ponomar text-[#313434]`}
+                    className={` text-lg flex items-center gap-1  font-ponomar text-[#313434]`}
                   >
-                    {items.name}
+                    <p className="min-md:hidden">{items.name}</p>
+                    {items.name==="drops" && <p className="px-1 hidden md:block bg-[#dde5e6] text-[14px] rounded-md text-[#47565b]">new</p> }
                   </Link>
                 </div>
               ))}
