@@ -9,7 +9,7 @@ import { bscTestnet } from "wagmi/chains";
 const metadata = {
   name: "wagmi",
   description: "Binance Smart Chain Testnet Example",
-  url: 'http://192.168.0.100:3000',
+  url: 'http://192.168.0.102:3000',
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
@@ -20,17 +20,15 @@ const config = defaultWagmiConfig({
   chains,
   projectId,
   metadata,
-  transports: {
-    [bscTestnet.id]: http("https://bsc-testnet.publicnode.com"), // stable RPC
-  },
-});
+}) as any;
+(config as any).autoConnect = false;
 
 createWeb3Modal({
   wagmiConfig: config,
   projectId,
   enableAnalytics: true,
   themeVariables: {
-    "--w3m-color-mix": "#2563eb", // Tailwind blue-600
+    "--w3m-color-mix": "#2563eb",
     "--w3m-accent": "#000000"
   },
   chainImages: {},

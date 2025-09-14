@@ -21,7 +21,7 @@ export const HeaderLists:HeaderLists[] = [
     islink: true,
   },
   {
-    name: "drops",
+    name: "drop",
     link: "/drops",
     islink: true,
   },
