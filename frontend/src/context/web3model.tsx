@@ -9,7 +9,7 @@ import { bscTestnet } from "wagmi/chains";
 const metadata = {
   name: "wagmi",
   description: "Binance Smart Chain Testnet Example",
-  url: 'http://192.168.0.102:3000',
+  url: 'https://leox-multi.vercel.app',
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
