@@ -11,20 +11,28 @@ import { IoMdClose } from "react-icons/io";
 import MobileSideBar from "../HelperCom/MobileSideBar";
 import SearchBar from "../ui/SearchBar";
 
-
 const index = () => {
   const pathname = usePathname();
   const [isScroll, setScroll] = useState(false);
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOPen] = useState(false);
+  const [IsDesktop, setIsDesktop] = useState(true);
+
   function toggleBtn() {
     setOpen(!open);
   }
 
   useEffect(() => {
     const handleScroll = () => setScroll(window.scrollY > 50);
+    const handleResize = () => setIsDesktop(window.innerWidth >= 764);
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   return (
@@ -33,21 +41,24 @@ const index = () => {
         <div className="w-full flex lg:grid  grid-cols-8 justify-between px-2 md:px-7 mx-auto">
           {/* Logo section  */}
           <div className="h-full flex items-center md:gap-10 gap-3 ">
-            <div className=" flex gap-1 items-center ">
+            <Link className=" flex gap-1 items-center" href="/">
+
               <Image
-                src="/logo.png"
+                src={IsDesktop ? "/pc_logo.png" : "/logo.png"}
                 alt="logo"
-                width={60}
+                width={IsDesktop ? 200 : 70 }
                 height={70}
                 priority
-                className={"object-fill"}
+                className={"object-fill pointer-events-none"}
               />
-              <h3 className="text-2xl text-[#474343] font-ponomar">
-                Leo<span>x</span>
-              </h3>
-            </div>
+              
+            </Link>
             <div className="lg:hidden items-center mt-1">
-              <HiOutlineMagnifyingGlass size={24} className="text-[#292b2b]" onClick={()=>setSearchOPen(true)} />
+              <HiOutlineMagnifyingGlass
+                size={24}
+                className="text-[#292b2b]"
+                onClick={() => setSearchOPen(true)}
+              />
             </div>
           </div>
 
@@ -75,7 +86,11 @@ const index = () => {
                     className={` text-lg flex items-center gap-1  font-ponomar text-[#313434]`}
                   >
                     <p className="min-md:hidden">{items.name}</p>
-                    {items.name==="drops" && <p className="px-1 hidden md:block bg-[#dde5e6] text-[14px] rounded-md text-[#47565b]">new</p> }
+                    {items.name === "drops" && (
+                      <p className="px-1 hidden md:block bg-[#dde5e6] text-[14px] rounded-md text-[#47565b]">
+                        new
+                      </p>
+                    )}
                   </Link>
                 </div>
               ))}

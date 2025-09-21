@@ -50,10 +50,13 @@ type FormInputProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export interface ListedItemView {
-  tokenId: number;
-  creator: string;
+export interface NFT {
+  tokenId: string;
+  name: string;
+  description: string;
+  image: string;
   seller: string;
+  owner: string;
   price: string;
   supply: string;
   remainingSupply: number;
@@ -63,14 +66,11 @@ export interface ListedItemView {
   highestBidder: string;
   highestBid: string;
   claimed: boolean;
-  name:string,
-description:string,
-image:string
 }
 
 
 interface NftState {
-  listings: ListedItemView[];
+  listings: NFT[];
   fee:number | undefined;
   loading: boolean;
   error: string | null;

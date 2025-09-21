@@ -31,6 +31,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "ethers": "^6.15.0",
     "express-graphql": "^0.12.0",
     "graphql": "^15.9.0",
     "mongodb": "^6.5.0",

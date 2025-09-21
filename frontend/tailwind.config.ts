@@ -13,6 +13,31 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        primary: {
+          DEFAULT: "#3B82F6", // Blue button default
+          dark: "#2563EB",    // Blue hover/dark
+        },
+        secondary: {
+          DEFAULT: "#6B7280", // Gray text/subtext
+          light: "#9CA3AF",   // Lighter gray
+          dark: "#374151",    // Darker gray (backgrounds)
+        },
+        danger: {
+          DEFAULT: "#EF4444", // Red button
+          dark: "#DC2626",    // Red hover
+        },
+        modal: {
+          bg: "#1F1F1F",     // Modal background
+          border: "#4B5563", // Modal border
+          overlay: "rgba(0,0,0,0.6)", // Overlay
+        },
+        text: {
+          primary: "#FFFFFF",
+          secondary: "#9CA3AF",
+          muted: "#6B7280",
+        },
+        blueGradientStart: "#3B82F6",
+        blueGradientEnd: "#2563EB",
         blue: "#1fb6ff",
         purple: "#7e5bef",
         orange: "#ff7849",
@@ -49,9 +74,16 @@ const config: Config = {
       },
       boxShadow: {
         header: "0 0px 5px rgba(0,0,0,.2)",
+        modal: "0 10px 25px rgba(0,0,0,0.4)",
+      },
+      borderRadius: {
+        xl: "1rem",
+        "2xl": "1.5rem",
       },
       animation: {
-        widthIncrease: "widthIncrease 0.3s ease-in-out",
+        widthIncrease: "widthIncrease 0.3s ease-in-out", 
+          'spin-slow': 'spin 1.5s linear infinite',
+        
       },
       keyframes: {
         widthIncrease: {

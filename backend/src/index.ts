@@ -1,8 +1,8 @@
 import express from "express";
 import { graphqlHTTP } from "express-graphql";
 import dotenv from "dotenv";
-import { productSchema } from "./graphql/schemas/product.schema";
-import connetdb from "./config/connectdb";
+import { nftSchema} from "./graphql/schemas/nft.schema";
+ import connetdb from "./config/connectdb";
 import cors from "cors";
 
 dotenv.config();
@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 8000;
 app.use(express.json());
 
 const corsOptions = {
-  origin: "http://localhost:3000", 
+  origin: "http://192.168.0.100:3000", 
   credentials: true, // enable CORS with credentials
 };
 app.use(cors(corsOptions));
@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 app.use(
   "/g",
   graphqlHTTP({
-    schema: productSchema,
+    schema: nftSchema,
     graphiql: true,
   })
 );

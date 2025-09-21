@@ -11,12 +11,7 @@ import { handleCopy } from "./handleCopy";
 import { WalletBalance } from "./WalletBalance";
 
 const ConnectBtn: React.FC = () => {
-  const {
-    address,
-    isConnected,
-    isConnecting,
-    isReconnecting,
-  } = useAccount();
+  const { address, isConnected, isConnecting, isReconnecting } = useAccount();
   const { connectors, connectAsync } = useConnect();
   const { disconnectAsync } = useDisconnect();
   const { symbol, formate } = WalletBalance();
@@ -34,11 +29,9 @@ const ConnectBtn: React.FC = () => {
 
   const handleConnect = async (connector: any) => {
     if (isConnected) {
-      console.log("Already connected");
       setIsModalOpen(true);
       return;
     }
-
     try {
       setIsModalOpen(true);
       await connectAsync({ connector });
@@ -46,14 +39,10 @@ const ConnectBtn: React.FC = () => {
       setUserRejected(false);
     } catch (error: any) {
       if (error?.name === "ConnectorAlreadyConnectedError") {
-        console.warn("Already connected, skipping connectAsync");
         setIsModalOpen(true);
         return;
       }
-
       if (error?.message?.includes("User rejected")) {
-        console.log("user rejected");
-
         setUserRejected(true);
         setIsModalOpen(true);
       } else {
@@ -80,9 +69,9 @@ const ConnectBtn: React.FC = () => {
         onClick={() =>
           isConnected ? setIsModalOpen(true) : handleConnect(metaMaskConnector)
         }
-        className="px-4 py-2 bg-blue text-black rounded text-sm"
+        className="px-5 py-2 bg-gradient-to-r from-blueGradientStart to-blueGradientEnd text-white rounded-lg font-semibold text-sm shadow-md hover:scale-105 transition-transform duration-200"
       >
-        {isConnected && address ? shortenAddress(address) : "connect Wallet"}
+        {isConnected && address ? shortenAddress(address) : "Connect Wallet"}
       </button>
 
       {/* Modal */}
@@ -95,61 +84,68 @@ const ConnectBtn: React.FC = () => {
         className="relative z-50"
       >
         <div
-          className="fixed inset-0 bg-black bg-opacity-70"
+          className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm transition-opacity"
           aria-hidden="true"
         />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="w-full max-w-md text-white rounded-xl border border-[#d9c6c6]/30 bg-black p-6">
-            <div className="flex flex-col items-center gap-4">
+          <Dialog.Panel className="w-full max-w-md bg-gray-900 rounded-xl border border-gray-700 p-6 shadow-2xl transform transition-all duration-300">
+            <div className="flex flex-col items-center gap-2">
               {/* 🔄 Connecting */}
               {(isConnecting || isReconnecting) &&
                 !userRejected &&
                 !isConnected && (
-                  <div className="flex flex-col items-center gap-4 py-6">
-                    <img
-                      src="/metamask.png"
-                      className="w-16 h-16 animate-pulse"
-                      alt="MetaMask"
-                    />
-                    <p className="text-lg font-semibold">
+                  <div className="flex flex-col items-center gap-3 py-6">
+                    <div className="relative w-20 h-20 flex items-center justify-center">
+                      <div className="absolute w-full h-full rounded-full border-4 border-blueGradientStart border-t-transparent animate-spin" />
+
+                      <Image
+                        src="/metamask.png"
+                        width={55}
+                        height={54}
+                        alt="MetaMask"
+                        className="animate-pulse pointer-events-none"
+                      />
+                    </div>
+                    <p className="text-xl font-semibold text-white">
                       Continue in MetaMask
                     </p>
-                    <p className="text-sm text-gray-400">
-                      Accept connection request in the wallet
+                    <p className="text-sm text-gray-400 text-center">
+                      Accept the connection request in your wallet to proceed.
                     </p>
                     <button
                       onClick={() => handleConnect(metaMaskConnector)}
-                      className="mt-4 px-4 py-2 bg-blue text-white rounded-lg"
+                      className="mt-4 px-6 py-2 bg-blueGradientStart rounded-lg font-medium text-white hover:bg-blueGradientEnd transition-colors"
                     >
-                      Try again
+                      Retry
                     </button>
                   </div>
                 )}
 
               {/* ❌ User Rejected */}
               {userRejected && !isConnected && (
-                <div className="flex flex-col items-center gap-4 py-6">
+                <div className="flex flex-col items-center gap-3 py-6">
                   <div className="relative">
-                    <img
+                    <Image
                       src="/metamask.png"
-                      className="w-16 h-16 relative"
+                      width={64}
+                      height={64}
                       alt="MetaMask"
                     />
-                    <span className="absolute -bottom-1 right-0 text-red-500 text-2xl">
+                    <span className="absolute -bottom-2 right-0 text-red-500 text-3xl">
                       ✖
                     </span>
                   </div>
-                  <p className="text-lg font-semibold text-red-500">
-                    Connection declined
+                  <p className="text-xl font-semibold text-red-500">
+                    Connection Declined
                   </p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-gray-400 text-center">
                     You rejected the request in MetaMask.
                   </p>
                   <button
                     onClick={() => handleConnect(metaMaskConnector)}
-                    className="mt-4 px-4 py-2 bg-blue text-white rounded-lg"
+                    className="mt-4 px-6 py-2 bg-blue-600 rounded-lg font-medium text-white hover:bg-blueGradientEnd transition-colors"
                   >
-                    Try again
+                    Try Again
                   </button>
                 </div>
               )}
@@ -157,50 +153,50 @@ const ConnectBtn: React.FC = () => {
               {/* ✅ Connected */}
               {isConnected && address && (
                 <>
-                  <div className="flex w-full items-end justify-end">
+                  <div className="flex w-full justify-end">
                     <IoMdClose
-                      className="font-bold text-xl cursor-pointer"
+                      className="text-white/70 text-2xl cursor-pointer hover:text-white transition-colors"
                       onClick={() => setIsModalOpen(false)}
                     />
                   </div>
-                  <div className="p-2 bg-[#2c2a2a] rounded-full">
+                  <div className="p-2 bg-gray-800 rounded-full">
                     <Image
                       src={icon!}
-                      width={70}
-                      height={70}
-                      alt="identicon"
-                      className="object-cover rounded-full"
+                      width={72}
+                      height={72}
+                      alt="Identicon"
+                      className="rounded-full"
                     />
                   </div>
-                  <div className="flex gap-2 items-center justify-center">
-                    <p className="text-2xl font-extrabold">
+                  <div className="flex items-center gap-2">
+                    <p className="text-2xl font-bold text-white">
                       {shortenAddress(address)}
                     </p>
                     <GoCopy
-                      className="text-white/80 cursor-pointer"
+                      className="text-white/60 cursor-pointer hover:text-white transition-colors"
                       onClick={() => handleCopy(address)}
                     />
                   </div>
-                  <p className="text-white/60">
+                  <p className="text-gray-400">
                     {formate} {symbol}
                   </p>
                   <button
                     onClick={() => console.log("Open explorer")}
-                    className="flex items-center gap-2 px-4 py-2 rounded-2xl border border-gray-600 text-white hover:bg-gray-700 hover:scale-105 transition-all duration-200 shadow-lg"
+                    className="mt-3 flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-600 text-white hover:bg-gray-700 transition-all duration-200 shadow-md"
                   >
                     <FaExternalLinkAlt className="w-5 h-5" />
                     Block Explorer
                   </button>
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 mt-4">
                     <button
                       onClick={() => setIsModalOpen(false)}
-                      className="px-4 py-2 bg-gray-300 rounded"
+                      className="flex-1 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
                     >
-                      Cancel
+                      Close
                     </button>
                     <button
                       onClick={handleDisconnect}
-                      className="px-4 py-2 bg-red-500 text-white rounded"
+                      className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
                     >
                       Disconnect
                     </button>
