@@ -9,9 +9,7 @@ export const fetchMetadata = async (tokenURI: string) => {
 
     const imageUrl = data.image?.startsWith("ipfs://")
       ? `https://nftstorage.link/ipfs/${data.image.replace("ipfs://", "")}`
-      : data.image || "";
-      console.log(data.name,data.description,imageUrl);
-      
+      : data.image || "";      
     return {
       name: data.name,
       description: data.description || "No description available",

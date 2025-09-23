@@ -13,7 +13,7 @@ app.use(express.json());
 
 const corsOptions = {
   origin: "http://192.168.0.100:3000", 
-  credentials: true, // enable CORS with credentials
+  credentials: true, 
 };
 app.use(cors(corsOptions));
 // Main backend data
@@ -32,7 +32,7 @@ const start = async () => {
   try {
     await connetdb()
     app.listen(PORT, () => {
-      console.log(`Server is running....`);
+      console.log(`Server is running on ${PORT}`);
     });
   } catch (error) {
     console.error("Error starting server:", error);

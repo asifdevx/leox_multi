@@ -20,7 +20,6 @@ export const WalletBalance = () => {
   const formattedBalance = balance?.formatted
     ? parseFloat(balance.formatted).toFixed(3) 
     : undefined;
-    console.log(formattedBalance,"formattedBalance");
     
   return { symbol:balance?.symbol ,
   formate:formattedBalance

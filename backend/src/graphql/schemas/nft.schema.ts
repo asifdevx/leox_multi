@@ -1,4 +1,5 @@
 import {
+  GraphQLInt,
     GraphQLList,
     GraphQLObjectType,
   GraphQLSchema,
@@ -13,8 +14,14 @@ const RootQuery = new GraphQLObjectType({
   fields: {
     nfts:{
       type: new GraphQLList( NftType) ,
-      resolve: async()=>{
-        return await getNFTs(0, 10);
+      args:{
+        start:{type:GraphQLInt},
+        limit:{type:GraphQLInt},
+      },
+      resolve: async(_,arg)=>{
+        const start = Number.isInteger(arg?.start) ? arg.start : 0;
+        const limit = Number.isInteger(arg?.limit) ? arg.limit : 10;
+        return await getNFTs(start,limit);
       }
     }
   },

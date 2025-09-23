@@ -3,7 +3,7 @@ import {createEthContract} from "../../config/bsc.service"
 import {fetchMetadata} from "../../config/ipfs.service"
 import { ethers } from "ethers";
 
-export const getNFTs =async(start=0 ,limit=10)=>{
+export const getNFTs =async(start=0 ,limit:number)=>{
   const contract= await createEthContract();
   const nftsRaw = await contract.getPaginatedListed(start,limit);
   

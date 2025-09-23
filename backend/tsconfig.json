@@ -6,7 +6,8 @@
       "outDir": "dist",
       "resolveJsonModule": true,
       "sourceMap": true,
-      "noImplicitAny": true
+      "noImplicitAny": true,
+      "skipLibCheck": true
     },
     "include": ["src/index.ts"]
   }

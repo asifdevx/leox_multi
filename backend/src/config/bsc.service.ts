@@ -11,7 +11,6 @@ declare global {
 }
 
 const contract_address = process.env.CONTRACT_ADDRESS!;
-console.log("CONTRACT_ADDRESS", contract_address);
 
 export const  createEthContract = async () => {
   const provider = new ethers.JsonRpcProvider(process.env.BSC_RPC!);

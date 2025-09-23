@@ -74,8 +74,8 @@ interface NftState {
   fee:number | undefined;
   loading: boolean;
   error: string | null;
-  hasMore: boolean;    
-  page: number;      
+  hasMore: boolean; 
+  offset:number;    
   limit: number;       
 }
 interface MobileSideBar {

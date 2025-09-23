@@ -5,6 +5,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import abi from "@/components/ABI/abi.json";
 import { CreateNFTArgs, NFT, NftState } from "@/types";
 import { fetchGraphQL } from "@/api/graphql";
+import { getNft } from "@/config/graphql";
 
 dotenv.config();
 
@@ -42,33 +43,10 @@ export const createNFT = createAsyncThunk(
 );
 
 export const fetchNFT = createAsyncThunk<
-  NFT[], // return type
-  { start: number; limit: number } // arg type
+  NFT[],  { start: number; limit: number } 
 >("nft/fetchNFT", async ({ start, limit }) => {
-  const query = `
-    query GetNFTs {
-      nfts {
-        tokenId
-        name
-        description
-        image
-        seller
-        owner
-        price
-        supply
-        remainingSupply
-        isListed
-        saleType
-        auctionEndTime
-        highestBidder
-        highestBid
-        claimed
-      }
-    }
-  `;
-
-  // 👇 Tell TypeScript what the query returns
-  const data = await fetchGraphQL<{ nfts: NFT[] }>(query);
+ 
+  const data = await fetchGraphQL<{ nfts: NFT[] }>(getNft,{start,limit});
   return data?.nfts || [];
 });
 
@@ -87,7 +65,7 @@ const initialState: NftState = {
   loading: false,
   error: null,
   hasMore: true,
-  page: 0,
+  offset: 0,
   limit: 2,
   fee: 0,
 };
@@ -96,7 +74,14 @@ const initialState: NftState = {
 const nftSlice = createSlice({
   name: "nft",
   initialState,
-  reducers: {},
+  reducers: {
+    resetListings(state) {
+      state.listings = [];
+      state.offset = 0;
+      state.hasMore = true;
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createNFT.pending, (state) => {
@@ -114,7 +99,12 @@ const nftSlice = createSlice({
       })
       .addCase(fetchNFT.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload.length < state.limit) {
+
+        const fatchData: NFT[] = action.payload || [];
+
+        if (fatchData.length ===0 || fatchData.length < state.limit) {
+          console.log(fatchData.length,"+",state.offset);
+          
           state.hasMore = false;
         }
 
@@ -125,9 +115,10 @@ const nftSlice = createSlice({
         const newUniqueListings = action.payload.filter(
           (item) => !existingKeys.has(`${item.tokenId}-${item.seller}`)
         );
+        console.log(newUniqueListings, "newUniqueListings");
 
         state.listings.push(...newUniqueListings);
-        state.page += newUniqueListings.length;
+        state.offset += fatchData.length;
       })
       .addCase(fetchNFT.rejected, (state) => {
         state.loading = false;
