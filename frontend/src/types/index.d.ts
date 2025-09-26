@@ -71,8 +71,7 @@ export interface NFT {
 
 interface NftState {
   listings: NFT[];
-  fee:number | undefined;
-  loading: boolean;
+   loading: boolean;
   error: string | null;
   hasMore: boolean; 
   offset:number;    

@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   env:{
-    CONTACT_ADDRESS:process.env.CONTACT_ADDRESS,
+    NEXT_PUBLIC_CONTRACT_ADDRESS:process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
   }
 };
 

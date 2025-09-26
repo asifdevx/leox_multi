@@ -1,16 +1,16 @@
-import NFT from "../schemas/nft.schema";
-import {createEthContract} from "../../config/bsc.service"
-import {fetchMetadata} from "../../config/ipfs.service"
+import { Fee, NFT } from "../schemas/nft.schema";
+import { createEthContract } from "../../config/bsc.service";
+import { fetchMetadata } from "../../config/ipfs.service";
 import { ethers } from "ethers";
 
-export const getNFTs =async(start=0 ,limit:number)=>{
-  const contract= await createEthContract();
-  const nftsRaw = await contract.getPaginatedListed(start,limit);
-  
-   const result=await Promise.all( 
-    nftsRaw.map(async(nft:any)=>{
+export const getNFTs = async (start = 0, limit: number) => {
+  const contract = await createEthContract();
+  const nftsRaw = await contract.getPaginatedListed(start, limit);
+
+  const result = await Promise.all(
+    nftsRaw.map(async (nft: any) => {
       const tokenId = nft[0].toString();
-      
+
       let tokenURI = "";
       try {
         tokenURI = await contract.uri(tokenId);
@@ -36,22 +36,62 @@ export const getNFTs =async(start=0 ,limit:number)=>{
         highestBid: ethers.formatEther(nft[10]),
         claimed: nft[11],
         tokenURI,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       try {
         await NFT.updateOne(
-          {tokenId:transformed.tokenId,seller:transformed.seller},
-          {$set:transformed},
-          {upsert:true}
-        )
+          { tokenId: transformed.tokenId, seller: transformed.seller },
+          { $set: transformed },
+          { upsert: true }
+        );
       } catch (err) {
         console.warn("MongoDB upsert failed", err.message);
-        
       }
       return transformed;
     })
+  );
+  return result;
+};
+// --------------------------------findfee -------------------------------------
+export const findFee = async () => {
 
-   )
-   return result
-}
+  const latestFee = await Fee.findOne().sort({ updateAt: -1 }).lean();
+  console.log(latestFee,"latestFee");
+  
+  if (!latestFee) {
+    
+    const contract = await createEthContract();
+    const feeBigNumber = await contract.marketplaceFee();
+    const fee= Number(feeBigNumber) / 10;
+   
+    const newFee = await Fee.create({
+      fee: Number(fee),
+      updateAt: new Date(),
+      txHash: null, 
+    });
+
+    return newFee.toObject();
+  }
+
+ 
+  return latestFee;
+};
+
+// --------------------------------UPDatefee -------------------------------------
+export const updateFee = async (fee: number) => {
+  const contract = await createEthContract();
+  const tx = await contract.updateMarketplaceFee(fee);
+  const receipt = await tx.wait();
+
+  try {
+    await Fee.create({
+      fee,
+      updateAt: new Date(),
+      txhase: receipt.transactionHash,
+    });
+  } catch (error) {
+    console.warn("failed to fatch fee", error.message);
+  }
+  return receipt.transactionHash;
+};

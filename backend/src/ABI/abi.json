@@ -323,6 +323,25 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint128",
+        "name": "fee",
+        "type": "uint128"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "UpdateFee",
+    "type": "event"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint96",

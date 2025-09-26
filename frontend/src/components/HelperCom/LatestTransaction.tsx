@@ -11,6 +11,8 @@ export default function LatestTransaction() {
   );
 
   useEffect(() => {
+    console.log(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
+    
     if (listings.length === 0) {
       dispatch(fetchNFT({ start: 0, limit }));
     }
@@ -39,7 +41,7 @@ export default function LatestTransaction() {
             >
               <div className="w-full bg-gray-100 flex items-center justify-center overflow-hidden rounded-lg">
                 <img
-                  src={item.image || "/placeholder.png"}
+                  src={item.image || "/eth.svg"}
                   alt={item.name}
                   className="w-full h-full object-cover aspect-square bg-gray-300"
                 />

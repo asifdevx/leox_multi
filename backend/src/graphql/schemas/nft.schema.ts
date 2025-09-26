@@ -27,7 +27,6 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
-
 export const nftSchema = new GraphQLSchema({
   query: RootQuery,
 

@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import nftReducer from "@/reducer/nftSlice";
-
+import feeReducer from "@/reducer/feeSlice";
 export const store = configureStore({
   reducer: {
     nft: nftReducer,
+    fee:feeReducer
   },
 });
 

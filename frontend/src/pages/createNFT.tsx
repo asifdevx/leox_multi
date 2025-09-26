@@ -7,19 +7,20 @@ import { shortenAddress } from "@/components/ui/ShortenAddress";
 import { useAccount, useConnect } from "wagmi";
 import { uploadMetadataToIPFS, uploadToIPFS } from "@/utils/uploadIpfs";
 import PreviewNFT from "@/components/HelperCom/PreviewNFT";
-import { createNFT, getMarketplaceFee } from "@/reducer/nftSlice";
+import { createNFT } from "@/reducer/nftSlice";
 import FormInput from "@/components/HelperCom/FormInput";
 import { IoCloseSharp } from "react-icons/io5";
+import { fatchFee } from "@/reducer/feeSlice";
 
 const createNft = () => {
-  const fee = useSelector((state: RootState) => state.nft.fee);
+  const fee = useSelector((state: RootState) => state.fee.value);
   const dispatch = useDispatch<AppDispatch>();
 
   const feePercent = useMemo(() => (fee ? fee / 10 : 0), [fee]);
   useEffect(() => {
     console.log(feePercent);
     
-    dispatch(getMarketplaceFee());
+    dispatch(fatchFee());
   }, []);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -61,6 +62,7 @@ const createNft = () => {
       setPreview(null);
       setName("");
       setDescription("");
+      setSupply("");
       setPrice("");
       setFile(null);
       console.log("NFT Created:", response);

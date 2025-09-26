@@ -2,18 +2,17 @@ import { useState, type ReactNode } from "react";
 import { http, WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
-
 import { createWeb3Modal } from "@web3modal/wagmi/react";
 import { bscTestnet } from "wagmi/chains";
 
 const metadata = {
   name: "wagmi",
   description: "Binance Smart Chain Testnet Example",
-  url: 'http://192.168.0.100:3000/',
+  url: 'http://192.168.0.101:3000',
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
-const projectId = process.env.NEXT_PUBLIC_KEY || "";
+const projectId = process.env.NEXT_PUBLIC_KEY!;
 const chains = [bscTestnet] as const;
 
 const config = defaultWagmiConfig({
@@ -38,7 +37,6 @@ createWeb3Modal({
 
 export function Web3Provider(props: any) {
   const [queryClient] = useState(() => new QueryClient());
-  console.log(projectId, "project id");
 
   return (
     <WagmiProvider config={config}>
