@@ -17,14 +17,14 @@ const PORT = process.env.PORT || 8000;
 app.use(express.json());
 
 const corsOptions = {
-  origin: "http://192.168.0.101:3000",
+  origin: "http://192.168.0.100:3000",
   credentials: true,
 };
 app.use(cors(corsOptions));
 
 export const io = new Server(httpServer, {
   cors: { 
-    origin: "http://192.168.0.101:3000",
+    origin: "http://192.168.0.100:3000",
     methods: ["GET", "POST"],
     credentials: true,
    },

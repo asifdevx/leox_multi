@@ -17,7 +17,6 @@ export const uploadToIPFS = async (file: File) => {
         },
       }
     );
-    console.log("url1", `ipfs://${response.data.IpfsHash}`);
 
     return `ipfs://${response.data.IpfsHash}`;
   } catch (error) {
@@ -49,8 +48,6 @@ export const uploadMetadataToIPFS = async (
         },
       }
     );
-    console.log("url2", `ipfs://${response.data.IpfsHash}`);
-
     return `ipfs://${response.data.IpfsHash}`;
   } catch (error) {
     console.error("Error uploading metadata:", error);

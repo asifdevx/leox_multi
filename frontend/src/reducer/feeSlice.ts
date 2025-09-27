@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { getFee, updateFee } from "@/api/api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
@@ -30,7 +30,8 @@ const feeSlice = createSlice({
         state.value = action.payload.fee;
         state.status = "succeeded";
       })
-      .addCase(changeFee.fulfilled, (state) => {
+      .addCase(changeFee.fulfilled, (state,action) => {
+        state.value = action.payload.fee;
         state.status = "succeeded";
       });
   },

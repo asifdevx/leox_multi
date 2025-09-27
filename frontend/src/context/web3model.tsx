@@ -8,7 +8,7 @@ import { bscTestnet } from "wagmi/chains";
 const metadata = {
   name: "wagmi",
   description: "Binance Smart Chain Testnet Example",
-  url: 'http://192.168.0.101:3000',
+  url: 'http://192.168.0.100:3000',
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 

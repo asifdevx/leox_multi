@@ -9,7 +9,7 @@ export async function feeListener () {
     console.log("Fee updated on-chain:", newFee.toString());
     try {
         await Fee.create({
-            fee: Number(newFee),
+            fee: Number(newFee) / 10,
             updateAt: new Date(Number(timestamp) * 1000),
             txHash: event.transactionHash,
         })

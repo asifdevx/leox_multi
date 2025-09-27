@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { io } from "socket.io-client";
 
 
-const socket = io("http://192.168.0.101:8000", {
+const socket = io("http://192.168.0.100:8000", {
   withCredentials: true,
   transports: ["websocket"],
 });
