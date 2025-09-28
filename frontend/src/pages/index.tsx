@@ -16,10 +16,7 @@ const index = () => {
       
     
   } 
-   const handlebtn =()=>{
-    console.log("clicked",fee );
-
-    
+   const handlebtn =()=>{    
     dispatch(changeFee( fee * 10));
   }
 

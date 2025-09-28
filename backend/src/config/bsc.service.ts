@@ -12,9 +12,8 @@ declare global {
 
 const contract_address = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
 
-export const  createEthContract = async () => {
+export const createEthContract = async () => {
   const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_BSC_RPC!);
-  const signer = await provider.getSigner();
-  const contract = new ethers.Contract(contract_address!, abi, signer);
+  const contract = new ethers.Contract(contract_address!, abi, provider);
   return contract;
 };

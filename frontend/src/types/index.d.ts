@@ -90,3 +90,13 @@ interface PreviewNFTProps{
    name:string;
    price: string;
 }
+
+
+
+// ----------------------------------------------------AUTH--------------------------------------------------
+export type Role = "Admin" | "Buyer" | "Seller" | "Moderator" ;
+
+declare type UserRole = {
+  address:string | null,
+  roles:Role[],
+}

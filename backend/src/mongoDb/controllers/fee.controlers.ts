@@ -1,14 +1,14 @@
-import { Fee } from "../schemas/nft.schema";
+import { Fee } from "../schemas/marketplace.schema";
 import { createEthContract } from "../../config/bsc.service";
-import { getAdminContract } from "../../config/adminContract";
+
 
 // --------------------------------findfee -------------------------------------
 export const findFee = async () => {
 
-    const latestFee = await Fee.findOne().sort({ updateAt: -1 }).lean();
-    console.log(latestFee,"latestFee");
-    
+    const latestFee = await Fee.findOne().sort({ updateAt: -1 }).lean();  
+
     if (!latestFee) {
+      console.log("no latest fee");
       
       const contract = await createEthContract();
       const feeBigNumber = await contract.marketplaceFee();
@@ -25,23 +25,5 @@ export const findFee = async () => {
   
    
     return latestFee;
-  };
-  
-  // --------------------------------UPDatefee -------------------------------------
-  export const updateFee = async (fee: number) => {
-    const contract =  getAdminContract();
-    const tx = await contract.updateMarketplaceFee(fee);
-    const receipt = await tx.wait();
-  
-    try {
-      await Fee.create({
-        fee : fee / 10 ,
-        updateAt: new Date(),
-        txhase: receipt.transactionHash,
-      });
-    } catch (error) {
-      console.warn("failed to fatch fee", error.message);
-    }
-    return receipt.transactionHash;
   };
   

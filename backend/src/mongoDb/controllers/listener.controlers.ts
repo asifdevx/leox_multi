@@ -1,4 +1,4 @@
-import {Fee } from "../schemas/nft.schema";
+import {Fee } from "../schemas/marketplace.schema";
 import {createEthContract } from "../../config/bsc.service";
 import {io} from '../../index';
 
@@ -6,7 +6,6 @@ export async function feeListener () {
     const contract = await createEthContract();
     
    contract.on("UpdateFee",async(newFee , timestamp,event)=>{
-    console.log("Fee updated on-chain:", newFee.toString());
     try {
         await Fee.create({
             fee: Number(newFee) / 10,
@@ -16,6 +15,6 @@ export async function feeListener () {
     } catch (error) {
         console.warn("Failed to update fee in MongoDB:", error.message);
     }
-    await io.emit("feeUpdate",Number(newFee));
+    return io.emit("feeUpdate",Number(newFee));
    });
 }

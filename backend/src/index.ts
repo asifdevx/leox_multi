@@ -1,7 +1,7 @@
 import express from "express";
 import { graphqlHTTP } from "express-graphql";
 import dotenv from "dotenv";
-import { nftSchema } from "./graphql/schemas/nft.schema";
+import { marketplace } from "./graphql/schemas/marketplace.schema";
 import connetdb from "./config/connectdb";
 import cors from "cors";
 import { Server } from "socket.io";
@@ -30,12 +30,11 @@ export const io = new Server(httpServer, {
    },
 });
 
-
 app.get("/", (req, res) => {
   res.send("Welcome to the GraphQL API!");
 });
 app.use("/api", Marketplace);
-app.use("/g", graphqlHTTP({ schema: nftSchema, graphiql: true }));
+app.use("/g", graphqlHTTP({ schema: marketplace, graphiql: true }));
 
 const start = async () => {
   try {

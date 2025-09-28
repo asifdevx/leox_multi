@@ -1,6 +1,8 @@
 
-import { getFee, updateFee } from "@/api/api";
+import { getFee } from "@/api/api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createEthContract } from "./nftSlice";
+
 
 export const fatchFee = createAsyncThunk(
   "marketplace/fee",
@@ -8,8 +10,19 @@ export const fatchFee = createAsyncThunk(
 );
 export const changeFee = createAsyncThunk(
   "marketplace/updateFee",
-  async (fee: number) => await updateFee(fee)
-);
+  async (fee: number) =>{
+   try {
+    const contract = await createEthContract();
+    const tx = await contract?.updateMarketplaceFee(fee);
+    const receipt= await tx.wait();
+    return {fee};
+   } catch (error) {
+    console.log("failed to fatch data of ",error);
+    return {fee : 0}
+   }
+
+    
+  });
 
 const initialState: { value: number; status: "idle" | "succeeded" } = {
   value: 0,
@@ -31,7 +44,7 @@ const feeSlice = createSlice({
         state.status = "succeeded";
       })
       .addCase(changeFee.fulfilled, (state,action) => {
-        state.value = action.payload.fee;
+        state.value = action.payload?.fee;
         state.status = "succeeded";
       });
   },

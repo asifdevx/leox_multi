@@ -27,5 +27,14 @@ const feeSchema = new mongoose.Schema({
   txhase: { type: Number, require: true },
 });
 
-export const Fee = mongoose.model("MarketplaceFee",feeSchema)
+
+const UserRoleSchema =new mongoose.Schema({
+    address:{type:String,require:true,unique:true},
+    roles: { type:[String], enum:["Buyer" , "Seller" , "Admin" , "Moderator"], default:["Buyer"]}
+},{timestamps:true})
+
+
 export const NFT = mongoose.model("Nfts", nftSchema);
+export const Fee = mongoose.model("MarketplaceFee",feeSchema);
+export const UserRole = mongoose.model("UserRole",UserRoleSchema);
+

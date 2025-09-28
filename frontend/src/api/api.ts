@@ -9,11 +9,4 @@ export const getFee = async () => {
   return data.data;
 };
 
-export const updateFee = async (fee: number) => {
-  console.log("fatch");
-  
-  const res = await axios.post(`${API_CALL}/updateFee`, { fee });
-  console.log(res.data);
 
-  return res.data;
-};

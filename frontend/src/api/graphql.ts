@@ -16,8 +16,7 @@ export async function fetchGraphQL<T>(
     if (data.errors) {
       console.error("GraphQL errors:", data.errors);
       return null;
-    }
-
+    }    
     return data.data as T;
   } catch (err: any) {
     console.error("GraphQL fetch error:", err.message);

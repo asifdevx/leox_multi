@@ -1,4 +1,4 @@
-import {  NFT } from "../schemas/nft.schema";
+import {  NFT } from "../schemas/marketplace.schema";
 import { createEthContract } from "../../config/bsc.service";
 
 import { fetchMetadata } from "../../config/ipfs.service";

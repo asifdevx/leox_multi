@@ -4,14 +4,14 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import abi from "@/components/ABI/abi.json";
 import { CreateNFTArgs, NFT, NftState } from "@/types";
 import { fetchGraphQL } from "@/api/graphql";
-import { getNft } from "@/config/graphql";
+import { GET_NFT,GET_USER_ROLE } from "@/config/graphql";
 
 
 dotenv.config();
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 
-const createEthContract = async () => {
+export const createEthContract = async () => {
   if (!window.ethereum) return;
   const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
@@ -44,7 +44,7 @@ export const fetchNFT = createAsyncThunk<
   NFT[],  { start: number; limit: number } 
 >("nft/fetchNFT", async ({ start, limit }) => {
  
-  const data = await fetchGraphQL<{ nfts: NFT[] }>(getNft,{start,limit});
+  const data = await fetchGraphQL<{ nfts: NFT[] }>(GET_NFT,{start,limit});
   return data?.nfts || [];
 });
 

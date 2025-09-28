@@ -1,4 +1,10 @@
-import {  GraphQLObjectType, GraphQLString,GraphQLBoolean,GraphQLInt } from "graphql";
+import {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLBoolean,
+  GraphQLInt,
+  GraphQLList,
+} from "graphql";
 
 export const NftType = new GraphQLObjectType({
   name: "nft",
@@ -18,6 +24,14 @@ export const NftType = new GraphQLObjectType({
     highestBidder: { type: GraphQLString },
     highestBid: { type: GraphQLString },
     claimed: { type: GraphQLBoolean },
-    tokenURI: { type: GraphQLString }
+    tokenURI: { type: GraphQLString },
+  },
+});
+
+export const UserRoleType = new GraphQLObjectType({
+  name: "role",
+  fields: {
+    address: { type: GraphQLString },
+    roles: { type: new GraphQLList(GraphQLString) },
   },
 });
