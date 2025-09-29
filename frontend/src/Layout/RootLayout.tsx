@@ -1,7 +1,7 @@
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/Header";
 
-const Layout = (props: any) => {
+const RootLayout = (props: any) => {
   return (
     <div className="w-screen min-h-screen flex flex-col bg-[#ffffff] text-black">
       <Header />
@@ -12,5 +12,5 @@ const Layout = (props: any) => {
   );
 };
 
-export default Layout;
+export default RootLayout;
 

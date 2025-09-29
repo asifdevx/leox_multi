@@ -10,13 +10,17 @@ import { CiMenuBurger } from "react-icons/ci";
 import { IoMdClose } from "react-icons/io";
 import MobileSideBar from "../HelperCom/MobileSideBar";
 import SearchBar from "../ui/SearchBar";
+import { useMediaQuery } from "usehooks-ts";
 
 const index = () => {
   const pathname = usePathname();
+  const searchMatches = useMediaQuery("(min-width: 1024px)");
+  const isDekstop = useMediaQuery("(min-width: 768px)");
+
   const [isScroll, setScroll] = useState(false);
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOPen] = useState(false);
-  const [IsDesktop, setIsDesktop] = useState(true);
+
 
   function toggleBtn() {
     setOpen(!open);
@@ -24,34 +28,32 @@ const index = () => {
 
   useEffect(() => {
     const handleScroll = () => setScroll(window.scrollY > 50);
-    const handleResize = () => setIsDesktop(window.innerWidth >= 764);
 
     window.addEventListener("scroll", handleScroll);
-    window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    if (searchMatches) {
+      setSearchOPen(false);
+    }
+  }, [searchMatches]);
 
   return (
     <>
       <div className={`fixed top-0 left-0 bg-white w-screen text-black z-40`}>
-        <div className="w-full flex lg:grid  grid-cols-8 justify-between px-2 md:px-7 mx-auto">
+        <div className="w-full flex lg:grid pt-2 grid-cols-8 justify-between px-3 md:px-7 mx-auto">
           {/* Logo section  */}
           <div className="h-full flex items-center md:gap-10 gap-3 ">
             <Link className=" flex gap-1 items-center" href="/">
-
-              <Image
-                src={IsDesktop ? "/pc_logo.png" : "/logo.png"}
+              <img
+                src={isDekstop ? "/pc_logo.png" : "/logo.png"}
                 alt="logo"
-                width={IsDesktop ? 200 : 70 }
-                height={70}
-                priority
-                className={"object-fill pointer-events-none"}
+                className="w-[70px] md:w-[150px] h-auto object-fill cursor-pointer"
               />
-              
             </Link>
             <div className="lg:hidden items-center mt-1">
               <HiOutlineMagnifyingGlass
@@ -106,7 +108,7 @@ const index = () => {
         </div>
         {open && <MobileSideBar open={open} setOpen={setOpen} />}
       </div>
-      {searchOpen && (
+      {searchOpen && !searchMatches && (
         <SearchBar search={searchOpen} setSearchBar={setSearchOPen} />
       )}
     </>

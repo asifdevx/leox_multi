@@ -8,6 +8,15 @@
     padding: 0;
     box-sizing: border-box;
 }
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 .fi{
     filter: opacity(30);
 }
@@ -113,8 +122,22 @@ h6 {
   * {
     @apply border-border;
     }
+    
   body {
     @apply bg-background text-foreground;
     }
 }
 
+@layer utilities {
+    .text-26 {
+        @apply text-[26px] leading-[32px];
+      }
+     /* SIDEBAR  */
+  .sidebar {
+    @apply h-screen top-0 left-0 sticky flex flex-col justify-between border-r border-gray-200 bg-white pt-8 text-white max-md:hidden xl:w-[324px] sm:p-4 xl:p-6;
+  }
+  .sidebar-logo {
+    @apply 2xl:text-26  text-[26px] font-bold text-black max-xl:hidden;
+  }
+
+}

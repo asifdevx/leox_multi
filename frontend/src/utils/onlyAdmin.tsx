@@ -1,13 +1,10 @@
-// src/pages/admin/index.tsx
-import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/components/store/store";
-import AdminLayout from "@/Layout/AdminLayout";
-import UserRoleTable from "@/components/adminCom/UserRoleTable";
-import { useEffect } from "react";
 import { getUserRole } from "@/reducer/roleSlice";
 import { useAccount } from "wagmi";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, ReactNode } from "react";
 
-const AdminDashboard = () => {
+export default function AdminGuard({ children }: { children: ReactNode }) {
   const dispatch = useDispatch<AppDispatch>();
   const { address } = useAccount();
   const { roles, loading } = useSelector((state: RootState) => state.userRole);
@@ -15,11 +12,10 @@ const AdminDashboard = () => {
   const isAdmin = roles.includes("Admin") || roles.includes("Moderator");
 
   useEffect(() => {
-    if (address && !roles.length && !loading) {
+    if (address) {
       dispatch(getUserRole(address));
     }
-  }, [address, roles.length, loading, dispatch]);
-  
+  }, [address, dispatch]);
 
   if (loading) {
     return (
@@ -40,14 +36,5 @@ const AdminDashboard = () => {
     );
   }
 
-  return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
-      <UserRoleTable />
-    </div>
-  );
-};
-
-
-
-export default AdminDashboard;
+  return <>{children}</>;
+}

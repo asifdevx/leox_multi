@@ -27,3 +27,26 @@ export const HeaderLists:HeaderLists[] = [
   },
  
 ];
+
+export const sidebarLinks = [
+  {
+    imgURL: "/eth.svg",
+    route: "/",
+    label: "Home",
+  },
+  {
+    imgURL: "/eth.svg",
+    route: "/mybanks",
+    label: "My Banks",
+  },
+  {
+    imgURL: "/eth.svg",
+    route: "/transaction-history",
+    label: "Transaction History",
+  },
+  {
+    imgURL: "/eth.svg",
+    route: "/payment-transfer",
+    label: "Transfer Funds",
+  },
+];
