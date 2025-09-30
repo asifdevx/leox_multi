@@ -4,7 +4,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import abi from "@/components/ABI/abi.json";
 import { CreateNFTArgs, NFT, NftState } from "@/types";
 import { fetchGraphQL } from "@/api/graphql";
-import { GET_NFT,GET_USER_ROLE } from "@/config/graphql";
+import { GET_NFT } from "@/config/graphql";
 
 
 dotenv.config();

@@ -1,47 +1,40 @@
-import { useState, type ReactNode } from "react";
-import { http, WagmiProvider } from "wagmi";
+import { bscTestnet } from "@wagmi/core/chains";
+import { createConfig, createStorage, http, injected } from "@wagmi/core";
+import { walletConnect } from "wagmi/connectors";
+import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
-import { createWeb3Modal } from "@web3modal/wagmi/react";
-import { bscTestnet } from "wagmi/chains";
-
-const metadata = {
-  name: "wagmi",
-  description: "Binance Smart Chain Testnet Example",
-  url: 'http://192.168.0.100:3000',
-  icons: ["https://avatars.githubusercontent.com/u/37784886"],
-};
+import { useState } from "react";
 
 const projectId = process.env.NEXT_PUBLIC_KEY!;
-const chains = [bscTestnet] as const;
 
-const config = defaultWagmiConfig({
-  chains,
+const connector = walletConnect({
   projectId,
-  metadata,
-}) as any;
-(config as any).autoConnect = false;
-
-createWeb3Modal({
-  wagmiConfig: config,
-  projectId,
-  enableAnalytics: true,
-  themeVariables: {
-    "--w3m-color-mix": "#2563eb",
-    "--w3m-accent": "#000000"
+  metadata: {
+    name: "wagmi",
+    description: "Binance Smart Chain Testnet Example",
+    url: "http://192.168.0.100:3000",
+    icons: ["https://avatars.githubusercontent.com/u/37784886"],
   },
-  chainImages: {},
- 
-
 });
 
-export function Web3Provider(props: any) {
+export const config = createConfig({
+  chains: [bscTestnet],
+  storage: createStorage({
+    storage: typeof window !== "undefined" ? window.localStorage : undefined,
+  }),
+  transports: {
+    [bscTestnet.id]: http("https://data-seed-prebsc-1-s1.binance.org:8545"),
+  },
+  connectors: [injected(), walletConnect({ projectId }), connector],
+});
+
+export function Web3Provider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        {props.children}
+        {children}
       </QueryClientProvider>
     </WagmiProvider>
   );

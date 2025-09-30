@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { shortenAddress } from "../ui/ShortenAddress";
 import { IoMdClose } from "react-icons/io";
 import { GoCopy } from "react-icons/go";
@@ -9,11 +8,14 @@ import blockies from "ethereum-blockies";
 import Image from "next/image";
 import { handleCopy } from "./handleCopy";
 import { WalletBalance } from "./WalletBalance";
+import { config } from "@/context/web3model";
+import { useAccount, useConnect, useDisconnect } from "wagmi";
 
 const ConnectBtn: React.FC = () => {
-  const { address, isConnected, isConnecting, isReconnecting } = useAccount();
-  const { connectors, connectAsync } = useConnect();
-  const { disconnectAsync } = useDisconnect();
+  const { address, isConnected, isConnecting, isReconnecting,status} =
+    useAccount();
+  const { connect, connectors } = useConnect();
+  const { disconnect } = useDisconnect();
   const { symbol, formate } = WalletBalance();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,16 +29,20 @@ const ConnectBtn: React.FC = () => {
       .create({ seed: address.toLowerCase(), size: 8, scale: 4 })
       .toDataURL();
 
-  const handleConnect = async (connector: any) => {
+  const handleConnect = async(connector: any) => {
+    console.log(isConnected ? " connect" : "disconnect");
+    
+    
     if (isConnected) {
       setIsModalOpen(true);
       return;
     }
     try {
-      setIsModalOpen(true);
-      await connectAsync({ connector });
-      setIsModalOpen(false);
+          
+     setIsModalOpen(true);
+      await connect({ connector });
       setUserRejected(false);
+      
     } catch (error: any) {
       if (error?.name === "ConnectorAlreadyConnectedError") {
         setIsModalOpen(true);
@@ -52,14 +58,9 @@ const ConnectBtn: React.FC = () => {
     }
   };
 
-  const handleDisconnect = async () => {
-    try {
-      await disconnectAsync();
-    } catch (err) {
-      console.error("Disconnection failed:", err);
-    } finally {
-      setIsModalOpen(false);
-    }
+  const handleDisconnect = () => {
+    disconnect();
+    setIsModalOpen(false);
   };
 
   return (
@@ -121,7 +122,6 @@ const ConnectBtn: React.FC = () => {
                   </div>
                 )}
 
-              {/* ❌ User Rejected */}
               {userRejected && !isConnected && (
                 <div className="flex flex-col items-center gap-3 py-6">
                   <div className="relative">

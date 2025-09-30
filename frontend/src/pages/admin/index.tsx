@@ -14,32 +14,6 @@ const AdminDashboard = () => {
 
   const isAdmin = roles.includes("Admin") || roles.includes("Moderator");
 
-  useEffect(() => {
-    if (address && !roles.length && !loading) {
-      dispatch(getUserRole(address));
-    }
-  }, [address, roles.length, loading, dispatch]);
-  
-
-  if (loading) {
-    return (
-      <div className="p-6 text-center">
-        <h1 className="text-xl font-semibold">Loading...</h1>
-      </div>
-    );
-  }
-
-  if (!isAdmin) {
-    return (
-      <div className="p-6 text-center">
-        <h1 className="text-2xl font-bold">🚫 Access Denied</h1>
-        <p className="text-gray-600">
-          Only Admins & Moderators can access this page.
-        </p>
-      </div>
-    );
-  }
-
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>

@@ -1,6 +1,3 @@
-"use client";
-
-
 import { sidebarLinks } from "@/config/HeaderLists";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,18 +7,19 @@ import { usePathname } from "next/navigation";
 const SideBar = () => {
  
   const pathName = usePathname();
+
   return (
-    <div className="sidebar">
+    <div className="sidebar bg-gray-400">
       <div className="flex flex-col gap-4">
         <Link href="/" className="mb-12 flex gap-3 items-center cursor-pointer">
           <Image
-            src="/icons/logo.svg"
-            width={34}
-            height={34}
+            src="/logo.png"
+            width={50}
+            height={50}
             alt="horizon logo"
-            className="size-[24px] max-xl:size-14"
+            className="size-[24px] max-xl:size-20"
           />
-          <h1 className="sidebar-logo">Horizon</h1>
+          <h1 className="sidebar-logo">Admin pannel</h1>
         </Link>
         {sidebarLinks.map((items) => (
           <Link href={items.route} key={items.label}>
@@ -31,7 +29,7 @@ const SideBar = () => {
                 alt={items.imgURL}
                 width={34}
                 height={34}
-                className={pathName === items.route ? "brightness-[3] invert-0" : ""}/>
+                className={pathName === items.route ? "brightness-[3] invert-0 text-white" : ""}/>
               <p className="text-16 font-semibold max-xl:hidden">{items.label}</p>
             </div>
           </Link>

@@ -48,7 +48,7 @@ const index = () => {
         <div className="w-full flex lg:grid pt-2 grid-cols-8 justify-between px-3 md:px-7 mx-auto">
           {/* Logo section  */}
           <div className="h-full flex items-center md:gap-10 gap-3 ">
-            <Link className=" flex gap-1 items-center" href="/">
+            <Link className=" flex gap-1 items-center" href="/admin">
               <img
                 src={isDekstop ? "/pc_logo.png" : "/logo.png"}
                 alt="logo"
@@ -96,6 +96,7 @@ const index = () => {
                   </Link>
                 </div>
               ))}
+
             </div>
           </div>
           {/* connect btn section  */}

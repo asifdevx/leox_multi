@@ -11,7 +11,7 @@ export const getUserRole = createAsyncThunk(
     try {
       
       const data = await fetchGraphQL<{getUserRole:UserRole}>(GET_USER_ROLE, { address });
-      console.log("data",data);
+      console.log("roles",data?.getUserRole?.roles);
       
       return data?.getUserRole?.roles ?? [];
     } catch (error: any) {
@@ -44,10 +44,11 @@ export const removeUserRole = createAsyncThunk(
     }
   }
 );
-const initialState: UserRole & { loading: boolean; error:string | null } = {
+const initialState: UserRole & { loading: boolean; fetched:boolean; error:string | null } = {
   address: null,
   roles: [],
   loading: false,
+  fetched: false,
   error: null,
 };
 
@@ -59,10 +60,16 @@ const roleSlice = createSlice({
       state.address = null;
       state.roles = [];
       state.error = null;
+      state.fetched=false;
       state.loading = false;
     },
     setAddress(state,action) {
-      state.address=action.payload
+      if (state.address !== action.payload) {
+        state.address = action.payload;
+        state.roles = [];
+        state.fetched = false;   // ✅ force refetch for new wallet
+      }
+    
     }
   },
   extraReducers: (builder) => {
@@ -74,10 +81,12 @@ const roleSlice = createSlice({
     })
     .addCase(getUserRole.fulfilled, (state, action) => {
       state.loading = false;
-      state.roles = action.payload ?? state.roles ;
+      state.roles = action.payload;
+      state.fetched = true;
     })
     .addCase(getUserRole.rejected, (state, action) => {
       state.loading = false;
+      state.fetched = false;
       state.error = `${action.payload || "Error fetching roles"}`;
       state.roles = ["Buyer"]; 
     });

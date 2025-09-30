@@ -14,7 +14,7 @@ export const changeFee = createAsyncThunk(
    try {
     const contract = await createEthContract();
     const tx = await contract?.updateMarketplaceFee(fee);
-    const receipt= await tx.wait();
+    await tx.wait();
     return {fee};
    } catch (error) {
     console.log("failed to fatch data of ",error);

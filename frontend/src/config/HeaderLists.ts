@@ -27,26 +27,48 @@ export const HeaderLists:HeaderLists[] = [
   },
  
 ];
-
 export const sidebarLinks = [
   {
-    imgURL: "/eth.svg",
-    route: "/",
-    label: "Home",
+    imgURL: "/dashboard.svg",
+    route: "/admin",
+    label: "Dashboard",
   },
   {
-    imgURL: "/eth.svg",
-    route: "/mybanks",
-    label: "My Banks",
+    imgURL: "/fee.svg",
+    route: "/admin/fee",
+    label: "Fee", 
   },
   {
-    imgURL: "/eth.svg",
-    route: "/transaction-history",
+    imgURL: "/transaction.svg",
+    route: "/admin/transactions", 
     label: "Transaction History",
   },
+  
+  {
+    imgURL: "/user.svg",
+    route: "/admin/users",
+    label: "User Management",
+  },
   {
     imgURL: "/eth.svg",
-    route: "/payment-transfer",
-    label: "Transfer Funds",
+    route: "/admin/nfts",
+    label: "NFT Moderation",
   },
+  {
+    imgURL: "/analytics.svg",
+    route: "/admin/analytics",
+    label: "Analytics & Reports",
+  },
+  {
+    imgURL: "/role.svg",
+    route: "/admin/roles",
+    label: "Role Management",
+  },
+  {
+    imgURL: "/notification.svg",
+    route: "/admin/notifications",
+    label: "System Notifications",
+  },
+
+
 ];
