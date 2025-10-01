@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/components/store/store";
@@ -11,6 +10,7 @@ import { createNFT } from "@/reducer/nftSlice";
 import FormInput from "@/components/HelperCom/FormInput";
 import { IoCloseSharp } from "react-icons/io5";
 import { fatchFee } from "@/reducer/feeSlice";
+import Button from "@/components/ui/Button";
 
 const createNft = () => {
   const fee = useSelector((state: RootState) => state.fee.value);
@@ -22,6 +22,7 @@ const createNft = () => {
     
     dispatch(fatchFee());
   }, []);
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -240,18 +241,7 @@ const createNft = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-  
-            <button
-              type="button"
-              onClick={handleCreateNFT}
-              disabled={loading}
-              className="w-full py-3 rounded-lg font-semibold text-white 
-              bg-gradient-to-r from-[#00ff95] to-[#00d1ff] 
-              shadow-lg shadow-cyan-500/30 hover:scale-105 transition-all 
-              disabled:opacity-50"
-            >
-              {loading ? "Creating NFT..." : "Create NFT"}
-            </button>
+            <Button title={loading ? "Creating NFT..." : "Create NFT"} handleClick={handleCreateNFT} loading={loading} othercss="rounded-lg"/>
           </div>
   
           {/* Right side Preview */}

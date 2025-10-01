@@ -22,9 +22,10 @@ declare type CreateNFTArgs = {
 declare type customBtnProps = {
   title: string;
   othercss: string;
-  handleclick?: () => void;
+  handleClick?: () => void;
+  loading?:boolean,
   isLink?: boolean;
-  linkUrl: string;
+  linkUrl?: string;
   icon?: string;
 };
 interface InputProps  {
@@ -115,3 +116,9 @@ declare type UserRole = {
   roles:Role[],
 }
 
+// -----------------------------------------------------ADMIN-----------------------------------------------------
+declare type FeeSliderProps ={
+  value:number,
+  setValue:(value:number)=> void,
+  
+}

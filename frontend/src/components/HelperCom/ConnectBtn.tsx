@@ -10,9 +10,10 @@ import { handleCopy } from "./handleCopy";
 import { WalletBalance } from "./WalletBalance";
 import { config } from "@/context/web3model";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
+import Button from "../ui/Button";
 
 const ConnectBtn: React.FC = () => {
-  const { address, isConnected, isConnecting, isReconnecting,status} =
+  const { address, isConnected, isConnecting, isReconnecting, status } =
     useAccount();
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
@@ -29,20 +30,20 @@ const ConnectBtn: React.FC = () => {
       .create({ seed: address.toLowerCase(), size: 8, scale: 4 })
       .toDataURL();
 
-  const handleConnect = async(connector: any) => {
+  const handleConnect = async (connector: any) => {
     console.log(isConnected ? " connect" : "disconnect");
-    
-    
+
+
     if (isConnected) {
       setIsModalOpen(true);
       return;
     }
     try {
-          
-     setIsModalOpen(true);
+
+      setIsModalOpen(true);
       await connect({ connector });
       setUserRejected(false);
-      
+
     } catch (error: any) {
       if (error?.name === "ConnectorAlreadyConnectedError") {
         setIsModalOpen(true);
@@ -62,19 +63,20 @@ const ConnectBtn: React.FC = () => {
     disconnect();
     setIsModalOpen(false);
   };
-
+  const title = isConnected && address ? shortenAddress(address) : "Connect Wallet"
   return (
     <div>
       {/* Main Button */}
-      <button
-        onClick={() =>
-          isConnected ? setIsModalOpen(true) : handleConnect(metaMaskConnector)
+      
+      <Button title={title} handleClick={() => {
+        if (isConnected) {
+          setIsModalOpen(true);
+        } else {
+          handleConnect(metaMaskConnector);
         }
-        className="px-5 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-[#00ff95] to-[#00d1ff] 
-        shadow-lg shadow-cyan-500/30 hover:scale-105 hover:shadow-cyan-500/50 transition-all duration-300"
-      >
-        {isConnected && address ? shortenAddress(address) : "Connect Wallet"}
-      </button>
+      }}
+        loading={isConnecting} othercss="px-3 py-2 rounded-lg" />
+
 
       {/* Modal */}
       <Dialog
