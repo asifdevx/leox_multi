@@ -3,3 +3,6 @@
 
   yarn add wagmi viem@2.x @tanstack/react-query @wagmi/vue
   yarn add @wagmi/vue
+
+
+editor.parameterHints.enabled
