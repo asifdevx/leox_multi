@@ -95,162 +95,174 @@ const createNft = () => {
   }
 
   return (
-    <div className="min-h-screen max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-4xl bg-white mx-auto flex flex-col gap-4">
-      {!isConnected ? (
-        <div className="flex flex-col items-center justify-center h-screen text-center">
-          <h3 className="text-2xl font-bold">Connect Your Wallet</h3>
-          <p className="text-grayborder mt-2">
-            You need to connect your wallet to create an NFT.
-          </p>
-          <button
-            onClick={() => handleConnect(metaMaskConnector)}
-            className="mt-4 bg-blue text-white px-4 py-2 rounded-md hover:bg-[#689ea2]"
-          >
-            Connect Wallet
-          </button>
-        </div>
-      ) : (
-        <>
-          <h3>Create your NFT</h3>
-          <p>Single edition on Ethereum</p>
-          <div className="w-full flex">
-            <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="flex flex-col gap-5 md:col-span-2">
-                <div className="w-full px-4 py-2 rounded-xl border border-[#d9dddd] flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Image
-                      src="/eth.svg"
-                      width={50}
-                      height={50}
-                      alt="eth logo"
-                    />
-                    <div className="text-sm">
-                      {address && (
-                        <p className="font-bold">{shortenAddress(address)}</p>
-                      )}
-                      <p className="font-extralight">Ethereum</p>
-                    </div>
-                  </div>
-                  <div className="text-green-600 bg-green-100 px-2 py-1 rounded-full text-sm">
-                    Connected
-                  </div>
-                </div>
-
-                <h5 className="mt-5">Upload file</h5>
-                <div
-                  className={`${
-                    preview
-                      ? "flex justify-between gap-1 bg-grayborder h-full"
-                      : "h-72"
-                  } border-dashed border-2 p-6 w-full flex justify-center items-center mt-2 border-[#d9dddd] rounded-2xl relative`}
-                >
-                  {preview ? (
-                    <>
-                      <img
-                        src={preview}
-                        alt="NFT Preview"
-                        className="w-full h-full rounded-lg"
-                      />
-                      <IoCloseSharp
-                        size={24}
-                        onClick={() => setPreview(null)}
-                        className="cursor-pointer"
-                      />
-                    </>
-                  ) : (
-                    <label className="cursor-pointer">
-                      <input
-                        type="file"
-                        onChange={handleFileUpload}
-                        className="hidden"
-                      />
-                      <span className="text-black p-3 bg-gray-light">
-                        Upload file
-                      </span>
-                    </label>
+    <div className="min-h-screen max-w-4xl mx-auto w-full flex flex-col items-center py-12 px-6">
+    {!isConnected ? (
+      <div className="flex flex-col items-center justify-center h-screen text-center">
+        <h3 className="text-3xl font-bold text-white">Connect Your Wallet</h3>
+        <p className="text-gray-400 mt-2">
+          You need to connect your wallet to create an NFT.
+        </p>
+        <button
+          onClick={() => handleConnect(metaMaskConnector)}
+          className="mt-6 px-6 py-3 bg-gradient-to-r from-[#00d1ff] to-[#7c3aed] 
+          text-white font-semibold rounded-xl shadow-lg shadow-cyan-500/20 
+          hover:scale-105 transition-all"
+        >
+          Connect Wallet
+        </button>
+      </div>
+    ) : (
+      <>
+        <h2 className="text-3xl font-extrabold text-white mb-2">
+          Create Your NFT
+        </h2>
+        <p className="text-gray-400 mb-8">
+          Single edition on <span className="text-[#00d1ff]">Ethereum</span>
+        </p>
+  
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Left side form */}
+          <div className="flex flex-col gap-6 md:col-span-2">
+            {/* Wallet Status */}
+            <div className="px-4 py-3 rounded-xl bg-[#0f1f33] border border-[#1e3350] flex items-center justify-between shadow-md">
+              <div className="flex items-center gap-3">
+                <Image src="/eth.svg" width={50} height={50} alt="eth logo" />
+                <div className="text-sm">
+                  {address && (
+                    <p className="font-bold text-white">
+                      {shortenAddress(address)}
+                    </p>
                   )}
+                  <p className="text-gray-400">Ethereum</p>
                 </div>
-
-                <FormInput
-                  label="Price"
-                  placeholder="Enter price"
-                  type="text"
-                  value={price}
-                  icon="ETH"
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/[^0-9.]/g, "");
-                    if ((value.match(/\./g) || []).length <= 1) {
-                      setPrice(value);
-                    }
-                  }}
-                />
-                <div className="w-full border border-[#d9dddd] rounded-xl p-3 flex flex-col gap-4">
-                  <div className="flex items-center justify-between ">
-                    <p className="text-[rgb(141, 141, 159)]">Price</p>
-                    <p>{price ? `${parseFloat(price)} ETH` : "-"}</p>
-                  </div>
-                  <div className="flex items-center justify-between ">
-                    <p className="text-[rgb(141, 141, 159)]">Leox fee ?</p>
-                    <p>{fee !== null && fee !== undefined ? `${fee}%` : "—"}</p>
-                  </div>
-                  <div className="w-full h-[2px] bg-[#e8eeee] rounded-3xl" />
-                  <div className="flex items-center justify-between">
-                    <p className="text-[rgb(141, 141, 159)]">
-                      You will receive
-                    </p>
-                    <p>
-                      {price && fee !== undefined
-                        ? `${(
-                            parseFloat(price) -
-                            parseFloat(price) * (fee / 100)
-                          ).toFixed(4)} ETH`
-                        : "—"}
-                    </p>
-                  </div>
-                </div>
-                <FormInput
-                  label="Supply"
-                  placeholder="10"
-                  type="text"
-                  value={supply}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/[^0-9.]/g, "");
-                    if ((value.match(/\./g) || []).length <= 1) {
-                      setSupply(value);
-                    }
-                  }}
-                />
-
-                <FormInput
-                  label="Name"
-                  placeholder='e.g. "Redeemable T-Shirt with logo"'
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <FormInput
-                  label="Description"
-                  placeholder='e.g. "After purchasing, you will receive a real T-Shirt"'
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-
-                <button
-                  type="button"
-                  onClick={handleCreateNFT}
-                  disabled={loading}
-                  className="w-full bg-blue text-black font-semibold py-3 rounded-lg hover:bg-blue focus:outline-none focus:ring-2 focus:ring-blue disabled:bg-gray"
-                >
-                  {loading ? "Creating NFT..." : "Create NFT"}
-                </button>
               </div>
-              <div className="hidden md:block sticky top-0 h-fit">
-                <PreviewNFT preview={preview} price={price} name={name} />
+              <div className="text-green-400 bg-green-900/30 px-3 py-1 rounded-full text-sm">
+                Connected
               </div>
             </div>
+  
+            {/* Upload */}
+            <h5 className="text-white font-semibold">Upload File</h5>
+            <div
+              className={`${
+                preview
+                  ? "flex justify-between gap-1 bg-[#0f1f33] h-full"
+                  : "h-72"
+              } border-dashed border-2 border-[#1e3350] rounded-2xl p-6 w-full flex justify-center items-center relative hover:border-[#00d1ff]/60 transition-all`}
+            >
+              {preview ? (
+                <>
+                  <img
+                    src={preview}
+                    alt="NFT Preview"
+                    className="w-full h-full rounded-lg object-cover"
+                  />
+                  <IoCloseSharp
+                    size={28}
+                    onClick={() => setPreview(null)}
+                    className="cursor-pointer absolute top-3 right-3 text-white hover:text-red-400 transition"
+                  />
+                </>
+              ) : (
+                <label className="cursor-pointer text-gray-300 hover:text-white transition">
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg, image/jpg, image/svg+xml"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                  <span className="px-6 py-3 bg-[#1e3350] rounded-lg">
+                    Upload File
+                  </span>
+                </label>
+              )}
+            </div>
+  
+            {/* Price Input */}
+            <FormInput
+              label="Price"
+              placeholder="Enter price"
+              type="text"
+              value={price}
+              icon="ETH"
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^0-9.]/g, "");
+                if ((value.match(/\./g) || []).length <= 1) setPrice(value);
+              }}
+            />
+  
+            {/* Summary Box */}
+            <div className="w-full rounded-xl p-4 bg-[#0f1f33] border border-[#1e3350] shadow-inner flex flex-col gap-4">
+              <div className="flex justify-between text-gray-400">
+                <span>Price</span>
+                <span className="text-white">{price ? `${price} ETH` : "-"}</span>
+              </div>
+              <div className="flex justify-between text-gray-400">
+                <span>Leox Fee</span>
+                <span className="text-white">
+                  {fee !== null && fee !== undefined ? `${fee}%` : "—"}
+                </span>
+              </div>
+              <div className="w-full h-[1px] bg-[#1e3350]" />
+              <div className="flex justify-between text-gray-400">
+                <span>You will receive</span>
+                <span className="text-[#00d1ff] font-semibold">
+                  {price && fee !== undefined
+                    ? `${(
+                        parseFloat(price) -
+                        parseFloat(price) * (fee / 100)
+                      ).toFixed(4)} ETH`
+                    : "—"}
+                </span>
+              </div>
+            </div>
+  
+            <FormInput
+              label="Supply"
+              placeholder="10"
+              type="text"
+              value={supply}
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^0-9.]/g, "");
+                if ((value.match(/\./g) || []).length <= 1) setSupply(value);
+              }}
+            />
+  
+            <FormInput
+              label="Name"
+              placeholder='e.g. "Redeemable T-Shirt with logo"'
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <FormInput
+              label="Description"
+              placeholder='e.g. "After purchasing, you will receive a real T-Shirt"'
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+  
+            <button
+              type="button"
+              onClick={handleCreateNFT}
+              disabled={loading}
+              className="w-full py-3 rounded-lg font-semibold text-white 
+              bg-gradient-to-r from-[#00ff95] to-[#00d1ff] 
+              shadow-lg shadow-cyan-500/30 hover:scale-105 transition-all 
+              disabled:opacity-50"
+            >
+              {loading ? "Creating NFT..." : "Create NFT"}
+            </button>
           </div>
-        </>
-      )}
-    </div>
+  
+          {/* Right side Preview */}
+          <div className="hidden md:block top-6 h-fit">
+            <PreviewNFT preview={preview} price={price} name={name} />
+          </div>
+        </div>
+      </>
+    )}
+  </div>
+  
   );
 };
 

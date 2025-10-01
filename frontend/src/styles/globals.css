@@ -171,13 +171,13 @@ h6 {
   }
      /* SIDEBAR  */
   .sidebar {
-    @apply h-screen top-0 left-0 sticky flex flex-col justify-between border-r border-gray-200 bg-white pt-8 text-gray-700 max-md:hidden xl:w-[324px] sm:p-4 xl:p-6;
+    @apply h-screen top-0 left-0 sticky flex flex-col justify-between border-r pt-8 border-gray-500 bg-sidebarBg text-gray-700 max-md:hidden xl:w-[324px]  ;
   }
   .sidebar-logo {
-    @apply 2xl:text-26  text-[26px] font-bold text-black max-xl:hidden;
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-[#5aa9ff] to-[#00d1ff] text-4xl font-bold tracking-wide max-xl:hidden;
   }
   .active-link {
-    @apply bg-bank-gradient text-white;
+    @apply bg-sidebarActiveGradient border-l-4 border-[#00d1ff] text-[#fff];
   }
 
 }

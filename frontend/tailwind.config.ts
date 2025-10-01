@@ -65,6 +65,9 @@ const config: Config = {
         black: "#000000",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        sidebarBg: '#0a1625',
+        sidebarText: '#cfd8e1',
+        sidebarActive: '#1f4b6f',
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
@@ -134,6 +137,10 @@ const config: Config = {
       },
       backgroundImage: {
         "bank-gradient": "linear-gradient(90deg, #0179FE 0%, #4893FF 100%)",
+        'nft-dark-gradient': ' linear-gradient(135deg, #0b1a2a, #102b44, #15405c)',
+        'nft-glow-gradient': 'linear-gradient(135deg, #1a1a2e, #162447, #1f4068, #e43f5a)',
+        sidebarActiveGradient: 'linear-gradient(90deg, #102b44, #15405c)',
+
         connectButton:
           "linear-gradient(0deg, rgba(159,149,231,1) 37%, rgba(59,181,226,1) 100%)",
         mobileBg:

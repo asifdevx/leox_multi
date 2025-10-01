@@ -21,7 +21,6 @@ const index = () => {
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOPen] = useState(false);
 
-
   function toggleBtn() {
     setOpen(!open);
   }
@@ -44,7 +43,9 @@ const index = () => {
 
   return (
     <>
-      <div className={`fixed top-0 left-0 bg-white w-screen text-black z-40`}>
+      <div
+        className={`fixed top-0 left-0 bg-nft-dark-gradient text-white w-screen z-40`}
+      >
         <div className="w-full flex lg:grid pt-2 grid-cols-8 justify-between px-3 md:px-7 mx-auto">
           {/* Logo section  */}
           <div className="h-full flex items-center md:gap-10 gap-3 ">
@@ -58,7 +59,7 @@ const index = () => {
             <div className="lg:hidden items-center mt-1">
               <HiOutlineMagnifyingGlass
                 size={24}
-                className="text-[#292b2b]"
+                className="text-[#fff]"
                 onClick={() => setSearchOPen(true)}
               />
             </div>
@@ -77,26 +78,32 @@ const index = () => {
                     className="text-[#7a5454]"
                   />
                 }
-                inputClass={"bg-[#e8eeee] rounded-lg w-[400px]"}
+                inputClass={"bg-[#e8eeee] text-black rounded-lg w-[400px]"}
               />
             </div>
             <div className="flex items-center gap-5 max-md:hidden">
               {HeaderLists.map((items, idx) => (
                 <div key={idx}>
                   <Link
-                    href={items.link || ""}
-                    className={` text-lg flex items-center gap-1  font-ponomar text-[#313434]`}
+                    href={items.route || ""}
+                    className={` text-lg flex items-center gap-[2px] font-bold font-ponomar text-gray-300 ${
+                      pathname == items.route &&
+                      "text-white text-xl border-b-2 border-[#00d1ff]"
+                    }`}
                   >
-                    <p className="min-md:hidden">{items.name}</p>
-                    {items.name === "drops" && (
-                      <p className="px-1 hidden md:block bg-[#dde5e6] text-[14px] rounded-md text-[#47565b]">
-                        new
-                      </p>
+                    <p className="min-md:hidden">{items.label}</p>
+                    {items.label === "drops" && (
+                      <span
+                        className="ml-1 hidden md:inline-block text-[12px] px-2 py-0.5 
+    rounded-full bg-gradient-to-r from-[#00ff95] to-[#00d1ff] 
+    text-black font-semibold shadow-md animate-pulse"
+                      >
+                        NEW
+                      </span>
                     )}
                   </Link>
                 </div>
               ))}
-
             </div>
           </div>
           {/* connect btn section  */}
@@ -107,7 +114,7 @@ const index = () => {
             </div>
           </div>
         </div>
-        {open && <MobileSideBar open={open} setOpen={setOpen} />}
+        {open && <MobileSideBar open={open} setOpen={setOpen} items={HeaderLists} position={"right"} title={"Menu"} icon={false} />}
       </div>
       {searchOpen && !searchMatches && (
         <SearchBar search={searchOpen} setSearchBar={setSearchOPen} />

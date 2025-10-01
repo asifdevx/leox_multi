@@ -1,28 +1,28 @@
 interface HeaderLists {
-  name: string,
-  link?: string,
+  label: string,
+  route: string,
   islink: boolean, 
 }
 
 export const HeaderLists:HeaderLists[] = [
   {
-    name: "Home",
-    link: "/",
+    label: "Home",
+    route: "/",
     islink: true,
   },
   {
-    name: "Create",
-    link: "/createNFT",
+    label: "Create",
+    route: "/createNFT",
     islink: true,
   },
   {
-    name: "Buy",
-    link: "/buy",
+    label: "Buy",
+    route: "/buy",
     islink: true,
   },
   {
-    name: "drops",
-    link: "/drops",
+    label: "drops",
+    route: "/drops",
     islink: true,
   },
  
@@ -49,11 +49,7 @@ export const sidebarLinks = [
     route: "/admin/users",
     label: "User Management",
   },
-  {
-    imgURL: "/eth.svg",
-    route: "/admin/nfts",
-    label: "NFT Moderation",
-  },
+
   {
     imgURL: "/analytics.svg",
     route: "/admin/analytics",

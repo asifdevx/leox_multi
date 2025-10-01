@@ -12,7 +12,7 @@ const RootLayout = (props: any) => {
  console.log(address,"address");
  
   return (
-    <div className="w-screen min-h-screen flex flex-col bg-[#ffffff] text-black">
+    <div className="w-screen min-h-screen flex flex-col bg-nft-dark-gradient text-white">
       <Header />
       <div className="mt-20 ">{props.children}</div>
       <Footer />

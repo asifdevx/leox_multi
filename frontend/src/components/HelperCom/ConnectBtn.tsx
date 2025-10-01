@@ -70,7 +70,8 @@ const ConnectBtn: React.FC = () => {
         onClick={() =>
           isConnected ? setIsModalOpen(true) : handleConnect(metaMaskConnector)
         }
-        className="px-5 py-2 bg-gradient-to-r from-blueGradientStart to-blueGradientEnd text-white rounded-lg font-semibold text-sm shadow-md hover:scale-105 transition-transform duration-200"
+        className="px-5 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-[#00ff95] to-[#00d1ff] 
+        shadow-lg shadow-cyan-500/30 hover:scale-105 hover:shadow-cyan-500/50 transition-all duration-300"
       >
         {isConnected && address ? shortenAddress(address) : "Connect Wallet"}
       </button>

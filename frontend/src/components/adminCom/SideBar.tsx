@@ -2,35 +2,35 @@ import { sidebarLinks } from "@/config/HeaderLists";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-
+import { useMediaQuery } from "usehooks-ts";
 const SideBar = () => {
- 
+ const logoMedia = useMediaQuery("(min-width: 1280px)")
+
   const pathName = usePathname();
 
   return (
-    <div className="sidebar bg-gray-400">
+    <div className="sidebar">
       <div className="flex flex-col gap-4">
-        <Link href="/" className="mb-12 flex gap-3 items-center cursor-pointer">
+        <Link href="/" className="flex  items-center  flex-col cursor-pointer">
           <Image
             src="/logo.png"
-            width={50}
-            height={50}
-            alt="horizon logo"
-            className="size-[24px] max-xl:size-20"
+            width={logoMedia ? 200 : 70}
+            height={logoMedia ? 100 : 70}
+            alt="Leo"
+            className="object-center object-contain cursor-pointer "
           />
-          <h1 className="sidebar-logo">Admin pannel</h1>
+          <h1 className="sidebar-logo relative -top-6 space-x-3">LeoX</h1>
         </Link>
         {sidebarLinks.map((items) => (
           <Link href={items.route} key={items.label}>
-            <div className={ `flex gap-2 p-4 items-center rounded-[6px] ${pathName === items.route ? "active-link" : "text-black-2"}`}>
+            <div className={ `flex gap-2 p-4 items-center ${pathName === items.route ? "active-link " : "text-sidebarText"}`}>
               <Image
                 src={items.imgURL}
                 alt={items.imgURL}
                 width={34}
                 height={34}
-                className={pathName === items.route ? "brightness-[3] invert-0 text-white" : ""}/>
-              <p className="text-16 font-semibold max-xl:hidden">{items.label}</p>
+                className={pathName === items.route ? "brightness-[3] invert-0" : ""}/>
+              <p className="text-16 font-semibold max-xl:hidden ">{items.label}</p>
             </div>
           </Link>
         ))}

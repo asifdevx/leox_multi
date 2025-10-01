@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 declare global {
   interface Window {
@@ -77,9 +77,23 @@ interface NftState {
   offset:number;    
   limit: number;       
 }
-interface MobileSideBar {
+type SideBarItem = {
+  label:string,
+  route:string,
+  imgURL?:string,
+  islink?:boolean,
+
+}
+
+interface MobileSideBarProps {
   open:boolean,
-  setOpen:Dispatch<SetStateAction<boolean>>
+  setOpen:(open: boolean) => void,
+  items:SideBarItem[],
+  icon:boolean,
+  position:"right" | "left",
+  title: string,
+  footer?: React.ReactNode
+
 }
 declare type SearchBarProps={
   search:boolean,
