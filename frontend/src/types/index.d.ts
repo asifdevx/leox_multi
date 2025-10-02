@@ -122,3 +122,25 @@ declare type FeeSliderProps ={
   setValue:(value:number)=> void,
   
 }
+interface ShowConfirmationProps {
+  value:number,
+  setShowConfirmation:(showConfirmation:boolean)=>void,
+  handleClick:()=>void,
+  loading:boolean
+}
+// -----------------------------------------------------Fee-----------------------------------------------------
+interface FeeHistoryItem {
+  fee: number;
+  updateAt: String;
+  txHash?: string | null;
+}
+
+interface FeeState {
+  status: "idle" | "succeeded";
+  history: FeeHistoryItem[];
+}
+
+const initialState: FeeState = {
+  history: [],
+  status: "idle",
+};

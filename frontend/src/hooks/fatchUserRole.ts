@@ -1,31 +1,35 @@
-
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAccount } from "wagmi";
 import { AppDispatch, RootState } from "@/components/store/store";
-import { getUserRole } from "@/reducer/roleSlice";
+import { clearRole, getUserRole } from "@/reducer/roleSlice";
 import { setAddress } from "@/reducer/roleSlice";
 
 export function useFetchUserRole() {
   const { address } = useAccount();
   const dispatch = useDispatch<AppDispatch>();
-  const { roles, loading, fetched, error } = useSelector(
-    (state: RootState) => state.userRole
-  );
+  const {
+    roles,
+    loading,
+    fetched,
+    error,
+    address: UserAddress,
+  } = useSelector((state: RootState) => state.userRole);
 
-  // 🔄 Reset roles when wallet address changes
   useEffect(() => {
-    if (address) {
+    if (address && UserAddress !== address) {
       dispatch(setAddress(address));
     }
-  }, [address, dispatch]);
+    if (!address && UserAddress) {
+      dispatch(clearRole()); 
+    }
+  }, [address, dispatch, UserAddress]);
 
-  // ✅ Fetch roles only once per wallet
   useEffect(() => {
-    if (address && !fetched && !loading) {
+    if (address && (UserAddress !== address || !fetched) && !loading) {
       dispatch(getUserRole(address));
     }
-  }, [address, fetched, loading, dispatch]);
+  }, [address, UserAddress, fetched, loading, dispatch]);
 
   return { roles, loading, fetched, error, address };
 }

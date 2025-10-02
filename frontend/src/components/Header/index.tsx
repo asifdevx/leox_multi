@@ -44,7 +44,7 @@ const index = () => {
   return (
     <>
       <div
-        className={`fixed top-0 left-0 bg-nft-dark-gradient text-white w-screen z-40`}
+        className={`fixed top-0 left-0 bg-nft-dark-gradient text-white w-full z-40`}
       >
         <div className="w-full flex lg:grid pt-2 grid-cols-8 justify-between px-3 md:px-7 mx-auto">
           {/* Logo section  */}

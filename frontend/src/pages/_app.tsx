@@ -8,7 +8,7 @@ import { store } from "@/components/store/store";
 import SocketListener from "@/Layout/SocketListener";
 import AdminLayout from "@/Layout/AdminLayout";
 
-import { config, Web3Provider } from "@/context/web3model";
+import { Web3Provider } from "@/context/web3model";
 
 type NextPageWithLayout = AppProps["Component"] & {
   getLayout?: (page: ReactNode) => ReactNode;
@@ -30,13 +30,12 @@ export default function App({ Component, pageProps }: AppProps) {
   } else {
     getLayout = Page.getLayout ?? ((page) => <RootLayout>{page}</RootLayout>);
   }
-
-  return (
+  return mounted ? (
     <Web3Provider>
       <Provider store={store}>
         <SocketListener />
         {getLayout(<Page {...pageProps} />)}
       </Provider>
     </Web3Provider>
-  );
+  ) : null;
 }

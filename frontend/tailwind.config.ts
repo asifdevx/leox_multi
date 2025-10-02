@@ -40,11 +40,23 @@ const config: Config = {
         },
         blueGradientStart: "#3B82F6",
         blueGradientEnd: "#2563EB",
-        blue: "#1fb6ff",
+
         purple: "#7e5bef",
         orange: "#ff7849",
         yellow: "#ffc82c",
         "gray-dark": "#273444",
+        blue: {
+          50: "#eff6ff",
+          100: "#dbeafe",
+          200: "#bfdbfe",
+          300: "#93c5fd",
+          400: "#60a5fa",
+          500: "#3b82f6",
+          600: "#2563eb",
+          700: "#1d4ed8",
+          800: "#1e40af",
+          900: "#1e3a8a",
+        },
         gray: {
           "50": "#fafafa",
           "100": "#f4f4f5",
@@ -65,9 +77,9 @@ const config: Config = {
         black: "#000000",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        sidebarBg: '#0a1625',
-        sidebarText: '#cfd8e1',
-        sidebarActive: '#1f4b6f',
+        sidebarBg: "#0a1625",
+        sidebarText: "#cfd8e1",
+        sidebarActive: "#1f4b6f",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
@@ -121,6 +133,7 @@ const config: Config = {
       animation: {
         widthIncrease: "widthIncrease 0.3s ease-in-out",
         "spin-slow": "spin 1.5s linear infinite",
+        fadeIn: "fadeIn 0.4s ease-in-out",
       },
       keyframes: {
         widthIncrease: {
@@ -131,15 +144,20 @@ const config: Config = {
             width: "100%",
           },
         },
+        fadeIn: {
+          "0%": { opacity: "0", transform: "translateY(5px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       aspectRatio: {
         "4/2": "4 / 2",
       },
       backgroundImage: {
         "bank-gradient": "linear-gradient(90deg, #0179FE 0%, #4893FF 100%)",
-        'nft-dark-gradient': ' linear-gradient(135deg, #0b1a2a, #102b44, #15405c)',
-        'nft-glow-gradient': 'linear-gradient(135deg, #1a1a2e, #162447, #1f4068, #e43f5a)',
-        sidebarActiveGradient: 'linear-gradient(90deg, #102b44, #15405c)',
+        "nft-dark-gradient":
+          " linear-gradient(135deg, #0b1a2a, #102b44, #15405c)",
+
+        sidebarActiveGradient: "linear-gradient(90deg, #102b44, #15405c)",
 
         connectButton:
           "linear-gradient(0deg, rgba(159,149,231,1) 37%, rgba(59,181,226,1) 100%)",

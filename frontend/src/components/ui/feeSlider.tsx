@@ -1,12 +1,9 @@
-// src/components/ui/FeeSlider.tsx
-import React, { useState, useMemo } from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
-import Typography from "@mui/material/Typography";;
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { FeeSliderProps } from "@/types";
-
 
 const marks = [
   { value: 0, label: "0%" },
@@ -22,18 +19,23 @@ function valuetext(value: number) {
 }
 
 export default function FeeSlider({ value, setValue }: FeeSliderProps) {
-
-
   const handleChange = (_: Event, newValue: number | number[]) => {
     const val = Array.isArray(newValue) ? newValue[0] : newValue;
     setValue(val);
   };
 
   return (
-    <div className="w-56">
+    <Card
+      sx={{
+        width:"400px",
+        backgroundColor: "transparent", 
+        color: "white",
+        borderRadius: 0,
+        boxShadow: "0",
+      }}
+    >
       <CardContent>
-
-        <Box sx={{ my: 3 ,color:"white"}}>
+        <Box sx={{ my: 3, color: "white" }}>
           <Slider
             value={value}
             onChange={handleChange}
@@ -44,24 +46,22 @@ export default function FeeSlider({ value, setValue }: FeeSliderProps) {
             max={10}
             marks={marks}
             sx={{
+              color: "#1e90ff", // slider track color
               "& .MuiSlider-thumb": {
-                bgcolor: "primary.main",
-              },
-              "& .MuiSlider-track": {
-                bgcolor: "primary.main",
+                bgcolor: "#1e90ff",
+                border: "2px solid white",
               },
               "& .MuiSlider-valueLabel": {
-                bgcolor: "blue",
+                bgcolor: "#1e90ff",
+                color: "white",
               },
-              "& .MuiSlider-markLabel":{
-                color:"white"
-              }
+              "& .MuiSlider-markLabel": {
+                color: "white",
+              },
             }}
           />
         </Box>
       </CardContent>
-
-
-    </div>
+    </Card>
   );
 }

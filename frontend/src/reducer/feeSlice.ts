@@ -1,12 +1,14 @@
-
-import { getFee } from "@/api/api";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getFeeHistory } from "@/api/api";
+import {  createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createEthContract } from "./nftSlice";
+import { FeeState } from "@/types";
 
 
 export const fatchFee = createAsyncThunk(
   "marketplace/fee",
-  async () => await getFee()
+  async () => {
+    return await getFeeHistory();
+  }
 );
 export const changeFee = createAsyncThunk(
   "marketplace/updateFee",
@@ -24,31 +26,49 @@ export const changeFee = createAsyncThunk(
     
   });
 
-const initialState: { value: number; status: "idle" | "succeeded" } = {
-  value: 0,
+const initialState: FeeState = {
+  history:[],
   status: "idle",
+
 };
 
 const feeSlice = createSlice({
   name: "fee",
   initialState,
   reducers: {
-    setFee(state, action) {
-      state.value = action.payload;
-    },
+    setFeeHistory(state,action){
+      if(state.history[0].fee !== action.payload.fee ){
+        state.history.unshift(action.payload);
+        if(state.history.length > 3 ) {
+          state.history.pop();
+        }
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
       .addCase(fatchFee.fulfilled, (state, action) => {
-        state.value = action.payload.fee;
-        state.status = "succeeded";
+    
+      state.history=action.payload;
+      state.status="succeeded";
       })
       .addCase(changeFee.fulfilled, (state,action) => {
-        state.value = action.payload?.fee;
-        state.status = "succeeded";
+                 
+        if (state.history[0]?.fee !== action.payload.fee/10) {
+                    
+            state.history.unshift({
+              fee:action.payload.fee/10,
+              updateAt:new Date().toISOString(),
+              txHash: null,
+            });
+            if(state.history.length > 3 ) {
+              state.history.pop();
+            }
+          }
+          state.status="succeeded";
       });
   },
 });
 
-export const { setFee } = feeSlice.actions;
+export const { setFeeHistory } = feeSlice.actions;
 export default feeSlice.reducer;

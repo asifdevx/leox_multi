@@ -1,16 +1,20 @@
-import {  findFee } from "../controllers/fee.controlers";
-import express, { Request, Response } from "express";
+import {  feeHistory } from "../controllers/fee.controlers";
+import express, { Response } from "express";
 
 const router = express.Router();
 
-router.get("/fee", async (_, res: Response) => {
+
+
+router.get("/latestFees" ,async(_,res:Response)=>{
   try {
-    const fee = await findFee();
-    res.status(200).json(fee);
+    const feehistory = await feeHistory();
+    console.log("feehistory",feehistory);
+    
+    res.status(200).json(feehistory);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
+})
 
 
 

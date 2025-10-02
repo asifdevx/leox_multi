@@ -8,13 +8,13 @@ import blockies from "ethereum-blockies";
 import Image from "next/image";
 import { handleCopy } from "./handleCopy";
 import { WalletBalance } from "./WalletBalance";
-import { config } from "@/context/web3model";
+
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import Button from "../ui/Button";
 
+
 const ConnectBtn: React.FC = () => {
-  const { address, isConnected, isConnecting, isReconnecting, status } =
-    useAccount();
+  const { address, isConnected, isConnecting, isReconnecting, status } =  useAccount();
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
   const { symbol, formate } = WalletBalance();
@@ -31,25 +31,26 @@ const ConnectBtn: React.FC = () => {
       .toDataURL();
 
   const handleConnect = async (connector: any) => {
-    console.log(isConnected ? " connect" : "disconnect");
-
+    console.log("status",status);
+    console.log("userRejected",userRejected);
+    console.log("isModalOpen",isModalOpen);
+    
 
     if (isConnected) {
       setIsModalOpen(true);
       return;
     }
     try {
-
       setIsModalOpen(true);
       await connect({ connector });
       setUserRejected(false);
-
     } catch (error: any) {
       if (error?.name === "ConnectorAlreadyConnectedError") {
         setIsModalOpen(true);
         return;
       }
       if (error?.message?.includes("User rejected")) {
+
         setUserRejected(true);
         setIsModalOpen(true);
       } else {
@@ -63,20 +64,31 @@ const ConnectBtn: React.FC = () => {
     disconnect();
     setIsModalOpen(false);
   };
-  const title = isConnected && address ? shortenAddress(address) : "Connect Wallet"
+
+  const title =
+    isConnected && address ? shortenAddress(address) : "Connect Wallet";
+  const handleClick = async () => {
+    try {
+      await handleConnect(metaMaskConnector);
+    } catch (error:any) {
+      console.warn("faile to connect " , error?.message);
+    }
+  };
   return (
     <div>
       {/* Main Button */}
-      
-      <Button title={title} handleClick={() => {
-        if (isConnected) {
-          setIsModalOpen(true);
-        } else {
-          handleConnect(metaMaskConnector);
-        }
-      }}
-        loading={isConnecting} othercss="px-3 py-2 rounded-lg" />
 
+      <Button
+        title={title}
+        handleClick={() => {
+          if (isConnected) {
+            setIsModalOpen(true);
+          } else {
+            handleClick();
+          }
+        }}
+        othercss="px-3 py-2 rounded-lg"
+      />
 
       {/* Modal */}
       <Dialog

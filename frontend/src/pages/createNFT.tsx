@@ -11,12 +11,13 @@ import FormInput from "@/components/HelperCom/FormInput";
 import { IoCloseSharp } from "react-icons/io5";
 import { fatchFee } from "@/reducer/feeSlice";
 import Button from "@/components/ui/Button";
+import ConnectBtn from "@/components/HelperCom/ConnectBtn";
 
 const createNft = () => {
-  const fee = useSelector((state: RootState) => state.fee.value);
+  const history = useSelector((state: RootState) => state.fee.history);
   const dispatch = useDispatch<AppDispatch>();
-
-  const feePercent = useMemo(() => (fee ? fee / 10 : 0), [fee]);
+  const fee = history.length > 0 ? history[0].fee : 0;
+  const feePercent = useMemo(() => (fee), [fee]);
   useEffect(() => {
     console.log(feePercent);
     
@@ -32,7 +33,6 @@ const createNft = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const [supply, setSupply] = useState("");
   const { address, isConnected } = useAccount();
-  const { connectAsync, connectors } = useConnect();
   
   const handleCreateNFT = async () => {
     if (!isConnected) return;
@@ -83,18 +83,6 @@ const createNft = () => {
     }
   };
 
-  const metaMaskConnector = connectors.find(
-    (connector) => connector.name === "MetaMask"
-  );
-
-  async function handleConnect(connector: any) {
-    try {
-      await connectAsync({ connector });
-    } catch (error) {
-      console.error("Connection failed:", error);
-    }
-  }
-
   return (
     <div className="min-h-screen max-w-4xl mx-auto w-full flex flex-col items-center py-12 px-6">
     {!isConnected ? (
@@ -103,14 +91,7 @@ const createNft = () => {
         <p className="text-gray-400 mt-2">
           You need to connect your wallet to create an NFT.
         </p>
-        <button
-          onClick={() => handleConnect(metaMaskConnector)}
-          className="mt-6 px-6 py-3 bg-gradient-to-r from-[#00d1ff] to-[#7c3aed] 
-          text-white font-semibold rounded-xl shadow-lg shadow-cyan-500/20 
-          hover:scale-105 transition-all"
-        >
-          Connect Wallet
-        </button>
+        <ConnectBtn/>
       </div>
     ) : (
       <>
@@ -118,7 +99,7 @@ const createNft = () => {
           Create Your NFT
         </h2>
         <p className="text-gray-400 mb-8">
-          Single edition on <span className="text-[#00d1ff]">Ethereum</span>
+          Multiple edition on <span className="text-[#00d1ff]">Ethereum</span>
         </p>
   
         <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -241,7 +222,7 @@ const createNft = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-            <Button title={loading ? "Creating NFT..." : "Create NFT"} handleClick={handleCreateNFT} loading={loading} othercss="rounded-lg"/>
+            <Button title={loading ? "Creating NFT..." : "Create NFT"} handleClick={handleCreateNFT} loading={loading} othercss="rounded-lg px-3 py-3"/>
           </div>
   
           {/* Right side Preview */}
