@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import { shortenAddress } from "../ui/ShortenAddress";
 import { IoMdClose } from "react-icons/io";
@@ -12,10 +12,10 @@ import { WalletBalance } from "./WalletBalance";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import Button from "../ui/Button";
 
-
 const ConnectBtn: React.FC = () => {
-  const { address, isConnected, isConnecting, isReconnecting, status } =  useAccount();
-  const { connect, connectors } = useConnect();
+  const { address, isConnected, isConnecting, isReconnecting, status } =
+    useAccount();
+  const { connect, connectors, connectAsync, error, isSuccess } = useConnect();
   const { disconnect } = useDisconnect();
   const { symbol, formate } = WalletBalance();
 
@@ -30,29 +30,28 @@ const ConnectBtn: React.FC = () => {
       .create({ seed: address.toLowerCase(), size: 8, scale: 4 })
       .toDataURL();
 
-  const handleConnect = async (connector: any) => {
-    console.log("status",status);
-    console.log("userRejected",userRejected);
-    console.log("isModalOpen",isModalOpen);
-    
 
+  const handleConnect = async (connector: any) => {
     if (isConnected) {
       setIsModalOpen(true);
       return;
     }
+    if (isConnecting || isReconnecting) null;
+    setIsModalOpen(true);
     try {
-      setIsModalOpen(true);
-      await connect({ connector });
+      
+      await connectAsync({ connector });
+    
+
       setUserRejected(false);
     } catch (error: any) {
       if (error?.name === "ConnectorAlreadyConnectedError") {
         setIsModalOpen(true);
+        setUserRejected(false);
         return;
       }
-      if (error?.message?.includes("User rejected")) {
-
+      if (error?.code === 4001 || error?.message?.includes("User rejected")) {
         setUserRejected(true);
-        setIsModalOpen(true);
       } else {
         setUserRejected(false);
         setIsModalOpen(false);
@@ -67,26 +66,14 @@ const ConnectBtn: React.FC = () => {
 
   const title =
     isConnected && address ? shortenAddress(address) : "Connect Wallet";
-  const handleClick = async () => {
-    try {
-      await handleConnect(metaMaskConnector);
-    } catch (error:any) {
-      console.warn("faile to connect " , error?.message);
-    }
-  };
+
   return (
     <div>
       {/* Main Button */}
 
       <Button
         title={title}
-        handleClick={() => {
-          if (isConnected) {
-            setIsModalOpen(true);
-          } else {
-            handleClick();
-          }
-        }}
+        handleClick={() => handleConnect(metaMaskConnector)}
         othercss="px-3 py-2 rounded-lg"
       />
 
