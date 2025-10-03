@@ -4,7 +4,7 @@ import { AppDispatch, RootState } from "@/components/store/store";
 import AdminLayout from "@/Layout/AdminLayout";
 import UserRoleTable from "@/components/adminCom/UserRoleTable";
 import { useEffect } from "react";
-import { getUserRole } from "@/reducer/roleSlice";
+import { getUserRole } from "@/reducer/userSlice";
 import { useAccount } from "wagmi";
 
 const AdminDashboard = () => {

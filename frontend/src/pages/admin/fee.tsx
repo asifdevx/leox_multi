@@ -37,9 +37,9 @@ const FeePage = () => {
   }
 
   return (
-    <section className="feeSection">
+    <section className="section">
     {/* ---- Current Fee ---- */}
-    <div className="innerFeeSection text-center mb-6">
+    <div className="inner_section text-center mb-6">
       <p className="text-gray-300">Current Marketplace Fee</p>
       <h2 className="text-3xl font-bold text-blue-400">
         {history[0]?.fee ?? 0}%
@@ -47,8 +47,8 @@ const FeePage = () => {
     </div>
 
     {/* ---- Fee Management ---- */}
-    <div className="innerFeeSection">
-      <h1 className="feeSection_heading">Fee Management</h1>
+    <div className="inner_section">
+      <h1 className="section_heading">Fee Management</h1>
       <div className="flex flex-col justify-center gap-3 items-center">
         {/* Preset Buttons */}
         <div className="w-full flex items-center justify-around gap-2">
@@ -92,8 +92,8 @@ const FeePage = () => {
     </div>
 
     {/* ---- Fee History ---- */}
-    <div className="innerFeeSection">
-      <h1 className="feeSection_heading">Fee History</h1>
+    <div className="inner_section">
+      <h1 className="section_heading">Fee History</h1>
 
       {status === "idle" ? (
         <p className="text-gray-400">Loading...</p>

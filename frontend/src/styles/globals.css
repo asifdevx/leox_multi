@@ -164,14 +164,14 @@ h6 {
     @apply bg-sidebarActiveGradient border-l-4 border-[#00d1ff] text-[#fff];
   }
 
-  /* FeeSection  */
-  .feeSection {
+  /* [--------------Admin----------] */
+  .section {
     @apply m-10 flex flex-wrap items-start justify-center md:justify-start gap-6 rounded-lg h-full pb-5;
   }
-  .innerFeeSection {
+  .inner_section {
     @apply h-fit flex flex-col items-center md:items-start p-4 bg-gray-800 justify-center
   }
-  .feeSection_heading{
+  .section_heading{
     @apply text-[28px] font-extrabold text-white p-3 mb-3
   }
 }

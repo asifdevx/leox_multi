@@ -20,26 +20,22 @@ query GetNFTs($start:Int!,$limit:Int!) {
 }
 `;
 
-export const GET_USER_ROLE = `
-query UserRole($address:String!){
-  getUserRole(address:$address){
+export const GET_USER_INFO = `
+query GetUserData($address:String!){
+  getUserInfo(address:$address){
+    name
+    gmail
     address
     roles
   }
 }
 `;
 
-export const ADD_USER_ROLE = `
-mutation addRole($address:String!,$role:String!){
-  getUserRole(address:$address,role:$role){
-    address
-    roles
-  }
-}
-`;
-export const REMOVE_USER_ROLE = `
-mutation removeRole($address:String!,$role:String!){
-  getUserRole(address:$address,role:$role){
+export const UPDATE_USER_INFO = `
+mutation addRole($name:String,$gmail:String!,$address:String!,$role:String!,$action:String!){
+  updateInfo(name:$name,gmail:$gmail,address:$address,role:$role,action:$action){
+    name
+    gmail
     address
     roles
   }

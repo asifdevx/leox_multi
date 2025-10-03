@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useAccount } from "wagmi";
 import { AppDispatch, RootState } from "@/components/store/store";
-import { clearRole, getUserRole } from "@/reducer/roleSlice";
-import { setAddress } from "@/reducer/roleSlice";
+import { clearRole, getUserInfo } from "@/reducer/userSlice";
+import { setAddress } from "@/reducer/userSlice";
 
 export function useFetchUserRole() {
   const { address } = useAccount();
@@ -27,7 +27,7 @@ export function useFetchUserRole() {
 
   useEffect(() => {
     if (address && (UserAddress !== address || !fetched) && !loading) {
-      dispatch(getUserRole(address));
+      dispatch(getUserInfo({address}));
     }
   }, [address, UserAddress, fetched, loading, dispatch]);
 

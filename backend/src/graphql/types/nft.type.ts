@@ -4,6 +4,7 @@ import {
   GraphQLBoolean,
   GraphQLInt,
   GraphQLList,
+  GraphQLNonNull,
 } from "graphql";
 
 export const NftType = new GraphQLObjectType({
@@ -28,10 +29,12 @@ export const NftType = new GraphQLObjectType({
   },
 });
 
-export const UserRoleType = new GraphQLObjectType({
-  name: "role",
+export const UserInfoType = new GraphQLObjectType({
+  name: "user",
   fields: {
-    address: { type: GraphQLString },
+    name:{type:GraphQLString},
+    gmail:{type : GraphQLString},
+    address: { type: new GraphQLNonNull(GraphQLString) },
     roles: { type: new GraphQLList(GraphQLString) },
   },
 });

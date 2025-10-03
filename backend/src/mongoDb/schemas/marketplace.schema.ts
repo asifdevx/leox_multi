@@ -27,14 +27,22 @@ const feeSchema = new mongoose.Schema({
   txhase: { type: Number, require: true },
 });
 
-
-const UserRoleSchema =new mongoose.Schema({
-    address:{type:String,require:true,unique:true},
-    roles: { type:[String], enum:["Buyer" , "Seller" , "Admin" , "Moderator"], default:["Buyer"]}
-},{timestamps:true})
-
+const UserInfo = new mongoose.Schema(
+  {
+    name: { type: String,  trim: true },
+    gmail: { type: String, trim: true, lowerCase: true ,unique:true,sparse:true,
+      default: null,
+    },
+    address: { type: String, require: true, unique: true },
+    roles: {
+      type: [String],
+      enum: ["Buyer", "Seller", "Admin", "Moderator"],
+      default: ["Buyer"],
+    },
+  },
+  { timestamps: true }
+);
 
 export const NFT = mongoose.model("Nfts", nftSchema);
-export const Fee = mongoose.model("MarketplaceFee",feeSchema);
-export const UserRole = mongoose.model("UserRole",UserRoleSchema);
-
+export const Fee = mongoose.model("MarketplaceFee", feeSchema);
+export const UsersInfo = mongoose.model("Userinfos", UserInfo);

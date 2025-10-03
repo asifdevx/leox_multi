@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import nftReducer from "@/reducer/nftSlice";
 import feeReducer from "@/reducer/feeSlice";
-import roleReducer from "@/reducer/roleSlice";
+import roleReducer from "@/reducer/userSlice";
 
 export const store = configureStore({
   reducer: {

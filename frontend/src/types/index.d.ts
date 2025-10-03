@@ -111,9 +111,20 @@ interface PreviewNFTProps{
 // ----------------------------------------------------AUTH--------------------------------------------------
 export type Role = "Admin" | "Buyer" | "Seller" | "Moderator" ;
 
-declare type UserRole = {
-  address:string | null,
+declare type UserInfoType = {
+  address:string,
+  name?:string,
+  gmail?:string|null,
   roles:Role[],
+
+}
+
+declare type updateUserInfoType = { 
+  address:string,
+  name?:string ,
+  gmail?:string|null,
+  role:Role,
+  action?:"add" | "remove"
 }
 
 // -----------------------------------------------------ADMIN-----------------------------------------------------

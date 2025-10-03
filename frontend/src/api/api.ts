@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_CALL = "http://192.168.0.100:8000/api";
+const API_CALL = "http://192.168.2.108:8000/api";
 
 
 

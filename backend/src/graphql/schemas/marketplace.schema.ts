@@ -1,96 +1,102 @@
 import {
   GraphQLInt,
-    GraphQLList,
-    GraphQLNonNull,
-    GraphQLObjectType,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
- 
 } from "graphql";
-import {NftType, UserRoleType} from "../types/nft.type";
-import {getNFTs} from "../../mongoDb/controllers/nft.controlers";
-import {createRole, findRole} from "../../mongoDb/controllers/userRole.controlers";
-
-
+import { NftType, UserInfoType } from "../types/nft.type";
+import { getNFTs } from "../../mongoDb/controllers/nft.controlers";
+import {
+  createUser,
+  findUser,
+} from "../../mongoDb/controllers/userInfo.controlers";
 
 const RootQuery = new GraphQLObjectType({
   name: "Query",
   fields: {
-    nfts:{
-      type: new GraphQLList( NftType) ,
-      args:{
-        start:{type:GraphQLInt},
-        limit:{type:GraphQLInt},
+    nfts: {
+      type: new GraphQLList(NftType),
+      args: {
+        start: { type: GraphQLInt },
+        limit: { type: GraphQLInt },
       },
-      resolve: async(_,arg)=>{
+      resolve: async (_, arg) => {
         const start = Number.isInteger(arg?.start) ? arg.start : 0;
         const limit = Number.isInteger(arg?.limit) ? arg.limit : 10;
-        console.log(start,limit);
-        
-        return await getNFTs(start,limit);
-      }
-    },
-    getUserRole:{
-      type : UserRoleType,
-      args:{
-        address:{type:GraphQLString}
+        console.log(start, limit);
+
+        return await getNFTs(start, limit);
       },
-      resolve:async(_,args)=>{
-        let user = await findRole(args.address);
-        console.log("user",user);
+    },
+    getUserInfo: {
+      type: UserInfoType,
+      args: {
+        address: { type:new GraphQLNonNull (GraphQLString) },
+      },
+      resolve: async (_, {address }) => {
         
-    if (!user) {
-      console.log("he is first time");
-      
-      user = await createRole({ address: args.address, roles: ["Buyer"] });
-    }
-    return user;
-  
+        let user = await findUser(address);
+        if (!user) {
+          console.log("he is first time");
+          user = await createUser({
+            name:"Anonymous",
+            address,
+            roles: ["Buyer"],
+          });
+        }
+        console.log("user", user.toObject());
+        return user.toObject ? user.toObject() : user;
+      },
+    },
+  },
+});
+
+const Mutation = new GraphQLObjectType({
+  name: "mutation",
+  fields: {
+    updateInfo:{
+      type:UserInfoType,
+      args:{
+        address: { type: new GraphQLNonNull(GraphQLString) },
+        name: { type: GraphQLString },
+        gmail: { type: GraphQLString },
+        role: { type: GraphQLString },      
+        action: { type: GraphQLString }, 
+      },
+      resolve:async(_,{address, name, gmail, role, action})=>{
+        let user = await findUser(address.toLowerCase());
+        if(!user) { 
+          user = await createUser({
+            address,
+            name:name || "anonyomus",
+            gmail:gmail || "",
+            roles:role && action =="add" ? [role] : ["Buyer"]
+          })
+        }else{
+          if(gmail) user.gmail=gmail;
+          if(name) user.name=name;
+          
+          if(role){
+            if(action == "add" && !user.roles.includes(role)){
+              user.roles.push(role);
+            }else if(action == "remove"){
+              user.roles=user.roles.filter(r=>r!==role)
+            }else if (action == "add" && action == "remove"){
+              throw new Error("Invalid action, must be 'add' or 'remove'");
+            }
+          }
+        }
+        await user.save();
+      return user;
+
       }
     }
   },
 });
 
-const Mutation = new GraphQLObjectType({
-  name:"mutation",
-  fields:{
-    addRole:{
-      type:UserRoleType,
-      args:{
-        address: { type: new GraphQLNonNull(GraphQLString) },
-        role: { type: new GraphQLNonNull(GraphQLString) }, 
-      },
-      resolve:async(_,{address,role})=>{
-        const userExist = await findRole(address);
-        if(!userExist){
-          await createRole({address,roles:[role]})
-        }
-        if(!userExist.roles.includes(role)){
-          userExist.roles.push(role);
-          await userExist.save();
-        }
-        return userExist;
-      
-      }
-    },
-    removeRole : {
-      type:UserRoleType,
-      args:{
-        address: { type: new GraphQLNonNull(GraphQLString) },
-        role: { type: new GraphQLNonNull(GraphQLString) }, 
-      },
-      resolve:async(_,{address,role})=>{
-        const userExist = await findRole(address);
-        if(!userExist) throw new Error("user not found");
-        userExist.roles=userExist.roles.filter((r)=>r !==role);
-        await userExist.save();
-        return userExist;
-      }
-    }
-  },
-})
-
 export const marketplace = new GraphQLSchema({
   query: RootQuery,
-  mutation:Mutation
+  mutation: Mutation,
 });

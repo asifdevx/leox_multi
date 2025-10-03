@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { shortenAddress } from "../ui/ShortenAddress";
 import { IoMdClose } from "react-icons/io";
@@ -8,19 +8,23 @@ import blockies from "ethereum-blockies";
 import Image from "next/image";
 import { handleCopy } from "./handleCopy";
 import { WalletBalance } from "./WalletBalance";
-
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import Button from "../ui/Button";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store/store";
+import { getUserInfo } from "@/reducer/userSlice";
 
 const ConnectBtn: React.FC = () => {
   const { address, isConnected, isConnecting, isReconnecting, status } =
     useAccount();
-  const { connect, connectors, connectAsync, error, isSuccess } = useConnect();
+  const { connectors, connectAsync } = useConnect();
+  const dispatch = useDispatch<AppDispatch>();
   const { disconnect } = useDisconnect();
   const { symbol, formate } = WalletBalance();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userRejected, setUserRejected] = useState(false);
+  const [isFirstTimeLogin, setIsFirstTimeLogin] = useState(false);
+  const [userName, setUserName] = useState("");
 
   const metaMaskConnector = connectors.find((c) => c.name === "MetaMask");
 
@@ -30,18 +34,27 @@ const ConnectBtn: React.FC = () => {
       .create({ seed: address.toLowerCase(), size: 8, scale: 4 })
       .toDataURL();
 
+  useEffect(() => {
+    async function fatch() {
+      if (address) {
+        const data = await dispatch(getUserInfo({ address }));
+      }
+    }
+    fatch();
+  }, [address]);
 
   const handleConnect = async (connector: any) => {
     if (isConnected) {
       setIsModalOpen(true);
       return;
     }
-    if (isConnecting || isReconnecting) null;
+    if (isConnecting || isReconnecting) {
+      setIsModalOpen(true);
+      return;
+    }
     setIsModalOpen(true);
     try {
-      
       await connectAsync({ connector });
-    
 
       setUserRejected(false);
     } catch (error: any) {
@@ -56,6 +69,8 @@ const ConnectBtn: React.FC = () => {
         setUserRejected(false);
         setIsModalOpen(false);
       }
+    } finally {
+      setIsModalOpen(false);
     }
   };
 
@@ -105,6 +120,7 @@ const ConnectBtn: React.FC = () => {
                         src="/metamask.png"
                         width={55}
                         height={54}
+                        fetchPriority="high"
                         alt="MetaMask"
                         className="animate-pulse pointer-events-none"
                       />
@@ -131,6 +147,7 @@ const ConnectBtn: React.FC = () => {
                       src="/metamask.png"
                       width={64}
                       height={64}
+                      fetchPriority="high"
                       alt="MetaMask"
                     />
                     <span className="absolute -bottom-2 right-0 text-red-500 text-3xl">
@@ -167,6 +184,7 @@ const ConnectBtn: React.FC = () => {
                       width={72}
                       height={72}
                       alt="Identicon"
+                      fetchPriority="high"
                       className="rounded-full"
                     />
                   </div>
@@ -205,6 +223,8 @@ const ConnectBtn: React.FC = () => {
                   </div>
                 </>
               )}
+
+              {}
             </div>
           </Dialog.Panel>
         </div>
