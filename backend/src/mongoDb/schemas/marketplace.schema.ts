@@ -30,14 +30,17 @@ const feeSchema = new mongoose.Schema({
 const UserInfo = new mongoose.Schema(
   {
     name: { type: String,  trim: true },
-    gmail: { type: String, trim: true, lowerCase: true ,unique:true,sparse:true,
-      default: null,
+    gmail: { type: String, trim: true, lowercase: true ,unique:true,sparse:true,
     },
-    address: { type: String, require: true, unique: true },
+    address: { type: String, required: true,lowercase:true, unique: true },
     roles: {
       type: [String],
       enum: ["Buyer", "Seller", "Admin", "Moderator"],
       default: ["Buyer"],
+    },
+    isFirstTime: { 
+      type: Boolean, 
+      default: true,
     },
   },
   { timestamps: true }
@@ -45,4 +48,4 @@ const UserInfo = new mongoose.Schema(
 
 export const NFT = mongoose.model("Nfts", nftSchema);
 export const Fee = mongoose.model("MarketplaceFee", feeSchema);
-export const UsersInfo = mongoose.model("Userinfos", UserInfo);
+export const UsersInfo = mongoose.model("UserInfos", UserInfo);

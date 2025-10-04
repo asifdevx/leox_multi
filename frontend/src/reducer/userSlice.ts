@@ -49,12 +49,13 @@ const initialState: type.UserInfoType & {
   name:"",
   gmail: "",
   roles: [],
+  isFirstTime: true,
   loading: false,
   fetched: false,
   error: null,
 };
 
-const roleSlice = createSlice({
+const roleSlice= createSlice({
   name: "role",
   initialState,
   reducers: {
@@ -63,6 +64,7 @@ const roleSlice = createSlice({
       state.gmail = null;
       state.address = "";
       state.roles = [];
+      state.isFirstTime=true;
       state.error = null;
       state.fetched = false;
       state.loading = false;
@@ -85,7 +87,9 @@ const roleSlice = createSlice({
         state.loading = false;
         state.fetched = true;
         state.error = null;
+        state.isFirstTime=action.payload?.isFirstTime ?? true; 
         state.gmail = action.payload?.gmail ;
+
         state.name = action.payload?.name as string;
         state.roles = action.payload?.roles as type.Role[];
         state.address = action.payload?.address as string;
@@ -103,6 +107,9 @@ const roleSlice = createSlice({
         state.fetched = true;
         state.error = null;
         if (action.payload) {
+         
+          state.isFirstTime=action.payload?.isFirstTime ; 
+
           state.name = action.payload.name ?? state.name;
           state.gmail = action.payload.gmail ?? state.gmail;
           state.address = action.payload.address ?? state.address;

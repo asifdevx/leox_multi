@@ -17,6 +17,7 @@ const SideBar = () => {
             width={logoMedia ? 200 : 70}
             height={logoMedia ? 100 : 70}
             alt="Leo"
+            fetchPriority="high"
             className="object-center object-contain cursor-pointer "
           />
           <h1 className="sidebar-logo relative -top-6 space-x-3">LeoX</h1>
@@ -29,6 +30,7 @@ const SideBar = () => {
                 alt={items.imgURL}
                 width={34}
                 height={34}
+                fetchPriority="high"
                 className={pathName === items.route ? "brightness-[3] invert-0" : ""}/>
               <p className="text-16 font-semibold max-xl:hidden ">{items.label}</p>
             </div>

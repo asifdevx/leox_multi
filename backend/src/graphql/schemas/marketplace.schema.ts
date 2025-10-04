@@ -32,25 +32,29 @@ const RootQuery = new GraphQLObjectType({
     },
     getUserInfo: {
       type: UserInfoType,
-      args: {
-        address: { type:new GraphQLNonNull (GraphQLString) },
-      },
-      resolve: async (_, {address }) => {
+      args: { address: { type: new GraphQLNonNull(GraphQLString) } },
+      resolve: async (_, { address }) => {
+        const normalizedAddress = address.toLowerCase();
+        console.log("normalizedAddress",normalizedAddress);
         
-        let user = await findUser(address);
+        let user = await findUser(normalizedAddress);
+  
         if (!user) {
-          console.log("he is first time");
+          console.log("first timee");
           user = await createUser({
-            name:"Anonymous",
-            address,
+            name: "Anonymous",
+            address: normalizedAddress,
             roles: ["Buyer"],
+            isFirstTime:true
           });
         }
-        console.log("user", user.toObject());
+        console.log("User",user);
+        
         return user.toObject ? user.toObject() : user;
+       
       },
-    },
-  },
+    }
+  }
 });
 
 const Mutation = new GraphQLObjectType({
@@ -70,26 +74,32 @@ const Mutation = new GraphQLObjectType({
         if(!user) { 
           user = await createUser({
             address,
-            name:name || "anonyomus",
-            gmail:gmail || "",
+            name:name || "Anonymous",
+            gmail:gmail || null,
             roles:role && action =="add" ? [role] : ["Buyer"]
           })
         }else{
           if(gmail) user.gmail=gmail;
           if(name) user.name=name;
-          
+
+          if ((name && name !== "Anonymous") || gmail) {
+            user.isFirstTime = false;
+          }
           if(role){
             if(action == "add" && !user.roles.includes(role)){
               user.roles.push(role);
             }else if(action == "remove"){
-              user.roles=user.roles.filter(r=>r!==role)
+              user.roles=user.roles.filter(r=>r!==role);
+              if (user.roles.length === 0) user.roles.push("Buyer"); 
             }else if (action == "add" && action == "remove"){
               throw new Error("Invalid action, must be 'add' or 'remove'");
             }
           }
         }
         await user.save();
-      return user;
+        console.log("user", user.toObject());
+
+        return user.toObject ? user.toObject() : user;
 
       }
     }

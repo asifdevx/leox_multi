@@ -24,6 +24,8 @@ export const createNFT = createAsyncThunk(
   async ({ tokenURI, supply, price }: CreateNFTArgs,{dispatch}) => {
     try {
       const contract = await createEthContract();
+      console.log("tokenURI",tokenURI);
+      
       const tx = await contract?.mint(
         tokenURI,
         supply,
@@ -93,8 +95,7 @@ const nftSlice = createSlice({
         const fatchData: NFT[] = action.payload || [];
         console.log(fatchData, "fatchData");
         if (fatchData.length ===0 || fatchData.length < state.limit) {
-          console.log(fatchData.length,"+",state.limit);
-          
+             
           state.hasMore = false;
         }
 

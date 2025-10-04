@@ -13,6 +13,7 @@ import Button from "../ui/Button";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 import { getUserInfo } from "@/reducer/userSlice";
+import AddUserName from "./AddUserName";
 
 const ConnectBtn: React.FC = () => {
   const { address, isConnected, isConnecting, isReconnecting, status } =
@@ -24,7 +25,6 @@ const ConnectBtn: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userRejected, setUserRejected] = useState(false);
   const [isFirstTimeLogin, setIsFirstTimeLogin] = useState(false);
-  const [userName, setUserName] = useState("");
 
   const metaMaskConnector = connectors.find((c) => c.name === "MetaMask");
 
@@ -37,7 +37,17 @@ const ConnectBtn: React.FC = () => {
   useEffect(() => {
     async function fatch() {
       if (address) {
-        const data = await dispatch(getUserInfo({ address }));
+        const data = await dispatch(getUserInfo({ address })).then(
+          (res: any) => {
+            const user = res.payload;
+            console.log("userData",user);
+            
+            if (user?.isFirstTime) {
+              console.log("true");
+              setIsFirstTimeLogin(true);
+            }
+          }
+        );
       }
     }
     fatch();
@@ -223,12 +233,13 @@ const ConnectBtn: React.FC = () => {
                   </div>
                 </>
               )}
-
-              {}
             </div>
           </Dialog.Panel>
         </div>
       </Dialog>
+      {isFirstTimeLogin && (
+       <AddUserName setIsFirstTimeLogin={setIsFirstTimeLogin} isFirstTimeLogin={isFirstTimeLogin} />
+      )}
     </div>
   );
 };

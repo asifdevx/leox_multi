@@ -81,6 +81,7 @@ const MobileSideBar: React.FC<MobileSideBarProps> = ({
                         src={item.imgURL}
                         alt={item.imgURL}
                         width={34}
+                        fetchPriority="high"
                         height={34}
                         className={isActive ? "brightness-[3] invert-0" : ""}
                       />

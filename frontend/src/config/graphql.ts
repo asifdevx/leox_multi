@@ -27,17 +27,19 @@ query GetUserData($address:String!){
     gmail
     address
     roles
+    isFirstTime
   }
 }
 `;
 
 export const UPDATE_USER_INFO = `
-mutation addRole($name:String,$gmail:String!,$address:String!,$role:String!,$action:String!){
+mutation addRole($name:String,$gmail:String,$address:String!,$role:String,$action:String){
   updateInfo(name:$name,gmail:$gmail,address:$address,role:$role,action:$action){
     name
     gmail
     address
     roles
+    isFirstTime
   }
 }
 `;

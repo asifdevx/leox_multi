@@ -5,10 +5,10 @@ export const fetchMetadata = async (tokenURI: string) => {
 
   try {
     const ipfsCID = tokenURI.replace("ipfs://", "");
-    const { data } = await axios.get(`https://nftstorage.link/ipfs/${ipfsCID}`);
+    const { data } = await axios.get(`https://gateway.pinata.cloud/ipfs/${ipfsCID}`);
 
     const imageUrl = data.image?.startsWith("ipfs://")
-      ? `https://nftstorage.link/ipfs/${data.image.replace("ipfs://", "")}`
+      ? `https://gateway.pinata.cloud/ipfs/${data.image.replace("ipfs://", "")}`
       : data.image || "";      
     return {
       name: data.name,

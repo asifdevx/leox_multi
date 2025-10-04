@@ -49,6 +49,8 @@ export const getNFTs = async (start = 0, limit: number) => {
       } catch (err) {
         console.warn("MongoDB upsert failed", err.message);
       }
+      console.log("transformed",transformed);
+      
       return transformed;
     })
   );

@@ -36,5 +36,6 @@ export const UserInfoType = new GraphQLObjectType({
     gmail:{type : GraphQLString},
     address: { type: new GraphQLNonNull(GraphQLString) },
     roles: { type: new GraphQLList(GraphQLString) },
+    isFirstTime:{type :GraphQLBoolean}
   },
 });

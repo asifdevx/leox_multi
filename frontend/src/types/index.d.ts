@@ -51,7 +51,12 @@ type FormInputProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export interface NFT {
+interface AddUserNameProps  { 
+  setIsFirstTimeLogin:(isFirstTimeLogin:boolean)=>void;
+  isFirstTimeLogin:boolean;
+}
+
+ interface NFT {
   tokenId: string;
   name: string;
   description: string;
@@ -115,7 +120,8 @@ declare type UserInfoType = {
   address:string,
   name?:string,
   gmail?:string|null,
-  roles:Role[],
+  roles?:Role[],
+  isFirstTime?: boolean;
 
 }
 
@@ -123,7 +129,8 @@ declare type updateUserInfoType = {
   address:string,
   name?:string ,
   gmail?:string|null,
-  role:Role,
+  role?:Role,
+  isFirstTime?: boolean;
   action?:"add" | "remove"
 }
 

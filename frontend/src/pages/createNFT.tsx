@@ -33,7 +33,7 @@ const createNft = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const [supply, setSupply] = useState("");
   const { address, isConnected } = useAccount();
-  
+
   const handleCreateNFT = async () => {
     if (!isConnected) return;
     setLoading(true);
@@ -48,10 +48,11 @@ const createNft = () => {
     try {
       const imageCID = await uploadToIPFS(file);
       if (!imageCID) throw new Error("Failed to upload image to IPFS");
-
+      
       const tokenURI = await uploadMetadataToIPFS(name, description, imageCID);
       if (!tokenURI) throw new Error("Failed to generate metadata URI");
-
+      console.log("tokenURI",tokenURI);
+      
       const response = await dispatch(
         createNFT({
           tokenURI,
@@ -63,7 +64,6 @@ const createNft = () => {
       setPreview(null);
       setName("");
       setDescription("");
-      setSupply("");
       setPrice("");
       setFile(null);
       console.log("NFT Created:", response);
@@ -108,7 +108,7 @@ const createNft = () => {
             {/* Wallet Status */}
             <div className="px-4 py-3 rounded-xl bg-[#0f1f33] border border-[#1e3350] flex items-center justify-between shadow-md">
               <div className="flex items-center gap-3">
-                <Image src="/eth.svg" width={50} height={50} alt="eth logo" />
+                <Image src="/eth.svg" width={50} height={50} alt="eth logo" fetchPriority="high" />
                 <div className="text-sm">
                   {address && (
                     <p className="font-bold text-white">

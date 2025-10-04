@@ -53,6 +53,7 @@ const index = () => {
               <img
                 src={isDekstop ? "/pc_logo.png" : "/logo.png"}
                 alt="logo"
+                
                 className="w-[70px] md:w-[150px] h-auto object-fill cursor-pointer"
               />
             </Link>
