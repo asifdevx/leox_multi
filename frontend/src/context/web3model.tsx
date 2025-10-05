@@ -12,7 +12,7 @@ const connector = walletConnect({
   metadata: {
     name: "wagmi",
     description: "Binance Smart Chain Testnet Example",
-    url: "http://192.168.0.100:3000",
+    url: "http://10.98.0.173:3000",
     icons: ["https://avatars.githubusercontent.com/u/37784886"],
   },
 });
@@ -25,7 +25,7 @@ export const config = createConfig({
   transports: {
     [bscTestnet.id]: http("https://data-seed-prebsc-1-s1.binance.org:8545"),
   },
-  connectors: [injected(), walletConnect({ projectId }), connector],
+  connectors: [injected(), walletConnect({ projectId }), connector]
 });
 
 export function Web3Provider({ children }: { children: React.ReactNode }) {

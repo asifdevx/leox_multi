@@ -36,6 +36,7 @@
     "mongodb": "^6.5.0",
     "mongodb-connection-string-url": "^3.0.0",
     "mongoose": "^7.6.3",
+    "p-map": "^7.0.3",
     "socket.io": "^4.8.1"
   }
 }

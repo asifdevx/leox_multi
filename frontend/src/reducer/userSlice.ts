@@ -47,7 +47,7 @@ const initialState: type.UserInfoType & {
 } = {
   address: "",
   name:"",
-  gmail: "",
+  gmail: null,
   roles: [],
   isFirstTime: true,
   loading: false,
@@ -55,8 +55,8 @@ const initialState: type.UserInfoType & {
   error: null,
 };
 
-const roleSlice= createSlice({
-  name: "role",
+const userSlice= createSlice({
+  name: "userInfo",
   initialState,
   reducers: {
     clearRole(state) {
@@ -72,7 +72,7 @@ const roleSlice= createSlice({
     setAddress(state, action) {
       if (state.address !== action.payload) {
         state.address = action.payload;
-        state.roles = [];
+        
         state.fetched = false;
       }
     },
@@ -123,5 +123,5 @@ const roleSlice= createSlice({
   },
 });
 
-export const { clearRole, setAddress } = roleSlice.actions;
-export default roleSlice.reducer;
+export const { clearRole, setAddress } = userSlice.actions;
+export default userSlice.reducer;

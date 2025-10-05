@@ -1,12 +1,12 @@
+import { createServer } from "http";
 import express from "express";
-import { graphqlHTTP } from "express-graphql";
 import dotenv from "dotenv";
-import { marketplace } from "./graphql/schemas/marketplace.schema";
-import connetdb from "./config/connectdb";
 import cors from "cors";
 import { Server } from "socket.io";
-import { createServer } from "http";
+import connetdb from "./config/connectdb";
+import { graphqlHTTP } from "express-graphql";
 import Marketplace from "./mongoDb/router/Marketplace.router";
+import { marketplace } from "./graphql/schemas/marketplace.schema";
 import { feeListener } from "./mongoDb/controllers/listener.controlers";
 dotenv.config();
 
@@ -17,14 +17,14 @@ const PORT = process.env.PORT || 8000;
 app.use(express.json());
 
 const corsOptions = {
-  origin: "http://192.168.0.100:3000",
+  origin: "http://10.98.0.173:3000",
   credentials: true,
 };
 app.use(cors(corsOptions));
 
 export const io = new Server(httpServer, {
   cors: { 
-    origin: "http://192.168.0.100:3000",
+    origin: "http://10.98.0.173:3000",
     methods: ["GET", "POST"],
     credentials: true,
    },

@@ -1,15 +1,17 @@
 import {  NFT } from "../schemas/marketplace.schema";
 import { createEthContract } from "../../config/bsc.service";
 
+
 import { fetchMetadata } from "../../config/ipfs.service";
 import { ethers } from "ethers";
 
 export const getNFTs = async (start = 0, limit: number) => {
   const contract = await createEthContract();
   const nftsRaw = await contract.getPaginatedListed(start, limit);
-
-  const result = await Promise.all(
-    nftsRaw.map(async (nft: any) => {
+  const pMap = (await import("p-map")).default;
+  const transformed = await pMap(
+    nftsRaw,
+    async (nft: any) => {
       const tokenId = nft[0].toString();
 
       let tokenURI = "";
@@ -18,15 +20,16 @@ export const getNFTs = async (start = 0, limit: number) => {
       } catch (err) {
         console.warn("Failed to get tokenURI for token:", tokenId, err.message);
       }
+
       const meta = await fetchMetadata(tokenURI);
 
-      const transformed = {
+      const transformedNFT = {
         tokenId,
         seller: nft[2],
         owner: nft[1],
-        name: meta?.name || `Token #${tokenId}`,
-        description: meta?.description || "",
-        image: meta?.image || "",
+        name: meta.name || `Token #${tokenId}`,
+        description: meta.description || "",
+        image: meta.image || "",
         price: ethers.formatEther(nft[3]),
         supply: nft[4].toString(),
         remainingSupply: Number(nft[5]),
@@ -41,18 +44,20 @@ export const getNFTs = async (start = 0, limit: number) => {
       };
 
       try {
+        // Only update DB if NFT is new or metadata changed
         await NFT.updateOne(
-          { tokenId: transformed.tokenId, seller: transformed.seller },
-          { $set: transformed },
+          { tokenId: transformedNFT.tokenId, seller: transformedNFT.seller },
+          { $set: transformedNFT },
           { upsert: true }
         );
       } catch (err) {
-        console.warn("MongoDB upsert failed", err.message);
+        console.warn("MongoDB upsert failed for token:", tokenId, err.message);
       }
-      console.log("transformed",transformed);
-      
-      return transformed;
-    })
+
+      return transformedNFT;
+    },
+    { concurrency: 10 } 
   );
-  return result;
+
+  return transformed;
 };

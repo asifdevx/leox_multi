@@ -27,12 +27,13 @@ export default function FeeSlider({ value, setValue }: FeeSliderProps) {
   return (
     <Card
       sx={{
-        width:"400px",
+       
         backgroundColor: "transparent", 
         color: "white",
         borderRadius: 0,
         boxShadow: "0",
       }}
+      className="w-[400px] xl:w-[500px] "
     >
       <CardContent>
         <Box sx={{ my: 3, color: "white" }}>

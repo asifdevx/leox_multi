@@ -14,3 +14,6 @@ export const createUser = async ({ name,gmail,address, roles ,isFirstTime}: crea
   return await UsersInfo.create({ name,gmail,address, roles,isFirstTime });
 };
 
+export const findByRole = async (role:string) =>{
+  return await UsersInfo.find({roles : role},{name:1,address:1,_id:0});
+}

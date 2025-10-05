@@ -2,7 +2,7 @@ import { Fee } from "../schemas/marketplace.schema";
 import { createEthContract } from "../../config/bsc.service";
 
 export const feeHistory = async () => {
-  let history=await Fee.find().sort({ updateAt: -1 }).limit(3).lean();
+  let history=await Fee.find().sort({ updateAt: -1 }).limit(6).lean();
 
   if(!history.length) { 
     console.log("there is no fee");

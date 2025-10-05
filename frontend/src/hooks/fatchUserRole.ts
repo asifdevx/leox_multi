@@ -7,6 +7,7 @@ import { setAddress } from "@/reducer/userSlice";
 
 export function useFetchUserRole() {
   const { address } = useAccount();
+  const lowercaseAddress=address?.toLowerCase();
   const dispatch = useDispatch<AppDispatch>();
   const {
     roles,
@@ -14,19 +15,19 @@ export function useFetchUserRole() {
     fetched,
     error,
     address: UserAddress,
-  } = useSelector((state: RootState) => state.userRole);
+  } = useSelector((state: RootState) => state.userInfo);
 
   useEffect(() => {
-    if (address && UserAddress !== address) {
+    if (lowercaseAddress && UserAddress !== lowercaseAddress) {
       dispatch(setAddress(address));
     }
-    if (!address && UserAddress) {
+    if (!lowercaseAddress && UserAddress) {
       dispatch(clearRole()); 
     }
   }, [address, dispatch, UserAddress]);
 
   useEffect(() => {
-    if (address && (UserAddress !== address || !fetched) && !loading) {
+    if (address && (UserAddress !== lowercaseAddress || !fetched) && !loading) {
       dispatch(getUserInfo({address}));
     }
   }, [address, UserAddress, fetched, loading, dispatch]);

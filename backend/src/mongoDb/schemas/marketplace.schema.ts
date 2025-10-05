@@ -35,7 +35,7 @@ const UserInfo = new mongoose.Schema(
     address: { type: String, required: true,lowercase:true, unique: true },
     roles: {
       type: [String],
-      enum: ["Buyer", "Seller", "Admin", "Moderator"],
+      enum: ["Buyer", "Seller", "Admin", "Moderator","Ban"],
       default: ["Buyer"],
     },
     isFirstTime: { 

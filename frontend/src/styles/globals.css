@@ -37,7 +37,9 @@ h6 {
 .blue-glassmorphism {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
 }
-
+.Flex_col_reverse{
+  flex-direction: column-reverse;
+}
 @layer utilities {
   .section_padding {
     @apply px-10 md:px-20 xl:px-0;
@@ -165,13 +167,10 @@ h6 {
   }
 
   /* [--------------Admin----------] */
-  .section {
-    @apply m-10 flex flex-wrap items-start justify-center md:justify-start gap-6 rounded-lg h-full pb-5;
+ 
+
+  .section_heading {
+    @apply text-[28px] font-extrabold text-white p-3 mb-3;
   }
-  .inner_section {
-    @apply h-fit flex flex-col items-center md:items-start p-4 bg-gray-800 justify-center
-  }
-  .section_heading{
-    @apply text-[28px] font-extrabold text-white p-3 mb-3
-  }
+  
 }

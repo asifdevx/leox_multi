@@ -2,22 +2,37 @@ import SideBar from "@/components/adminCom/SideBar";
 import MobileSideBar from "@/components/HelperCom/MobileSideBar";
 import { sidebarLinks } from "@/config/HeaderLists";
 import { useFetchUserRole } from "@/hooks/fatchUserRole";
-import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CiMenuBurger } from "react-icons/ci";
 import { IoMdClose } from "react-icons/io";
 
 export default function AdminLayout(props: any) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const { roles } = useFetchUserRole();
+  const { roles,fetched } = useFetchUserRole();
 
-  const isAdmin = roles.includes("Admin") || roles.includes("Moderator");
+  const isAdmin = roles?.includes("Admin") || roles?.includes("Moderator");
+  console.log("roles",roles);
+  
+
+
+  useEffect(() => {
+    if (fetched && !isAdmin) {
+      router.replace("/");
+    }
+  }, [fetched, isAdmin, router]);
+
+
+  if (!fetched) {
+    return <p className="text-center text-gray-400">Loading...</p>;
+  }
+
   if (!isAdmin) {
-    router.replace("/");
     return <p className="text-red-700 text-center text-20">Not Accessible</p>;
   }
+
+
 
   function toggleBtn() {
     setOpen(!open);
