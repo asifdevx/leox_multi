@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const GRAPHQL_ENDPOINT = "http://10.98.0.173:8000/g";
+const GRAPHQL_ENDPOINT = "http://192.168.0.100:8000/g";
 
 export async function fetchGraphQL<T>(
   query: string,

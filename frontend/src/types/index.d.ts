@@ -158,7 +158,17 @@ interface FeeState {
   history: FeeHistoryItem[];
 }
 
-const initialState: FeeState = {
-  history: [],
-  status: "idle",
-};
+
+// -----------------------------------------------------Role-----------------------------------------------------
+
+interface User {
+  
+  name: string;
+  address:string;
+}
+
+interface UsersState {
+  usersByRole: Record<string, User[]>;
+  loading: boolean;
+  error: string | null;
+}

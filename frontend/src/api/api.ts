@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_CALL = "http://10.98.0.173:8000/api";
+const API_CALL = "http://192.168.0.100:8000/api";
 
 
 
@@ -9,3 +9,34 @@ export const getFeeHistory = async () => {
   
   return data;
 };
+
+
+export const getUserByRole = async (role:string) =>{
+  try {
+    const {data} = await axios.post(`${API_CALL}/findByRole`,{role});
+    console.log("dat  1",data);
+    
+    return data ;
+    
+  } catch (error) {
+    console.log("failed to fatch user by role",error );
+    
+  }
+  }
+
+
+  
+
+
+  export const getUserByAddress = async (address:string) =>{
+    try {
+      const {data} = await axios.post(`${API_CALL}/findByAddress`,{address});
+      console.log("dat  1",data);
+      
+      return data ;
+      
+    } catch (error) {
+      console.log("failed to fatch user by role",error );
+      
+    }
+    }
