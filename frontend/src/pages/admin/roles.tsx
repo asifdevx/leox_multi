@@ -1,48 +1,16 @@
-// pages/Roles.tsx
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/components/store/store";
+import React from "react";
+
 import Button from "@/components/ui/Button";
 import ShowDetails from "@/components/ui/ShowDetails";
-import { fetchUsersByRole } from "@/reducer/RoleByUserSlice";
 import { InteractiveCard } from "@/components/ui/InteractiveCard";
-import Input from "@/components/ui/Input";
-import { getUserInfo } from "@/reducer/userSlice";
-import { getUserByAddress } from "@/api/api";
+import { RoleCatagories } from "@/config/RoleList";
+import ManageUserRole from "@/components/adminCom/Role/ManageUserRole";
 
 const Roles = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const [walletAddress, setWalletAddress] = useState("");
-  const [userRoles, setUserRoles] = useState<string[]>([]);
-  const [newRole, setNewRole] = useState("");
-  const [userAddress, setuserAddress] = useState<string>("");
-  const [userData, SetUserData] = useState([]);
-
-  const handleAddRole = () => {
-    if (newRole && !userRoles.includes(newRole)) {
-      setUserRoles([...userRoles, newRole]);
-      setNewRole("");
-    }
-  };
-
-  const handleRemoveRole = (role: string) => {
-    setUserRoles(userRoles.filter((r) => r !== role));
-  };
-  const handleSearch = async () => {
-    if (userAddress) {
-      const data = await getUserByAddress(userAddress.toLowerCase());
-      SetUserData(data);
-    }
-  };
-
-  useEffect(() => {
-    console.log(userData);
-  }, [userData]);
-
   return (
     <section className="mt-5 w-full flex flex-col  lg:flex-row items-center lg:items-start justify-start gap-4  rounded-lg p-6">
       {/* Left Panel: Roles Overview */}
-      <div className="flex flex-col justify-start items-center">
+      <div className="flex flex-col justify-start w-full lg:w-2/3 gap-4 items-center">
         <InteractiveCard
           width="100%"
           height="fit-content"
@@ -69,26 +37,52 @@ const Roles = () => {
           </div>
         </InteractiveCard>
 
-        {/* Right: Role Management */}
-        <div className=" w-full flex flex-col gap-4 bg-gray-800 rounded-xl p-6 shadow-md hover:shadow-[#5797d8] hover:shadow-sm transition-all duration-300">
-          <h4 className="text-2xl font-bold text-white mb-2">
-            Manage User Roles
+        <div className="bg-gray-800/40 w-[98%] border border-white/80  rounded-xl p-6 backdrop-blur-md">
+          <h4 className="text-2xl font-semibold text-white mb-4">
+            Role Permissions
           </h4>
-          <div className="flex items-center gap-2 w-full">
-            <Input
-              inputClass="w-full px-4 py-3   bg-gray-700 text-white  outline-none focus:outline-none focus:ring-2 focus:ring-[#00d1ff]/50 focus:border-[#00d1ff] transition xl:placeholder:text-[15px] placeholder:text-[13px] p-2 rounded-lg"
-              placeholder="Enter User Address"
-              handleChange={(e) => setuserAddress(e.target.value)}
-              type={"text"}
-              value={userAddress}
-            />
-            <Button
-              handleClick={handleSearch}
-              title="search"
-              othercss="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-400"
-            />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {RoleCatagories.map(({ role, perms }) => (
+              <div
+                key={role}
+                className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 hover:shadow-[0_0_10px_rgba(0,255,255,0.3)] transition-all"
+              >
+                <h5 className="text-lg font-bold text-cyan-400 mb-2">{role}</h5>
+                <ul className="text-gray-300 text-sm list-disc list-inside">
+                  {perms.map((p) => (
+                    <li key={p}>{p}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
+
+        <div className="w-full bg-gray-800/40 rounded-xl p-6">
+          <h4 className="text-2xl font-semibold text-white mb-4">
+            Role Statistics
+          </h4>
+          <div className="grid grid-cols-3 gap-4 text-center">
+            {[
+              { name: "Admins", count: 3, color: "text-red-400" },
+              { name: "Moderators", count: 5, color: "text-yellow-400" },
+              { name: "Artists", count: 12, color: "text-green-400" },
+            ].map((stat) => (
+              <div
+                key={stat.name}
+                className="bg-gray-900/60 rounded-lg py-4 hover:bg-gray-900/80 transition-all"
+              >
+                <p className={`text-3xl font-bold ${stat.color}`}>
+                  {stat.count}
+                </p>
+                <p className="text-gray-400 text-sm">{stat.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col w-full lg:w-1/3 gap-6">
+        <ManageUserRole />
       </div>
     </section>
   );

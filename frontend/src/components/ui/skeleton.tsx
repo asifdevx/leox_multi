@@ -14,13 +14,27 @@ function Skeleton({
 
 export { Skeleton };
 
-export default function SkeletonCom() {
+export function SkeletonCom() {
   return (
     <div className="flex flex-col space-y-3">
       <Skeleton className="h-[125px] w-[250px] rounded-xl" />
       <div className="space-y-2">
         <Skeleton className="h-4 w-[250px]" />
         <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>
+  );
+}
+
+export function SkeletonComRole() {
+  return (
+    <div className="flex items-center gap-3 bg-gray-800 p-4 rounded-lg shadow-md">
+      <Skeleton className="h-10 w-10 rounded-full bg-gray-700" />
+
+      <div className="flex flex-col space-y-2 w-full">
+        <Skeleton className="h-4 w-[120px] bg-gray-700" />
+        <Skeleton className="h-3 w-[160px] bg-gray-700" />
+        <Skeleton className="h-3 w-[100px] bg-gray-700" />
       </div>
     </div>
   );

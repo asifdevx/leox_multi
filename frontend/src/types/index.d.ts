@@ -1,12 +1,18 @@
 import React, { ReactNode } from "react";
 
+// ====================================================
+//                  GLOBAL DECLARATIONS
+// ====================================================
+
 declare global {
   interface Window {
     ethereum?: any;
   }
 }
 
-
+// ====================================================
+//                    NFT & MINTING
+// ====================================================
 
 declare type CreateNFTArgs = {
   tokenURI: string;
@@ -14,49 +20,7 @@ declare type CreateNFTArgs = {
   price: number; // in ETH or wei
 };
 
-
-
-
-
-
-declare type customBtnProps = {
-  title: string;
-  othercss: string;
-  handleClick?: () => void;
-  loading?:boolean,
-  isLink?: boolean;
-  linkUrl?: string;
-  icon?: string;
-};
-interface InputProps  {
-  placeholder: string;
-  name?: string;
-  type: string;
-  inputClass?:string,
-  iconClass?:string,
-  value?: string | number;
-  position?:"left" | "right",
-  handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  icon?: ReactNode | string;
-};
-
-
-type FormInputProps = {
-  label: string;
-  placeholder: string;
-  type?: string;
-  value?: string;
-  icon?: string;
-  inputClass?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-interface AddUserNameProps  { 
-  setIsFirstTimeLogin:(isFirstTimeLogin:boolean)=>void;
-  isFirstTimeLogin:boolean;
-}
-
- interface NFT {
+interface NFT {
   tokenId: string;
   name: string;
   description: string;
@@ -74,79 +38,136 @@ interface AddUserNameProps  {
   claimed: boolean;
 }
 
-
 interface NftState {
   listings: NFT[];
-   loading: boolean;
+  loading: boolean;
   error: string | null;
-  hasMore: boolean; 
-  offset:number;    
-  limit: number;       
+  hasMore: boolean;
+  offset: number;
+  limit: number;
 }
-type SideBarItem = {
-  label:string,
-  route:string,
-  imgURL?:string,
-  islink?:boolean,
 
+interface PreviewNFTProps {
+  preview: string | null;
+  name: string;
+  price: string;
 }
+
+// ====================================================
+//                    UI COMPONENTS
+// ====================================================
+
+declare type customBtnProps = {
+  title: string;
+  othercss: string;
+  handleClick?: () => void;
+  loading?: boolean;
+  isLink?: boolean;
+  linkUrl?: string;
+  icon?: string;
+};
+
+interface InputProps {
+  placeholder: string;
+  name?: string;
+  type: string;
+  inputClass?: string;
+  iconClass?: string;
+  value?: string | number;
+  position?: "left" | "right";
+  handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  icon?: ReactNode | string;
+}
+
+type FormInputProps = {
+  label: string;
+  placeholder: string;
+  type?: string;
+  value?: string;
+  icon?: string;
+  inputClass?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+type SideBarItem = {
+  label: string;
+  route: string;
+  imgURL?: string;
+  islink?: boolean;
+};
 
 interface MobileSideBarProps {
-  open:boolean,
-  setOpen:(open: boolean) => void,
-  items:SideBarItem[],
-  icon:boolean,
-  position:"right" | "left",
-  title: string,
-  footer?: React.ReactNode
-
-}
-declare type SearchBarProps={
-  search:boolean,
-  setSearchBar:Dispatch<SetStateAction<boolean>>
-}
-interface PreviewNFTProps{
-  preview: string | null;
-   name:string;
-   price: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  items: SideBarItem[];
+  icon: boolean;
+  position: "right" | "left";
+  title: string;
+  footer?: React.ReactNode;
 }
 
+declare type SearchBarProps = {
+  search: boolean;
+  setSearchBar: Dispatch<SetStateAction<boolean>>;
+};
 
+// ====================================================
+//                  USER & AUTH / ROLES
+// ====================================================
 
-// ----------------------------------------------------AUTH--------------------------------------------------
-export type Role = "Admin" | "Buyer" | "Seller" | "Moderator" ;
+export type Role = "Admin" | "Buyer" | "Seller" | "Moderator" | "Ban"; // Added "Ban" role
 
-declare type UserInfoType = {
-  address:string,
-  name?:string,
-  gmail?:string|null,
-  roles?:Role[],
+ interface UserInfoType  {
+  address: string;
+  name?: string;
+  gmail?: string | null;
+  roles?: Role[];
   isFirstTime?: boolean;
+};
 
-}
-
-declare type updateUserInfoType = { 
-  address:string,
-  name?:string ,
-  gmail?:string|null,
-  role?:Role,
+declare type updateUserInfoType = {
+  address: string;
+  name?: string;
+  gmail?: string | null;
+  role?: Role;
   isFirstTime?: boolean;
-  action?:"add" | "remove"
+  action?: "add" | "remove";
+};
+
+interface AddUserNameProps {
+  setIsFirstTimeLogin: (isFirstTimeLogin: boolean) => void;
+  isFirstTimeLogin: boolean;
 }
 
-// -----------------------------------------------------ADMIN-----------------------------------------------------
-declare type FeeSliderProps ={
-  value:number,
-  setValue:(value:number)=> void,
-  
+// ---------------------- ADMIN / ROLE ------------------------
+
+interface User {
+  name: string;
+  address: string;
 }
+
+interface UsersState {
+  usersByRole: Record<string, User[]>;
+  loading: boolean;
+  error: string | null;
+}
+
+// ====================================================
+//                       FEES
+// ====================================================
+
+declare type FeeSliderProps = {
+  value: number;
+  setValue: (value: number) => void;
+};
+
 interface ShowConfirmationProps {
-  value:number,
-  setShowConfirmation:(showConfirmation:boolean)=>void,
-  handleClick:()=>void,
-  loading:boolean
+  value: number;
+  setShowConfirmation: (showConfirmation: boolean) => void;
+  handleClick: () => void;
+  loading: boolean;
 }
-// -----------------------------------------------------Fee-----------------------------------------------------
+
 interface FeeHistoryItem {
   fee: number;
   updateAt: String;
@@ -156,19 +177,4 @@ interface FeeHistoryItem {
 interface FeeState {
   status: "idle" | "succeeded";
   history: FeeHistoryItem[];
-}
-
-
-// -----------------------------------------------------Role-----------------------------------------------------
-
-interface User {
-  
-  name: string;
-  address:string;
-}
-
-interface UsersState {
-  usersByRole: Record<string, User[]>;
-  loading: boolean;
-  error: string | null;
 }

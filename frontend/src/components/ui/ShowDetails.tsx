@@ -34,6 +34,9 @@ export default function ShowDetails({ roleName }: ShowDetailsProps) {
   }
 
   return (
+
+
+    
     <Disclosure as="div" className="w-full">
       {({ open }) => (
         <div className="bg-gray-700/60 hover:bg-gray-700/80 rounded-lg shadow-sm transition-all">

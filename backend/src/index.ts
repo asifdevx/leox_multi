@@ -40,7 +40,7 @@ const start = async () => {
   try {
     await connetdb();
     httpServer.listen(PORT, () =>
-      console.log(`Server running on http://localhost:${PORT}`)
+      console.log(`Server running on ${corsOptions.origin}:${PORT}`)
     );
     await feeListener();
   } catch (error) {

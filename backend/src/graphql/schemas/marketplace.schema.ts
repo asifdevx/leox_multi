@@ -35,12 +35,10 @@ const RootQuery = new GraphQLObjectType({
       args: { address: { type: new GraphQLNonNull(GraphQLString) } },
       resolve: async (_, { address }) => {
         const normalizedAddress = address.toLowerCase();
-        console.log("normalizedAddress",normalizedAddress);
         
         let user = await findUser(normalizedAddress);
   
         if (!user) {
-          console.log("first timee");
           user = await createUser({
             name: "Anonymous",
             address: normalizedAddress,
