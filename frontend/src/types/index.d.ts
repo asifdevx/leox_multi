@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { IconType } from "react-icons";
 
 // ====================================================
 //                  GLOBAL DECLARATIONS
@@ -64,7 +65,8 @@ declare type customBtnProps = {
   loading?: boolean;
   isLink?: boolean;
   linkUrl?: string;
-  icon?: string;
+  icon?: ReactNode;
+  iconClass?:string
 };
 
 interface InputProps {
@@ -115,7 +117,7 @@ declare type SearchBarProps = {
 //                  USER & AUTH / ROLES
 // ====================================================
 
-export type Role = "Admin" | "Buyer" | "Seller" | "Moderator" | "Ban"; // Added "Ban" role
+export type Role = "Admin" | "Moderator"  | "Seller" | "Buyer"| "Ban"; // Added "Ban" role
 
  interface UserInfoType  {
   address: string;
@@ -147,6 +149,7 @@ interface User {
 }
 
 interface UsersState {
+  includes(arg0: string): unknown;
   usersByRole: Record<string, User[]>;
   loading: boolean;
   error: string | null;

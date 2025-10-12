@@ -1,19 +1,32 @@
 import { customBtnProps } from "@/types";
 import { cn } from "@/utils/cn";
-import React from "react";
 
-const Button = ({ loading, handleClick, title, othercss }: customBtnProps) => {
+const Button: React.FC<customBtnProps> = ({
+  loading = false,
+  handleClick,
+  title,
+  othercss = "",
+  icon: Icon,
+  iconClass = "",
+}) => {
   return (
     <button
       type="button"
       onClick={handleClick}
       disabled={loading}
       className={cn(
-        "font-semibold text-white bg-gradient-to-r from-[#00ff95d0] to-[#00d1ff] shadow-lg shadow-cyan-500/30 hover:scale-105 transition-all disabled:opacity-50",
+        "px-4 py-2 font-semibold text-white flex items-center justify-center gap-2 bg-gradient-to-r from-[#00ff95d0] to-[#00d1ff] rounded-lg shadow-lg shadow-cyan-500/30 hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
         othercss
       )}
     >
-      {title}
+      {loading ? (
+        <span className="animate-pulse">Loading...</span>
+      ) : (
+        <>
+          {title}
+          {Icon && <span className={iconClass}> {Icon}</span>}
+        </>
+      )}
     </button>
   );
 };

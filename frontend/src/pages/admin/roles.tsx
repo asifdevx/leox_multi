@@ -81,9 +81,11 @@ const Roles = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-full lg:w-1/3 gap-6">
-        <ManageUserRole />
-      </div>
+
+      {/* ------------------------ */}
+      {/* Role Section */}
+      {/* ------------------------ */}
+      <ManageUserRole />
     </section>
   );
 };

@@ -3,7 +3,8 @@ import { fetchNFT } from "@/reducer/nftSlice";
 import { NftState } from "@/types";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import SkeletonCom from "../ui/skeleton";
+import { SkeletonCom } from "../ui/skeleton";
+
 
 export default function LatestTransaction() {
   const dispatch = useDispatch<AppDispatch>();
