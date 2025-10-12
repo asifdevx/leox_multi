@@ -18,8 +18,8 @@ export const fetchUsersByRole = createAsyncThunk("users/fetchByRole" , async (ro
 const initialState:UsersState  = {
     usersByRole: {},
     loading: false,
-    error: null
-
+    error: null,
+   
 };
 
 const roleByUserSlice = createSlice({

@@ -26,11 +26,11 @@ export const getUserInfo = createAsyncThunk(
 
 export const updateUserInfo = createAsyncThunk(
   "user/updateInfo",
-  async ({ address, name, gmail, role, action }: type.updateUserInfoType, { rejectWithValue }) => {
+  async ({ address, name, gmail, roles }: type.updateUserInfoType, { rejectWithValue }) => {
     try {
       const data = await fetchGraphQL<{
         updateUserInfo: type.UserInfoType;
-      }>(UPDATE_USER_INFO, { name, gmail, address, role, action });
+      }>(UPDATE_USER_INFO, { name, gmail, address, roles});
       console.log("roles", data?.updateUserInfo);
 
       return data?.updateUserInfo;

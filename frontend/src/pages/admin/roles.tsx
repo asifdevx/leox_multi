@@ -31,7 +31,7 @@ const Roles = () => {
 
           {/* Roles list */}
           <div className="w-full flex flex-col gap-3 mt-4">
-            {["Admin", "Moderator", "Ban"].map((e, idx) => (
+            {["Admin", "Moderator", "Seller", "Buyer", "Ban"].map((e, idx) => (
               <ShowDetails key={idx} roleName={e} />
             ))}
           </div>
@@ -53,29 +53,6 @@ const Roles = () => {
                     <li key={p}>{p}</li>
                   ))}
                 </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="w-full bg-gray-800/40 rounded-xl p-6">
-          <h4 className="text-2xl font-semibold text-white mb-4">
-            Role Statistics
-          </h4>
-          <div className="grid grid-cols-3 gap-4 text-center">
-            {[
-              { name: "Admins", count: 3, color: "text-red-400" },
-              { name: "Moderators", count: 5, color: "text-yellow-400" },
-              { name: "Artists", count: 12, color: "text-green-400" },
-            ].map((stat) => (
-              <div
-                key={stat.name}
-                className="bg-gray-900/60 rounded-lg py-4 hover:bg-gray-900/80 transition-all"
-              >
-                <p className={`text-3xl font-bold ${stat.color}`}>
-                  {stat.count}
-                </p>
-                <p className="text-gray-400 text-sm">{stat.name}</p>
               </div>
             ))}
           </div>

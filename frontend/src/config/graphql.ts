@@ -33,8 +33,8 @@ query GetUserData($address:String!){
 `;
 
 export const UPDATE_USER_INFO = `
-mutation addRole($name:String,$gmail:String,$address:String!,$role:String,$action:String){
-  updateInfo(name:$name,gmail:$gmail,address:$address,role:$role,action:$action){
+mutation addRole($name:String,$gmail:String,$address:String!,$roles:[String]){
+  updateInfo(name:$name,gmail:$gmail,address:$address,roles:$roles){
     name
     gmail
     address

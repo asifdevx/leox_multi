@@ -131,9 +131,9 @@ declare type updateUserInfoType = {
   address: string;
   name?: string;
   gmail?: string | null;
-  role?: Role;
+  roles?: Role[];
   isFirstTime?: boolean;
-  action?: "add" | "remove";
+
 };
 
 interface AddUserNameProps {
@@ -149,7 +149,7 @@ interface User {
 }
 
 interface UsersState {
-  includes(arg0: string): unknown;
+
   usersByRole: Record<string, User[]>;
   loading: boolean;
   error: string | null;

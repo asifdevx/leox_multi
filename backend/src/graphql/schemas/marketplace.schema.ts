@@ -54,55 +54,49 @@ const RootQuery = new GraphQLObjectType({
     }
   }
 });
-
 const Mutation = new GraphQLObjectType({
   name: "mutation",
   fields: {
-    updateInfo:{
-      type:UserInfoType,
-      args:{
+    updateInfo: {
+      type: UserInfoType,
+      args: {
         address: { type: new GraphQLNonNull(GraphQLString) },
         name: { type: GraphQLString },
         gmail: { type: GraphQLString },
-        role: { type: GraphQLString },      
-        action: { type: GraphQLString }, 
+        roles: { type: new GraphQLList(GraphQLString) },
       },
-      resolve:async(_,{address, name, gmail, role, action})=>{
+      resolve: async (_, { address, name, gmail, roles }) => {
         let user = await findUser(address.toLowerCase());
-        if(!user) { 
+
+        if (!user) {
+          // create new user
           user = await createUser({
             address,
-            name:name || "Anonymous",
-            gmail:gmail || null,
-            roles:role && action =="add" ? [role] : ["Buyer"]
-          })
-        }else{
-          if(gmail) user.gmail=gmail;
-          if(name) user.name=name;
+            name: name || "Anonymous",
+            gmail: gmail || null,
+            roles: roles?.length ? roles : ["Buyer"],
+          });
+        } else {
+          // update existing user
+          if (name) user.name = name;
+          if (gmail) user.gmail = gmail;
+          if ((name && name !== "Anonymous") || gmail) user.isFirstTime = false;
 
-          if ((name && name !== "Anonymous") || gmail) {
-            user.isFirstTime = false;
+          if (roles?.length) {
+            user.roles = roles;
           }
-          if(role){
-            if(action == "add" && !user.roles.includes(role)){
-              user.roles.push(role);
-            }else if(action == "remove"){
-              user.roles=user.roles.filter(r=>r!==role);
-              if (user.roles.length === 0) user.roles.push("Buyer"); 
-            }else if (action == "add" && action == "remove"){
-              throw new Error("Invalid action, must be 'add' or 'remove'");
-            }
-          }
+          if (!user.roles?.length) user.roles.push("Buyer");
         }
+
         await user.save();
         console.log("user", user.toObject());
 
         return user.toObject ? user.toObject() : user;
-
-      }
-    }
+      },
+    },
   },
 });
+
 
 export const marketplace = new GraphQLSchema({
   query: RootQuery,

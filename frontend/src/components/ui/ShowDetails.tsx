@@ -1,6 +1,6 @@
 import { fetchUsersByRole } from "@/reducer/RoleByUserSlice";
 import { Disclosure, Transition } from "@headlessui/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { handleCopy } from "../HelperCom/handleCopy";
 import { AppDispatch, RootState } from "../store/store";
@@ -19,9 +19,20 @@ export default function ShowDetails({ roleName }: ShowDetailsProps) {
   const users = usersByRole[roleName] || [];
   const dispatch = useDispatch<AppDispatch>();
 
+  const [visibleCount, setVisibleCount] = useState(1);
+
   useEffect(() => {
     dispatch(fetchUsersByRole(roleName));
   }, [dispatch, roleName]);
+
+  // Reset visible count if role changes
+  useEffect(() => {
+    setVisibleCount(1);
+  }, [roleName]);
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + 1);
+  };
 
   // Skeleton/loading placeholder
   if (loading && users.length === 0) {
@@ -34,9 +45,6 @@ export default function ShowDetails({ roleName }: ShowDetailsProps) {
   }
 
   return (
-
-
-    
     <Disclosure as="div" className="w-full">
       {({ open }) => (
         <div className="bg-gray-700/60 hover:bg-gray-700/80 rounded-lg shadow-sm transition-all">
@@ -53,9 +61,13 @@ export default function ShowDetails({ roleName }: ShowDetailsProps) {
               />
               <span>{roleName}</span>
             </div>
-            <div className="flex items-center gap-2  text-gray-300">
+            <div className="flex items-center gap-2 text-gray-300">
               <span className="text-blue-500">{users.length} Users</span>
-              <span className={`transform transition-transform ${open ? "rotate-180" : ""}`}>
+              <span
+                className={`transform transition-transform ${
+                  open ? "rotate-180" : ""
+                }`}
+              >
                 ▼
               </span>
             </div>
@@ -73,27 +85,43 @@ export default function ShowDetails({ roleName }: ShowDetailsProps) {
           >
             <Disclosure.Panel className="px-4 py-3 bg-gray-700/80 rounded-b-lg text-gray-300">
               {users.length > 0 ? (
-                <ul className="flex flex-col divide-y divide-gray-600">
-                  {users.map((item, idx) => (
-                    <li
-                      key={idx}
-                      className="flex justify-between items-center py-2 text-sm sm:text-base hover:bg-gray-600/30 transition-colors rounded-md px-2"
-                    >
-                      <div className="text-base md:text-lg font-medium">{item.name}</div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm md:text-base font-mono text-gray-200">
-                          {shortenAddress(item.address)}
-                        </span>
-                        <GoCopy
-                          className="text-white/60 cursor-pointer hover:text-white transition-colors"
-                          onClick={() => handleCopy(item.address)}
-                        />
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                <>
+                  <ul className="flex flex-col divide-y divide-gray-600">
+                    {users.slice(0, visibleCount).map((item, idx) => (
+                      <li
+                        key={idx}
+                        className="flex justify-between items-center py-2 text-sm sm:text-base hover:bg-gray-600/30 transition-colors rounded-md px-2"
+                      >
+                        <div className="text-base md:text-lg font-medium">
+                          {item.name}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm md:text-base font-mono text-gray-200">
+                            {shortenAddress(item.address)}
+                          </span>
+                          <GoCopy
+                            className="text-white/60 cursor-pointer hover:text-white transition-colors"
+                            onClick={() => handleCopy(item.address)}
+                          />
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                  {visibleCount < users.length && (
+                    <div className="mt-2 flex justify-center">
+                      <button
+                        onClick={handleLoadMore}
+                        className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg transition-colors"
+                      >
+                        Load More
+                      </button>
+                    </div>
+                  )}
+                </>
               ) : (
-                <p className="text-gray-400 italic">No users found for this role.</p>
+                <p className="text-gray-400 italic">
+                  No users found for this role.
+                </p>
               )}
             </Disclosure.Panel>
           </Transition>
