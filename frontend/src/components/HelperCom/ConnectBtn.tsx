@@ -90,7 +90,7 @@ const ConnectBtn: React.FC = () => {
   };
 
   const title =
-    isConnected && address ? shortenAddress(address) : "Connect Wallet";
+    isConnected && address ? shortenAddress(address) : "Connect";
 
   return (
     <div>
@@ -99,7 +99,7 @@ const ConnectBtn: React.FC = () => {
       <Button
         title={title}
         handleClick={() => handleConnect(metaMaskConnector)}
-        othercss="px-3 py-2 rounded-lg"
+        othercss="px-3 py-2 text-base md:text-lg rounded-lg"
       />
 
       {/* Modal */}

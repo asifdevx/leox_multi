@@ -1,6 +1,6 @@
 import { fetchUsersByRole } from "@/reducer/RoleByUserSlice";
 import { Disclosure, Transition } from "@headlessui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { handleCopy } from "../HelperCom/handleCopy";
 import { AppDispatch, RootState } from "../store/store";
@@ -12,6 +12,8 @@ interface ShowDetailsProps {
   roleName: string;
 }
 
+const CHUNK_SIZE = 10; // Load 10 users at a time
+
 export default function ShowDetails({ roleName }: ShowDetailsProps) {
   const { loading, usersByRole } = useSelector(
     (state: RootState) => state.roleByUser
@@ -19,27 +21,27 @@ export default function ShowDetails({ roleName }: ShowDetailsProps) {
   const users = usersByRole[roleName] || [];
   const dispatch = useDispatch<AppDispatch>();
 
-  const [visibleCount, setVisibleCount] = useState(1);
+  const [visibleCount, setVisibleCount] = useState(CHUNK_SIZE);
 
+  // Fetch users only if not already loaded
   useEffect(() => {
-    dispatch(fetchUsersByRole(roleName));
-  }, [dispatch, roleName]);
+    if (!usersByRole[roleName]) {
+      dispatch(fetchUsersByRole(roleName));
+    }
+    setVisibleCount(CHUNK_SIZE); // Reset visible count when role changes
+  }, [dispatch, roleName, usersByRole]);
 
-  // Reset visible count if role changes
-  useEffect(() => {
-    setVisibleCount(1);
-  }, [roleName]);
+  const visibleUsers = useMemo(() => users.slice(0, visibleCount), [users, visibleCount]);
 
-  const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + 1);
-  };
+  const handleLoadMore = () => setVisibleCount((prev) => prev + CHUNK_SIZE);
 
-  // Skeleton/loading placeholder
+  // Skeleton
   if (loading && users.length === 0) {
     return (
       <div className="bg-gray-900 animate-pulse p-5 rounded-xl shadow-md w-full">
-        <div className="h-5 bg-gray-700 rounded w-1/3 mb-3"></div>
-        <div className="h-4 bg-gray-700 rounded w-full"></div>
+        {Array.from({ length: 5 }).map((_, idx) => (
+          <div key={idx} className="h-4 bg-gray-700 rounded w-full mb-2"></div>
+        ))}
       </div>
     );
   }
@@ -48,7 +50,6 @@ export default function ShowDetails({ roleName }: ShowDetailsProps) {
     <Disclosure as="div" className="w-full">
       {({ open }) => (
         <div className="bg-gray-700/60 hover:bg-gray-700/80 rounded-lg shadow-sm transition-all">
-          {/* Header */}
           <Disclosure.Button className="flex justify-between items-center w-full px-4 py-3 cursor-pointer text-white font-semibold text-lg md:text-xl transition-colors">
             <div className="flex items-center gap-3">
               <Image
@@ -56,24 +57,19 @@ export default function ShowDetails({ roleName }: ShowDetailsProps) {
                 height={32}
                 src={`/${roleName}.png`}
                 alt={roleName}
-                fetchPriority="high"
                 className="rounded-full object-cover"
+                fetchPriority="high"
               />
               <span>{roleName}</span>
             </div>
             <div className="flex items-center gap-2 text-gray-300">
               <span className="text-blue-500">{users.length} Users</span>
-              <span
-                className={`transform transition-transform ${
-                  open ? "rotate-180" : ""
-                }`}
-              >
+              <span className={`transform transition-transform ${open ? "rotate-180" : ""}`}>
                 ▼
               </span>
             </div>
           </Disclosure.Button>
 
-          {/* Panel */}
           <Transition
             show={open}
             enter="transition duration-300 ease-out"
@@ -87,14 +83,12 @@ export default function ShowDetails({ roleName }: ShowDetailsProps) {
               {users.length > 0 ? (
                 <>
                   <ul className="flex flex-col divide-y divide-gray-600">
-                    {users.slice(0, visibleCount).map((item, idx) => (
+                    {visibleUsers.map((item) => (
                       <li
-                        key={idx}
+                        key={item.address}
                         className="flex justify-between items-center py-2 text-sm sm:text-base hover:bg-gray-600/30 transition-colors rounded-md px-2"
                       >
-                        <div className="text-base md:text-lg font-medium">
-                          {item.name}
-                        </div>
+                        <div className="text-base md:text-lg font-medium">{item.name}</div>
                         <div className="flex items-center gap-2">
                           <span className="text-sm md:text-base font-mono text-gray-200">
                             {shortenAddress(item.address)}
@@ -119,9 +113,7 @@ export default function ShowDetails({ roleName }: ShowDetailsProps) {
                   )}
                 </>
               ) : (
-                <p className="text-gray-400 italic">
-                  No users found for this role.
-                </p>
+                <p className="text-gray-400 italic">No users found for this role.</p>
               )}
             </Disclosure.Panel>
           </Transition>

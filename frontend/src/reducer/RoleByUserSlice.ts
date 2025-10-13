@@ -7,8 +7,7 @@ import {  createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const fetchUsersByRole = createAsyncThunk("users/fetchByRole" , async (role:string,{rejectWithValue})=>{
     try {
         const data = await getUserByRole(role);
-        console.log("fetchUsersByRole",data);
-        
+       
         return {role,data} ;
     } catch (error:any) {
        return rejectWithValue(error.message || "Failed to fetch users") 

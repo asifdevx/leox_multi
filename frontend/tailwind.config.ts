@@ -134,6 +134,7 @@ const config: Config = {
         widthIncrease: "widthIncrease 0.3s ease-in-out",
         "spin-slow": "spin 1.5s linear infinite",
         fadeIn: "fadeIn 0.4s ease-in-out",
+        trail: "trail var(--duration) linear infinite",
       },
       keyframes: {
         widthIncrease: {
@@ -143,6 +144,10 @@ const config: Config = {
           "100%": {
             width: "100%",
           },
+        },
+        trail: {
+          "0%": { "--angle": "0deg" },
+          "100%": { "--angle": "360deg" },
         },
         fadeIn: {
           "0%": { opacity: "0", transform: "translateY(5px)" },
@@ -163,6 +168,9 @@ const config: Config = {
           "linear-gradient(0deg, rgba(159,149,231,1) 37%, rgba(59,181,226,1) 100%)",
         mobileBg:
           "linear-gradient(0deg, rgba(255,254,254,0.6015424164524421) 33%, rgba(255,255,255,0.7069408740359897) 37%)",
+        moving_button_bg: "linear-gradient(145deg, #e2e8ec, #ffffff)",
+        hover_moving_button_bg:
+          "linear-gradient(317deg, #13fdfd 0%, rgba(19, 215, 253, 1) 50%, rgba(19, 191, 253, 1) 62.96%, #139bfd 100%)",
       },
     },
     fontFamily: {

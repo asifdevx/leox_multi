@@ -181,3 +181,16 @@ interface FeeState {
   status: "idle" | "succeeded";
   history: FeeHistoryItem[];
 }
+// ====================================================
+//                       HOME
+// ====================================================
+
+
+type AnimatedBorderProps = {
+  title: string;
+  arrow?: string;
+  borderRadius?: string;
+  handleClick?: () => void;
+  type?: "button" | "submit" | "reset";  
+  
+}
