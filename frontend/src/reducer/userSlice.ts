@@ -31,7 +31,7 @@ export const updateUserInfo = createAsyncThunk(
       const data = await fetchGraphQL<{
         updateUserInfo: type.UserInfoType;
       }>(UPDATE_USER_INFO, { name, gmail, address, roles});
-      console.log("roles", data?.updateUserInfo);
+     
 
       return data?.updateUserInfo;
     } catch (error:any) {

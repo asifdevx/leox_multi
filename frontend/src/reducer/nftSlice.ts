@@ -6,7 +6,6 @@ import { CreateNFTArgs, NFT, NftState } from "@/types";
 import { fetchGraphQL } from "@/api/graphql";
 import { GET_NFT } from "@/config/graphql";
 
-
 dotenv.config();
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
@@ -18,14 +17,13 @@ export const createEthContract = async () => {
   return new ethers.Contract(CONTRACT_ADDRESS!, abi, signer);
 };
 
-
 export const createNFT = createAsyncThunk(
   "nft/createNFT",
-  async ({ tokenURI, supply, price }: CreateNFTArgs,{dispatch}) => {
+  async ({ tokenURI, supply, price }: CreateNFTArgs) => {
     try {
       const contract = await createEthContract();
-      console.log("tokenURI",tokenURI);
-      
+      console.log("tokenURI", tokenURI);
+
       const tx = await contract?.mint(
         tokenURI,
         supply,
@@ -33,7 +31,6 @@ export const createNFT = createAsyncThunk(
       );
       if (!tx) throw new Error("Transaction failed to initialize.");
       await tx.wait();
-      dispatch(fetchNFT({start:0,limit:10}));
       return { success: true, txHash: tx.hash };
     } catch (error) {
       console.error("Error creating NFT:", error);
@@ -43,15 +40,18 @@ export const createNFT = createAsyncThunk(
 );
 
 export const fetchNFT = createAsyncThunk<
-  NFT[],  { start: number; limit: number } 
->("nft/fetchNFT", async ({ start, limit }) => {
- 
-  const data = await fetchGraphQL<{ nfts: NFT[] }>(GET_NFT,{start,limit});
+  NFT[],
+  { start: number; limit: number; sortBy?: string }
+>("nft/fetchNFT", async ({ start, limit, sortBy }) => {
+  const data = await fetchGraphQL<{ nfts: NFT[] }>(GET_NFT, {
+    start,
+    limit,
+    sortBy,
+  });
+  console.log("nft Datas", data?.nfts || []);
+
   return data?.nfts || [];
 });
-
-
-
 
 const initialState: NftState = {
   listings: [],
@@ -60,7 +60,7 @@ const initialState: NftState = {
   hasMore: true,
   offset: 0,
   limit: 10,
-
+  sortBy: "recent",
 };
 
 const nftSlice = createSlice({
@@ -72,6 +72,25 @@ const nftSlice = createSlice({
       state.offset = 0;
       state.hasMore = true;
       state.error = null;
+    },
+    setSortBy(state, action) {
+      state.sortBy = action.payload;
+      state.listings = [];
+      state.offset = 0;
+      state.hasMore = true;
+    },
+    addNewNFT(state, action) {
+      const newNFT = action.payload;
+      const key = `${newNFT.tokenId}-${newNFT.seller}`;
+      const exists = state.listings.some(
+        (item) => `${item.tokenId}-${item.seller}` === key
+      );
+
+      if (!exists) {
+        // Add the new NFT to the beginning (most recent first)
+        state.listings.unshift(newNFT);
+        state.offset += 1;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -92,31 +111,29 @@ const nftSlice = createSlice({
       .addCase(fetchNFT.fulfilled, (state, action) => {
         state.loading = false;
 
-        const fatchData: NFT[] = action.payload || [];
-        console.log(fatchData, "fatchData");
-        if (fatchData.length ===0 || fatchData.length < state.limit) {
-             
-          state.hasMore = false;
-        }
+        let fetched: NFT[] = action.payload || [];
 
         const existingKeys = new Set(
-          state.listings.map((item) => `${item.tokenId}-${item.seller}`)
+          state.listings.map((i) => `${i.tokenId}-${i.seller}`)
         );
-
-        const newUniqueListings = action.payload.filter(
+        const newUnique = fetched.filter(
           (item) => !existingKeys.has(`${item.tokenId}-${item.seller}`)
         );
-        console.log(newUniqueListings, "newUniqueListings");
 
-        state.listings.push(...newUniqueListings);
-        state.offset += newUniqueListings.length;
+        state.listings.push(...newUnique);
+        state.offset += newUnique.length;
+        if (newUnique.length === 0 || fetched.length < state.limit) {
+          state.hasMore = false;
+        } else {
+          state.hasMore = true;
+        }
       })
       .addCase(fetchNFT.rejected, (state) => {
         state.loading = false;
         state.error = "Failed to fetch listings";
-      })
-  
-     
+      });
   },
 });
+
+export const { resetListings, setSortBy, addNewNFT } = nftSlice.actions;
 export default nftSlice.reducer;

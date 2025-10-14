@@ -21,13 +21,15 @@ const RootQuery = new GraphQLObjectType({
       args: {
         start: { type: GraphQLInt },
         limit: { type: GraphQLInt },
+        sortBy:{type :GraphQLString}
       },
-      resolve: async (_, arg) => {
-        const start = Number.isInteger(arg?.start) ? arg.start : 0;
-        const limit = Number.isInteger(arg?.limit) ? arg.limit : 10;
-        console.log(start, limit);
+      resolve: async (_, args) => {
+        const start = Number.isInteger(args?.start) ? args.start : 0;
+        const limit = Number.isInteger(args?.limit) ? args.limit : 10;
+        const sortBy = args?.sortBy || "recent";
+        console.log(start, limit,sortBy);
 
-        return await getNFTs(start, limit);
+        return await getNFTs(start, limit,sortBy);
       },
     },
     getUserInfo: {

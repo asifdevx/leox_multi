@@ -1,6 +1,6 @@
 export const GET_NFT = `
-query GetNFTs($start:Int!,$limit:Int!) {
-  nfts(start:$start,limit:$limit) {
+query GetNFTs($start:Int!,$limit:Int!,$sortBy: String) {
+  nfts(start:$start,limit:$limit,sortBy: $sortBy) {
     tokenId
     name
     description
@@ -16,6 +16,7 @@ query GetNFTs($start:Int!,$limit:Int!) {
     highestBidder
     highestBid
     claimed
+    updatedAt
   }
 }
 `;

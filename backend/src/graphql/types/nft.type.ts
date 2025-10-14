@@ -26,6 +26,7 @@ export const NftType = new GraphQLObjectType({
     highestBid: { type: GraphQLString },
     claimed: { type: GraphQLBoolean },
     tokenURI: { type: GraphQLString },
+    updatedAt:{type: GraphQLString}
   },
 });
 

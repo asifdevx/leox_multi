@@ -46,7 +46,7 @@ const index = () => {
       <div
         className={`fixed top-0 left-0 bg-nft-dark-gradient text-white w-full z-40`}
       >
-        <div className="w-full flex lg:grid pt-2 grid-cols-8 justify-between px-3 md:px-7 mx-auto">
+        <div className="w-full flex lg:grid pt-2 grid-cols-8 justify-between section_padding">
           {/* Logo section  */}
           <div className="h-full flex items-center md:gap-10 gap-3 ">
             <Link className=" flex gap-1 items-center" href="/admin">

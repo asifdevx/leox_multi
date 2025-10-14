@@ -6,7 +6,7 @@ import AnimatedBorder from "../ui/MovingBorder";
 const HomeBanner = () => {
   const router = useRouter();
   return (
-    <div className="relative w-full h-[600px] rounded-xl">
+    <div className="relative w-full h-[600px] ">
       {/* Background Image */}
       <Image
         src="/homeBg.png"
@@ -39,8 +39,8 @@ const HomeBanner = () => {
             digital ownership. At Leox, every NFT tells a story — yours starts
             here.
           </p>
-          <div className="flex gap-5 w-full items-center sm:items-start flex-col sm:flex-row mt-8">
-            <AnimatedBorder title="Learn More" arrow="&rarr;"/>
+          <div className="flex gap-5 w-full items-center sm:items-start flex-col  sm:flex-row mt-8">
+            <AnimatedBorder title="Learn More" arrow="&rarr;" buttonClass="text-sm lg:text-xl"/>
             <AnimatedBorder
               title="Create NFT"
               handleClick={() => router.push("/create")}

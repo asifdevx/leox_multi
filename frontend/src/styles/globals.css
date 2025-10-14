@@ -43,7 +43,7 @@ h6 {
 }
 @layer utilities {
   .section_padding {
-    @apply px-10 md:px-20 xl:px-0;
+    @apply  px-3 md:px-7 mx-auto;
   }
   .section_size {
     @apply max-w-xl md:max-w-5xl xl:max-w-7xl w-full mx-auto;

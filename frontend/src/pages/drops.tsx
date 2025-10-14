@@ -1,10 +1,10 @@
-import LatestTransaction from '@/components/HelperCom/LatestTransaction'
+import LatestTransaction from '@/components/Com/DropCom/LatestTransaction'
 import React from 'react'
 
 const drops = () => {
   return (
     <div>
-      <LatestTransaction/>
+      <LatestTransaction />
     </div>
   )
 }

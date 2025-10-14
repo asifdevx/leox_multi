@@ -1,5 +1,6 @@
 import { AppDispatch } from "@/components/store/store";
 import { fatchFee} from "@/reducer/feeSlice";
+import { addNewNFT } from "@/reducer/nftSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { io } from "socket.io-client";
@@ -15,11 +16,16 @@ export default function SocketListener() {
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(()=>{
-    socket.on("feeUpdate",(newFee)=>{
+    socket.on("updateFee",(newFee)=>{
         dispatch(fatchFee(newFee))
     })
+    socket.on("newNFTListed", (nft) => {
+        dispatch(addNewNFT(nft)); 
+      });
     return () =>{
-        socket.off("feeUpdate")
+        socket.off("updateFee");
+        socket.off("newNFTListed");
+
     }
     },[dispatch])
 return null;

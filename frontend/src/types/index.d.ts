@@ -37,6 +37,7 @@ interface NFT {
   highestBidder: string;
   highestBid: string;
   claimed: boolean;
+  updatedAt:Date,
 }
 
 interface NftState {
@@ -46,6 +47,7 @@ interface NftState {
   hasMore: boolean;
   offset: number;
   limit: number;
+  sortBy?: "highestPrice" | "lowestPrice" | "recent" | "oldest";
 }
 
 interface PreviewNFTProps {
@@ -192,5 +194,5 @@ type AnimatedBorderProps = {
   borderRadius?: string;
   handleClick?: () => void;
   type?: "button" | "submit" | "reset";  
-  
+  buttonClass?:string
 }

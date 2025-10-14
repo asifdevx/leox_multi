@@ -69,6 +69,7 @@ const AnimatedBorder = ({
   borderRadius,
   handleClick,
   type,
+  buttonClass
 }: AnimatedBorderProps) => {
  
 
@@ -85,7 +86,8 @@ const AnimatedBorder = ({
         className={cn(
           "group relative flex items-center justify-center gap-2 text-base font-medium transition-all duration-300",
           "bg-moving_button_bg hover:bg-hover_moving_button_bg",
-          "text-black hover:text-white"
+          "text-black hover:text-white",
+          buttonClass
         )}
         style={{ borderRadius }}
         type={type}
