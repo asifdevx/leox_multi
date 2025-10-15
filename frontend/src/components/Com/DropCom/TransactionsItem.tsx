@@ -1,7 +1,7 @@
 import { NFT } from "@/types";
 import React from "react";
 
-const LatestDropTransactions = ({ item }: { item: NFT }) => {
+const TransactionItems = ({ item }: { item: NFT }) => {
   return (
     <>
       <div className="w-full bg-gray-100 flex items-center justify-center overflow-hidden rounded-lg">
@@ -40,4 +40,4 @@ const LatestDropTransactions = ({ item }: { item: NFT }) => {
   );
 };
 
-export default LatestDropTransactions;
+export default TransactionItems;

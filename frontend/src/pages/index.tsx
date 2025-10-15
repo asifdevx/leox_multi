@@ -1,17 +1,18 @@
-import HomeDemoLatestNft from "@/components/Com/homrCom/HomeDemoLatestNft";
+
 import HomeBanner from "@/components/HelperCom/HomeBanner";
-import LatestTransaction from "@/components/Com/DropCom/LatestTransaction";
+import LatestTransaction from "@/components/ui/nftSlider";
+
 import React from "react";
 
 const index = () => {
   return (
-    <section className="section_padding w-full flex flex-col gap-5 ">
+    <section className="section_padding w-full flex flex-col gap-8 ">
       <HomeBanner />
-      <div className="border border-white/60 rounded-lg ">
-        <div className="p-4">
-          <h3 className="text-white font-extrabold">Latest Transactions</h3>
+      <div className="border-none md:border-solid border border-white/60 rounded-lg ">
+        <div className=" py-4 md:py-0 md:p-4">
+          <h3 className="text-white text-xl md:text-3xl font-extrabold">Recent Transaction</h3>
           <div className="w-full h-[2px] bg-white/60 rounded-full" />
-          <HomeDemoLatestNft/>
+          <LatestTransaction/>
         </div>
       </div>
     </section>

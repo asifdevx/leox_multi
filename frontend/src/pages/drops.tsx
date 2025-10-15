@@ -1,4 +1,4 @@
-import LatestTransaction from '@/components/Com/DropCom/LatestTransaction'
+import LatestTransaction from '@/components/Com/DropCom/TransactionItems'
 import React from 'react'
 
 const drops = () => {

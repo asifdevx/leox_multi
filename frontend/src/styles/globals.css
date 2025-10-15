@@ -48,6 +48,9 @@ h6 {
   .section_size {
     @apply max-w-xl md:max-w-5xl xl:max-w-7xl w-full mx-auto;
   }
+  button#prev-btn, button#next-btn {
+    @apply w-10 h-10 flex items-center justify-center bg-white/90 hover:bg-white hover:scale-105 bg-opacity-70 text-black rounded-full shadow-lg hover:bg-opacity-100 transition-all;
+  }
 }
 
 @layer base {
@@ -184,3 +187,4 @@ h6 {
   initial-value: 0deg;
   inherits: false;
 }
+

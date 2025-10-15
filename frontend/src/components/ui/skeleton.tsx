@@ -39,3 +39,28 @@ export function SkeletonComRole() {
     </div>
   );
 }
+
+
+
+export function RecentTransaction (){
+
+    return (
+      <div className="relative p-2 border border-white/40 rounded-lg overflow-hidden">
+        {/* Image Skeleton */}
+        <div className="relative w-full aspect-square">
+          <Skeleton className="w-full h-full rounded-lg bg-white" />
+        </div>
+  
+        {/* Text Skeletons */}
+        <div className="mt-2 space-y-2">
+          <Skeleton className="h-5 w-3/4 bg-white rounded" />
+  
+          <div className="flex items-center justify-between mt-1">
+            <Skeleton className="h-3 w-[60px] bg-white rounded" />
+            <Skeleton className="h-3 w-[40px] bg-white rounded" />
+          </div>
+        </div>
+      </div>
+    );
+
+}

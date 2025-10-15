@@ -4,9 +4,10 @@ import { NftState } from "@/types";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import LatestDropTransactions from "./LatestDropTransactions";
+
 import Button from "../../ui/Button";
-import { SkeletonCom } from "../../ui/skeleton";
+import { RecentTransaction } from "../../ui/skeleton";
+import TransactionItems from "./TransactionsItem";
 
 
 export default function LatestTransaction() {
@@ -34,14 +35,14 @@ export default function LatestTransaction() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {loading && listings.length === 0
           ? Array.from({ length: limit }).map((_, idx) => (
-              <SkeletonCom key={idx} />
+              <RecentTransaction key={idx} />
             ))
           : listings.map((item, index) => (
               <div
                 key={`${item.tokenId}-${item.seller}-${index}`}
                 className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
               >
-               <LatestDropTransactions item={item}/>
+               <TransactionItems item={item}/>
               </div>
             ))}
       </div>
