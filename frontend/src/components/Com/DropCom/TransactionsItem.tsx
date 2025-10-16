@@ -1,21 +1,53 @@
+import { NFTimage } from "@/components/ui/skeleton";
 import { NFT } from "@/types";
-import React from "react";
+import Image from "next/image";
+import React, {  useEffect, useState } from "react";
 
-const TransactionItems = ({ item }: { item: NFT }) => {
+const  TransactionsItem= ({
+  item,
+  isDesktop,
+}: {
+  item: NFT;
+  isDesktop?: boolean;
+}) => {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
-    <>
-      <div className="w-full bg-gray-100 flex items-center justify-center overflow-hidden rounded-lg">
-        <img
+    <div className="relative group  bg-white/5 backdrop-blur-md border hover:-translate-y-2 transition-transform duration-300 border-white/10 rounded-xl shadow-lg p-2 overflow-hidden">
+      {/* Image */}
+      <div className="relative w-full aspect-square rounded-lg">
+        {isLoading && <NFTimage />}
+
+        <Image
+          fill
+          loading="lazy"
           src={item.image || "/eth.svg"}
-          alt={item.name}
-          className="w-full h-full object-cover aspect-square bg-gray-300"
+          alt={item.name || "NFT image"}
+          className={`object-cover rounded-lg ${
+            isLoading ? "opacity-0" : "opacity-100"
+          }`}
+          onLoadingComplete={() => setIsLoading(false)}
         />
+
+        {/* Overlay with slide-up Mint button */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-all duration-300 flex items-end justify-center rounded-lg">
+          <button
+            className="mb-4 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 
+            bg-white text-black px-4 py-2 rounded-lg font-semibold transition-all duration-300"
+          >
+            Mint
+          </button>
+        </div>
       </div>
-      <div className="flex flex-col gap-2 p-3">
-        <p className="text-xs text-gray-500">User Name</p>
-        <h5 className="font-semibold text-lg text-white truncate">
-          {item.name}
-        </h5>
+
+      {/* Name */}
+      {isDesktop && <p className="text-lg text-gray-600">User Name</p>}
+      <p className="mt-2 text-lg md:text-xl text-white w-full truncate">
+        {item.name}
+      </p>
+
+      {/* Info Row */}
+      {isDesktop ? (
         <div className="flex bg-gray-100 w-full items-center justify-between px-3 py-2 rounded-lg mt-2">
           <div className="flex flex-col">
             <p className="text-sm text-gray-500">Status</p>
@@ -35,9 +67,22 @@ const TransactionItems = ({ item }: { item: NFT }) => {
             </p>
           </div>
         </div>
-      </div>
-    </>
+      ) : (
+        <div className="w-full flex items-center justify-between mt-1 gap-1">
+          <p className="flex items-center text-sm">
+            {item.isListed ? (
+              <span className="text-green-300 font-semibold">Now</span>
+            ) : (
+              <span className="text-gray-400">Not listed</span>
+            )}
+          </p>
+          <p className="font-semibold text-[11px]/[15px] text-indigo-600">
+            {item.price} ETH
+          </p>
+        </div>
+      )}
+    </div>
   );
 };
 
-export default TransactionItems;
+export default TransactionsItem;

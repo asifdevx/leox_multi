@@ -10,8 +10,8 @@ const index = () => {
       <HomeBanner />
       <div className="border-none md:border-solid border border-white/60 rounded-lg ">
         <div className=" py-4 md:py-0 md:p-4">
-          <h3 className="text-white text-xl md:text-3xl font-extrabold">Recent Transaction</h3>
-          <div className="w-full h-[2px] bg-white/60 rounded-full" />
+          <h3 className="text-white text-2xl sm:text-3xl md:text-5xl/[2.75rem] font-extrabold py-3 md:py-5">Recent Transaction</h3>
+          <div className="w-full h-[2px] bg-white/10 mt-2 rounded-full" />
           <LatestTransaction/>
         </div>
       </div>

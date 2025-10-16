@@ -92,12 +92,12 @@ const AnimatedBorder = ({
         style={{ borderRadius }}
         type={type}
       >
-        <div className="flex items-center justify-center relative transition-all duration-300 px-6 py-2">
+        <div className="flex items-center justify-center relative transition-all duration-300 px-2 md:px-3 lg:px-5 py-2 text-[14px] sm:text-lg md:text-xl">
           {/* Arrow */}
           {arrow && (
             <span
               className={cn(
-                "transition-all duration-500 ease-in-out text-[28px] mb-1 font-bold",
+                "transition-all duration-500 ease-in-out  mb-1 font-bold",
                 "order-2 group-hover:order-1",
                 "ml-3 group-hover:ml-0 group-hover:-translate-x-1"
               )}
@@ -109,7 +109,7 @@ const AnimatedBorder = ({
           {/* Text */}
           <p
             className={cn(
-              "transition-all duration-500 ease-in-out text-lg tracking-wide",
+              "transition-all duration-500 ease-in-out  tracking-wide",
               "order-1 group-hover:order-2",
               "group-hover:translate-x-1"
             )}

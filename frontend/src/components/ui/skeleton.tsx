@@ -42,7 +42,7 @@ export function SkeletonComRole() {
 
 
 
-export function RecentTransaction (){
+export function TransactionSkeleton (){
 
     return (
       <div className="relative p-2 border border-white/40 rounded-lg overflow-hidden">
@@ -63,4 +63,10 @@ export function RecentTransaction (){
       </div>
     );
 
+}
+export function NFTimage(){
+  return(
+    <Skeleton className="w-full h-full rounded-lg bg-white" />
+
+  )
 }

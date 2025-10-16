@@ -41,6 +41,9 @@ h6 {
 .Flex_col_reverse{
   flex-direction: column-reverse;
 }
+.swiper-horizontal {
+  padding-top: 10px !important;
+}
 @layer utilities {
   .section_padding {
     @apply  px-3 md:px-7 mx-auto;

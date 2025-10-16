@@ -122,11 +122,7 @@ const nftSlice = createSlice({
 
         state.listings.push(...newUnique);
         state.offset += newUnique.length;
-        if (newUnique.length === 0 || fetched.length < state.limit) {
-          state.hasMore = false;
-        } else {
-          state.hasMore = true;
-        }
+        state.hasMore = fetched.length === state.limit
       })
       .addCase(fetchNFT.rejected, (state) => {
         state.loading = false;
