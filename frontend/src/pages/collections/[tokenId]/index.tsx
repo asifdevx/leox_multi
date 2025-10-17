@@ -156,7 +156,7 @@ export default function NftDetail() {
             </div>
           ) : (
             <>
-              {/* Fixed Price Section */}
+           
               {/* Fixed Price Section */}
               <div className="bg-[#151c36] p-6 rounded-xl border border-purple-800/50 mb-8 shadow-xl space-y-4">
                 <p className="text-sm text-gray-400 uppercase font-medium">
