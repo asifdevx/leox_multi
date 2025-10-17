@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['crimson-odd-woodpecker-368.mypinata.cloud'],
+    domains: ['crimson-odd-woodpecker-368.mypinata.cloud',"via.placeholder.com"],
   },
   reactStrictMode: true,
   env:{

@@ -1,6 +1,7 @@
 import { NFTimage } from "@/components/ui/skeleton";
 import { NFT } from "@/types";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, {  useEffect, useState } from "react";
 
 const  TransactionsItem= ({
@@ -10,7 +11,11 @@ const  TransactionsItem= ({
   item: NFT;
   isDesktop?: boolean;
 }) => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const handleMintClick = () => {
+    router.push(`/collections/${item.tokenId}`);
+  };
 
   return (
     <div className="relative group  bg-white/5 backdrop-blur-md border hover:-translate-y-2 transition-transform duration-300 border-white/10 rounded-xl shadow-lg p-2 overflow-hidden">
@@ -32,6 +37,7 @@ const  TransactionsItem= ({
         {/* Overlay with slide-up Mint button */}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-all duration-300 flex items-end justify-center rounded-lg">
           <button
+          onClick={handleMintClick}
             className="mb-4 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 
             bg-white text-black px-4 py-2 rounded-lg font-semibold transition-all duration-300"
           >
@@ -51,7 +57,7 @@ const  TransactionsItem= ({
         <div className="flex bg-gray-100 w-full items-center justify-between px-3 py-2 rounded-lg mt-2">
           <div className="flex flex-col">
             <p className="text-sm text-gray-500">Status</p>
-            {item.isListed === false ? (
+            {item.isListed  ? (
               <div className="flex items-center gap-1">
                 <div className="w-3 h-3 bg-green-500 rounded-full" />
                 <p className="text-sm font-medium text-green-600">Available</p>

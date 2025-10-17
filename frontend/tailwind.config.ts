@@ -178,6 +178,8 @@ const config: Config = {
       ponomar: ["Ponomar", "system-ui"],
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"),
+
+],
 };
 export default config;
