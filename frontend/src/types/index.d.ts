@@ -19,6 +19,8 @@ declare type CreateNFTArgs = {
   tokenURI: string;
   supply: number;
   price: number; // in ETH or wei
+  saleType:"Fixed" | "Auction";
+  auctionDuration:number;
 };
 
 interface NFT {
@@ -61,7 +63,7 @@ interface PreviewNFTProps {
 // ====================================================
 
 declare type customBtnProps = {
-  title: string;
+  title: React.ReactNode;
   othercss: string;
   handleClick?: () => void;
   loading?: boolean;

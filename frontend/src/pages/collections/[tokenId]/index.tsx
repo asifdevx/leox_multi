@@ -13,6 +13,8 @@ export default function NftDetail() {
   );
 
   if (!nft) notFound();
+  console.log("nft",nft);
+  
   const isAuction = nft.saleType === 1;
 
   const [timeLeft, setTimeLeft] = useState({
@@ -32,8 +34,8 @@ export default function NftDetail() {
   useEffect(() => {
     if (!isAuction) return;
 
-    const endTime = new Date(nft.auctionEndTime).getTime();
-    const totalDuration = endTime - Date.now();
+    const endTime = nft.auctionEndTime * 1000; // convert seconds → ms
+  const totalDuration = endTime - Date.now();
 
     const timer = setInterval(() => {
       const now = Date.now();

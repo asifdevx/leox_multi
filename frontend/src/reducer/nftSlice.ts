@@ -19,15 +19,21 @@ export const createEthContract = async () => {
 
 export const createNFT = createAsyncThunk(
   "nft/createNFT",
-  async ({ tokenURI, supply, price }: CreateNFTArgs) => {
+  async ({ tokenURI, supply, price,saleType,auctionDuration   }: CreateNFTArgs) => {
     try {
       const contract = await createEthContract();
-      console.log("tokenURI", tokenURI);
-
+      const duration = saleType === "Fixed" ? 0 : Math.floor(auctionDuration);
+      console.log("duration",duration);
+      
+      const saleTypeString = saleType === "Fixed" ? "Fixed" : "Auction";
+      console.log("saleTypeString",saleTypeString);
+      
       const tx = await contract?.mint(
         tokenURI,
         supply,
-        ethers.parseEther(price.toString())
+        ethers.parseEther(price.toString()),
+        saleTypeString,
+        duration 
       );
       if (!tx) throw new Error("Transaction failed to initialize.");
       await tx.wait();
