@@ -1,20 +1,13 @@
 import React from "react";
 import { PreviewNFTProps } from "@/types";
+import { ShortenPrecisionPrice } from "@/utils/ShortenPrecisionPrice";
 
-const PreviewNFT = ({ preview, name, price }: PreviewNFTProps) => {
+
+const PreviewNFT = ({ preview, name, price, activeTab,supply }: PreviewNFTProps) => {
   function shortName(name: string) {
     return name.length > 15 ? `${name.slice(0, 15)}...` : name;
   }
-
-  const min = 0.00001;
-  const max = 100000;
-
-  const formatPrice = (price: number) => {
-    if (price === 0) return "0";
-    if (price < min) return `<${min}`;
-    if (price > max) return `>${max}`;
-    return Number(price).toString();
-  };
+  const isAuction = activeTab === "Auction";
 
   return (
     <div className="sticky top-20 w-64">
@@ -42,18 +35,31 @@ const PreviewNFT = ({ preview, name, price }: PreviewNFTProps) => {
             <div className="flex bg-[#0f1f33]/60 border border-[#1e3350] w-full items-center justify-between px-4 py-3 rounded-xl">
               {/* Price */}
               <div className="flex flex-col">
-                <p className="text-sm text-gray-400">Price</p>
+                <p className="text-sm text-gray-400">
+                  {isAuction ? "Min Price" : "price"}
+                </p>
                 <p className="text-base font-medium text-[#00d1ff]">
-                  {price ? `${formatPrice(parseFloat(price))} ETH` : "—"}
+                  {price ? `${ShortenPrecisionPrice(price)} ETH` : "—"}
                 </p>
               </div>
 
               {/* Bids */}
               <div className="text-right">
-                <p className="text-sm text-gray-400">Highest bid</p>
-                <p className="text-base font-bold text-[#00ff95]">
-                  No bids yet
-                </p>
+                {isAuction ? (
+                  <>
+                    <p className="text-sm text-gray-400">Highest bid</p>
+                    <p className="text-base font-bold text-[#00ff95]">
+                      No bids yet
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-sm text-gray-400">Supply</p>
+                    <p className="text-base font-bold text-[#00ff95]">
+                      {supply}
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           </div>

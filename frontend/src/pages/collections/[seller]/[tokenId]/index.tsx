@@ -74,7 +74,7 @@ export default function NftDetail() {
           <h1 className="text-4xl font-extrabold text-glow-purple mb-4">
             {nft.name}
           </h1>
-          <p className="text-gray-400 mb-8 max-w-lg">{nft.description}</p>
+          <p className="text-gray-400 mb-8 break-words">{nft.description}</p>
 
           <div className="text-sm space-y-4 mb-8">
             <p>

@@ -6,12 +6,13 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from "graphql";
-import { NftType, UserInfoType } from "../types/nft.type";
+import { NftType, UserInfoType,BidType } from "../types/nft.type";
 import { getNFTs } from "../../mongoDb/controllers/nft.controlers";
 import {
   createUser,
   findUser,
 } from "../../mongoDb/controllers/userInfo.controlers";
+import {bids} from "../../mongoDb/controllers/AuctionBid.controlers";
 
 const RootQuery = new GraphQLObjectType({
   name: "Query",
@@ -27,8 +28,6 @@ const RootQuery = new GraphQLObjectType({
         const start = Number.isInteger(args?.start) ? args.start : 0;
         const limit = Number.isInteger(args?.limit) ? args.limit : 10;
         const sortBy = args?.sortBy || "recent";
-        console.log(start, limit,sortBy);
-
         return await getNFTs(start, limit,sortBy);
       },
     },
@@ -52,6 +51,16 @@ const RootQuery = new GraphQLObjectType({
         
         return user.toObject ? user.toObject() : user;
        
+      },
+    },
+    getBids: {
+      type: new GraphQLList(BidType),
+      args: {
+        tokenId: { type: new GraphQLNonNull(GraphQLString) },
+        seller: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve: async (_, { tokenId, seller }) => {
+        return await bids(tokenId,seller)
       },
     }
   }

@@ -1,11 +1,12 @@
 
+import { fetchGraphQL } from "@/api/graphql";
+import { GET_BID_HISTORY } from "@/config/graphql";
 import * as t from "@/types";
 import {  createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
 
 import { useAccount } from "wagmi";
 import { createEthContract } from "./nftSlice";
-
 export const buyToken = createAsyncThunk("buy/token",async({ tokenId, seller, quantity, totalPrice }:t.BuyTokenProps,{rejectWithValue})=>{
   try {
     const contract = await createEthContract();
@@ -18,18 +19,42 @@ export const buyToken = createAsyncThunk("buy/token",async({ tokenId, seller, qu
   }
 })
 
-export const bidToken =createAsyncThunk("buy/bidToken",async({tokenId,seller,bidAmount}:t.BidTokenProps,{rejectWithValue})=>{
+export const bidToken =createAsyncThunk("buy/bidToken",async({tokenId,seller,bidder,bidAmount}:t.BidTokenProps,{rejectWithValue})=>{
   try {
     const contract = await createEthContract();
+
     if (!contract) return rejectWithValue("Ethereum contract not available");
-    const tx = await contract.buy(tokenId,seller,{value:ethers.parseEther(bidAmount.toString())});
+    const tx = await contract.bid(tokenId,seller,{value:ethers.parseEther(bidAmount.toString())});
     await tx.wait();
-    return {tokenId,seller ,bidAmount}
+    return {tokenId,seller, bidder,bidAmount}
   } catch (error:any) {
     return rejectWithValue(error?.message || " bidToken Failed");
     
   }
 })
+
+export const getBidHistory = createAsyncThunk(
+  "buy/getBidHistory",
+  async (
+    { tokenId, seller }: { tokenId: string; seller: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const data = await fetchGraphQL<{ getBids: t.getBidsProps[] }>(
+        GET_BID_HISTORY,
+        { tokenId, seller }
+      );
+
+      console.log("getBids", data?.getBids);
+
+      // Return both tokenId, seller, and fetched bids
+      return { tokenId, seller, bids: data?.getBids || [] };
+    } catch (error: any) {
+      return rejectWithValue(error?.message || "Failed to fetch bid history");
+    }
+  }
+);
+
 
 const initialState:t.BuyInitialStateProps = {
     bidHistory: {},      
@@ -43,6 +68,8 @@ const buySlice = createSlice({
   name: "buy",
   initialState,
   reducers: {
+
+    // explain me this part with example  ..@gpt 
     addBidEvent (state,action) {
       const {tokenId, seller, bidder, bid }=action.payload;
       state.bidHistory[tokenId] = state.bidHistory[tokenId] || {};
@@ -70,19 +97,39 @@ const buySlice = createSlice({
     }) 
     .addCase(bidToken.fulfilled, (state, action) => {
       state.loading = false;
-      const { tokenId, seller, bidAmount } = action.payload;
+
+      const { tokenId, seller,bidder, bidAmount } = action.payload;
       state.bidHistory[tokenId] = state.bidHistory[tokenId] || {};
       state.bidHistory[tokenId][seller] =
         state.bidHistory[tokenId][seller] || [];
       state.bidHistory[tokenId][seller].push({
-        bidder: useAccount().address!,
+        bidder,
         bid: bidAmount.toString(),
       })
     }).addCase(bidToken.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
+    }) .addCase(getBidHistory.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(getBidHistory.fulfilled, (state, action) => {
+      state.loading = false;
+      const { tokenId, seller, bids } = action.payload;
+      state.bidHistory[tokenId] = state.bidHistory[tokenId] || {};
+      state.bidHistory[tokenId][seller] = bids.map((b) => ({
+        bidder: b.bidder,
+        bid: b.bid,
+        createdAt: b.createdAt,
+      }));
+    })
+    .addCase(getBidHistory.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
     });
+    
 }
+
 });
 
 export const { addBidEvent} = buySlice.actions;

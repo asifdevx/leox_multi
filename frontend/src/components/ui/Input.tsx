@@ -10,7 +10,8 @@ const Input = ({
   position,
   icon,
   value,
-  handleChange
+  handleChange,
+  onFocus
 }: InputProps) => {
   return (
     <div className="relative w-full">
@@ -21,6 +22,7 @@ const Input = ({
         onChange={handleChange}
         onWheel={(e) => e.currentTarget.blur()}
         value={value}
+        onFocus={onFocus}
       />
       {icon && (
         <div

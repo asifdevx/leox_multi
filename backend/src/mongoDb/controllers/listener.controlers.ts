@@ -48,7 +48,7 @@ export async function startNFTListener() {
         bidder: bidder.toLowerCase(),
         bid: bid.toString(),
         txHash: event.transactionHash,
-        createAt: new Date(),
+        createdAt: new Date(),
       });
       io.emit("NewBid", bidHistory.toObject());
       console.log(`💰 New Bid on Token ${tokenId}: ${bidder} bid ${bid}`);

@@ -57,6 +57,8 @@ interface PreviewNFTProps {
   preview: string | null;
   name: string;
   price: string;
+  activeTab:"Auction" | "Fixed";
+  supply:string
 }
 
 // ====================================================
@@ -84,6 +86,7 @@ interface InputProps {
   position?: "left" | "right";
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   icon?: ReactNode | string;
+  onFocus?:()=>void
 }
 
 type FormInputProps = {
@@ -94,6 +97,7 @@ type FormInputProps = {
   icon?: string;
   inputClass?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onFocus?:()=>void
 };
 
 type SideBarItem = {
@@ -210,6 +214,7 @@ interface BuyTokenProps {
 interface BidTokenProps {
   tokenId: number;
   seller: string;
+  bidder:string;
   bidAmount: number; // in ETH
 }
 
@@ -228,3 +233,13 @@ type BuyInitialStateProps = {
   loading: boolean;
   error: string | null;
 };
+
+interface getBidsProps {
+  tokenId:string;
+  seller:string;
+  bidder:string;
+  bid:string;
+  txHash:string;
+  createdAt:string
+}
+

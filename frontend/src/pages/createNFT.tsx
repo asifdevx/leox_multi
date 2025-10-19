@@ -14,6 +14,7 @@ import Button from "@/components/ui/Button";
 import ConnectBtn from "@/components/HelperCom/ConnectBtn";
 import FixedNFTForm from "@/components/Com/createCom/FixedNFTForm";
 import AuctionNFTForm from "@/components/Com/createCom/AuctionNFTForm";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const createNft = () => {
   const history = useSelector((state: RootState) => state.fee.history);
@@ -115,7 +116,7 @@ const createNft = () => {
             Multiple edition on <span className="text-[#00d1ff]">Ethereum</span>
           </p>
 
-          <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-2 lg:gap-8">
             {/* Left side form */}
             <div className="flex flex-col gap-6 md:col-span-2">
               {/* Wallet Status */}
@@ -248,17 +249,7 @@ const createNft = () => {
                   loading ? (
                     <div className="flex items-center gap-2">
                       {/* Spinner SVG */}
-                      <svg
-                        viewBox="0 0 73 73"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-5 h-5 animate-spin"
-                        fill="#ffffff"
-                      >
-                        <g fillRule="nonzero">
-                          <path d="M11.0326,35.5544 C9.78039,35.5544 8.71628,35.9926 7.83983,36.8689 C6.96372,37.746 6.52534,38.8099 6.52534,40.0621 C6.52534,41.3145 6.9634,42.3784 7.83983,43.2555 C8.7166,44.1318 9.78072,44.57 11.0326,44.57 C12.2638,44.57 13.3225,44.1318 14.2095,43.2555 C15.0961,42.3795 15.5395,41.3145 15.5395,40.0621 C15.5395,38.8099 15.0963,37.7468 14.2095,36.8689 C13.3224,35.9933 12.2638,35.5544 11.0326,35.5544 Z" />
-                          {/* Add more spinner paths if needed */}
-                        </g>
-                      </svg>
+                      <AiOutlineLoading3Quarters className="text-black animate-spin"/>
                       <span>Creating NFT...</span>
                     </div>
                   ) : (
@@ -269,8 +260,8 @@ const createNft = () => {
             </div>
 
             {/* Right side Preview */}
-            <div className="hidden md:block top-6 h-fit">
-              <PreviewNFT preview={preview} price={price} name={name} />
+            <div className="hidden md:block top-6 h-fit stick">
+              <PreviewNFT preview={preview} price={activeTab == "Auction" ?startingBid :price } name={name} activeTab={activeTab} supply={supply}/>
             </div>
           </div>
         </>

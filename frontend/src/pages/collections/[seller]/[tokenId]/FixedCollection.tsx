@@ -2,8 +2,10 @@ import { AppDispatch, RootState } from "@/components/store/store";
 import Button from "@/components/ui/Button";
 import { buyToken } from "@/reducer/BuySlice";
 import { NFT } from "@/types";
+import { ShortenPrecisionPrice } from "@/utils/ShortenPrecisionPrice";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useAccount } from "wagmi";
 
 const FixedCollection = ({ nft }: { nft: NFT }) => {
@@ -37,7 +39,7 @@ const FixedCollection = ({ nft }: { nft: NFT }) => {
         </h2>
         <p className="text-gray-400 text-sm">
           ($
-          <span className="text-green-400">{Number(nft.price) * 3000}</span>)
+          <span className="text-green-400">{(Number(nft.price) * 3000).toFixed(4)}</span>)
         </p>
 
         {/* Quantity Selector */}
@@ -68,7 +70,7 @@ const FixedCollection = ({ nft }: { nft: NFT }) => {
         {/* Total Price */}
         <p className="text-white font-bold text-lg">
           Total:{" "}
-          <span className="text-glow-purple">{totalPrice.toFixed(4)} ETH</span>
+          <span className="text-glow-purple">{ShortenPrecisionPrice(totalPrice.toString())} ETH</span>
         </p>
 
         {/* Buy Now Button */}
@@ -80,8 +82,12 @@ const FixedCollection = ({ nft }: { nft: NFT }) => {
             loading={loading || userAddress?.toLowerCase() === nft.seller.toLowerCase()} 
             title={
               loading
-                ? "Buying..."
-                : `BUY ${quantity} NFT${quantity > 1 ? "s" : ""} FOR ${totalPrice.toFixed(4)} ETH`
+                ? (<>
+                 <AiOutlineLoading3Quarters className="text-black animate-spin"/>
+                  <span>Purchaseing</span>
+                </>
+                )
+                : `BUY ${quantity} NFT${quantity > 1 ? "s" : ""}`
             }
           />
         </div>

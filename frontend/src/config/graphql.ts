@@ -45,3 +45,16 @@ mutation addRole($name:String,$gmail:String,$address:String!,$roles:[String]){
   }
 }
 `;
+
+export const GET_BID_HISTORY = `
+query GetBidHistory($tokenId:String!,$seller:String!){
+  getBids(tokenId:$tokenId,seller:$seller){
+  tokenId
+  seller
+  bidder
+  bid
+  txHash
+  createdAt
+  }
+}
+`;

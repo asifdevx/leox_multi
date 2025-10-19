@@ -41,3 +41,15 @@ export const UserInfoType = new GraphQLObjectType({
     isFirstTime:{type :GraphQLBoolean}
   },
 });
+export const BidType = new GraphQLObjectType({
+  name: "bid",
+  fields:{
+    tokenId: { type: new GraphQLNonNull(GraphQLString)},
+  seller: { type: new GraphQLNonNull(GraphQLString)},
+  bidder: { type: new GraphQLNonNull(GraphQLString)},
+  bid: { type: new GraphQLNonNull(GraphQLString)},
+  txHash: { type: GraphQLString },
+  createdAt: { type: GraphQLString},
+  }
+
+})
