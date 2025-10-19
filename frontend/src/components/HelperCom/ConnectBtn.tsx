@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { shortenAddress } from "../ui/ShortenAddress";
+import { shortenAddress } from "../../utils/ShortenAddress";
 import { IoMdClose } from "react-icons/io";
 import { GoCopy } from "react-icons/go";
 import { FaExternalLinkAlt } from "react-icons/fa";

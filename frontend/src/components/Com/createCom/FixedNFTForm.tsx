@@ -1,4 +1,5 @@
 import FormInput from "@/components/HelperCom/FormInput";
+import { ShortenPrecisionPrice } from "@/utils/ShortenPrecisionPrice";
 
 interface FixedNFTFormProps {
   value: { price: string; fee: number; supply: string };
@@ -20,8 +21,15 @@ const FixedNFTForm = ({
         value={price}
         icon="ETH"
         onChange={(e) => {
-          const value = e.target.value.replace(/[^0-9.]/g, "");
-          if ((value.match(/\./g) || []).length <= 1) setPrice(value);
+          let value = e.target.value.replace(/[^0-9.]/g, ""); 
+          if ((value.match(/\./g) || []).length > 1) return; 
+      
+ 
+          const parts = value.split(".");
+          if (parts[1]?.length > 5) parts[1] = parts[1].slice(0, 5); 
+          value = parts.join(".");
+      
+          setPrice(value);
         }}
       />
 
@@ -42,10 +50,12 @@ const FixedNFTForm = ({
           <span>You will receive</span>
           <span className="text-[#00d1ff] font-semibold">
             {price && fee !== undefined
-              ? `${(
-                  parseFloat(price) -
-                  parseFloat(price) * (fee / 100)
-                ).toFixed(4)} ETH`
+              ? `${ShortenPrecisionPrice(
+                  (
+                    parseFloat(price) -
+                    parseFloat(price) * (fee / 100)
+                  ).toString()
+                )} ETH`
               : "—"}
           </span>
         </div>

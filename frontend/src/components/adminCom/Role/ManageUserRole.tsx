@@ -4,7 +4,7 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Image from "next/image";
 import { Role, UserInfoType } from "@/types";
-import { shortenAddress } from "@/components/ui/ShortenAddress";
+import { shortenAddress } from "@/utils/ShortenAddress";
 import { SkeletonComRole } from "@/components/ui/skeleton";
 import { IoCloseSharp } from "react-icons/io5";
 import { IoMdAdd } from "react-icons/io";

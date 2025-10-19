@@ -48,3 +48,4 @@ backend/.env
 
 frontend/yarn.lock
 backend/yarn.lock
+/leox_multi.sol

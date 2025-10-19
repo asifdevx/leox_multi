@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const nftSchema = new mongoose.Schema({
   tokenId: { type: String, required: true },
-  seller: { type: String },
+  seller: { type: String,lowercase:true },
   owner: { type: String },
   name: String,
   description: String,
@@ -12,6 +12,7 @@ const nftSchema = new mongoose.Schema({
   remainingSupply: Number,
   isListed: Boolean,
   saleType: Number,
+  auctionStartTime:Number,
   auctionEndTime: Number,
   highestBidder: String,
   highestBid: String,
@@ -45,7 +46,16 @@ const UserInfo = new mongoose.Schema(
   },
   { timestamps: true }
 );
+const bidSchema = new mongoose.Schema({
+  tokenId: { type: String, required: true },
+  seller: { type: String, required: true },
+  bidder: { type: String, required: true },
+  bid: { type: String, required: true },
+  txHash: { type: String },
+  createdAt: { type: Date, default: Date.now },
+});
 
 export const NFT = mongoose.model("Nfts", nftSchema);
 export const Fee = mongoose.model("MarketplaceFee", feeSchema);
 export const UsersInfo = mongoose.model("UserInfos", UserInfo);
+export const Bid = mongoose.model("Bid", bidSchema);

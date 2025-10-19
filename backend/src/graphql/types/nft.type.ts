@@ -21,6 +21,7 @@ export const NftType = new GraphQLObjectType({
     supply: { type: GraphQLString },
     remainingSupply: { type: GraphQLInt },
     saleType: { type: GraphQLInt },
+    auctionStartTime:{ type: GraphQLInt },
     auctionEndTime: { type: GraphQLInt },
     highestBidder: { type: GraphQLString },
     highestBid: { type: GraphQLString },

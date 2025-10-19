@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/components/store/store";
-import { shortenAddress } from "@/components/ui/ShortenAddress";
+import { shortenAddress } from "@/utils/ShortenAddress";
 import { useAccount, useConnect } from "wagmi";
 import { uploadMetadataToIPFS, uploadToIPFS } from "@/utils/uploadIpfs";
 import PreviewNFT from "@/components/HelperCom/PreviewNFT";
@@ -77,6 +77,8 @@ const createNft = () => {
       setDescription("");
       setPrice("");
       setSupply("");
+      setStartingBid("");
+      setDuration("");
       setFile(null);
       console.log("NFT Created:", response);
     } catch (error) {
@@ -241,6 +243,7 @@ const createNft = () => {
               <Button
                 handleClick={handleCreateNFT}
                 othercss="rounded-lg px-3 py-3 flex items-center justify-center gap-2"
+                loading={loading}
                 title={
                   loading ? (
                     <div className="flex items-center gap-2">

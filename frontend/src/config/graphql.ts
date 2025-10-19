@@ -12,6 +12,7 @@ query GetNFTs($start:Int!,$limit:Int!,$sortBy: String) {
     remainingSupply
     isListed
     saleType
+    auctionStartTime
     auctionEndTime
     highestBidder
     highestBid

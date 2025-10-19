@@ -16,6 +16,8 @@ export const syncSingleNFT = async ({
 
   try {
     const nft = await contract.Listings(tokenId, address);
+    console.log("nft",nft);
+    
     const tokenURI = await contract.uri(tokenId);
     const meta = await fetchMetadata(tokenURI);
 
@@ -31,7 +33,8 @@ export const syncSingleNFT = async ({
       remainingSupply: Number(nft[5]),
       isListed: nft[6],
       saleType: Number(nft[7]),
-      auctionEndTime: Number(nft[8]),
+      auctionStartTime:Math.floor( Number(nft[8]) - (Number(nft[8]) - Date.now() / 1000)),
+      auctionEndTime:Math.floor(Number(nft[8])),
       highestBidder: nft[9],
       highestBid: parseFloat(ethers.formatEther(nft[10])),
       claimed: nft[11],

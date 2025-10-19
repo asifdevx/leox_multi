@@ -1,4 +1,4 @@
-import { UsersInfo } from "../schemas/marketplace.schema";
+import * as s from "../schemas/marketplace.schema";
 interface createUser {
   name?:string;
   gmail?:string;
@@ -8,12 +8,14 @@ interface createUser {
 
 }
 export const findUser = async (address: string) => {
-  return await UsersInfo.findOne({ address });
+  return await s.UsersInfo.findOne({ address });
 };
 export const createUser = async ({ name,gmail,address, roles ,isFirstTime}: createUser) => {
-  return await UsersInfo.create({ name,gmail,address, roles,isFirstTime });
+  return await s.UsersInfo.create({ name,gmail,address, roles,isFirstTime });
 };
 
 export const findByRole = async (role:string) =>{
-  return await UsersInfo.find({roles : role},{name:1,address:1,_id:0});
+  return await s.UsersInfo.find({roles : role},{name:1,address:1,_id:0});
 }
+
+export const findNFT = async ({tokenId,seller}:{tokenId:string,seller:string})=>await s.NFT.findOne({tokenId:tokenId.toString(),seller:seller.toLowerCase()})

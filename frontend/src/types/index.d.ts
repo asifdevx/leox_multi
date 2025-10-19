@@ -35,6 +35,7 @@ interface NFT {
   remainingSupply: number;
   isListed: boolean;
   saleType: number;
+  auctionStartTime: number;
   auctionEndTime: number;
   highestBidder: string;
   highestBid: string;
@@ -198,3 +199,32 @@ type AnimatedBorderProps = {
   type?: "button" | "submit" | "reset";  
   buttonClass?:string
 }
+
+
+interface BuyTokenProps {
+  tokenId: number;
+  seller: string;
+  quantity: number;
+  totalPrice: number; // in ETH
+}
+interface BidTokenProps {
+  tokenId: number;
+  seller: string;
+  bidAmount: number; // in ETH
+}
+
+type Bid = {
+  bidder: string;
+  bid: string; // store as string to handle large numbers safely
+};
+
+type BidHistory={
+  [tokenId:string]:{[seller:string]:Bid[]}
+}
+
+
+type BuyInitialStateProps = {
+  bidHistory: BidHistory;
+  loading: boolean;
+  error: string | null;
+};

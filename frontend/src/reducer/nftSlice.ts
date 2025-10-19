@@ -9,6 +9,8 @@ import { GET_NFT } from "@/config/graphql";
 dotenv.config();
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
+console.log(CONTRACT_ADDRESS);
+
 
 export const createEthContract = async () => {
   if (!window.ethereum) return;
@@ -73,6 +75,14 @@ const nftSlice = createSlice({
   name: "nft",
   initialState,
   reducers: {
+    updateListing (state,action) { 
+      const {tokenId, seller, remainingSupply, isListed}=action.payload;
+      const listing=state.listings.find((e)=>e.tokenId ==tokenId && e.seller == seller );
+      if(listing){
+        listing.remainingSupply= remainingSupply;
+        listing.isListed = isListed;
+      }
+    },
     resetListings(state) {
       state.listings = [];
       state.offset = 0;
@@ -137,5 +147,5 @@ const nftSlice = createSlice({
   },
 });
 
-export const { resetListings, setSortBy, addNewNFT } = nftSlice.actions;
+export const { resetListings, setSortBy, addNewNFT,updateListing } = nftSlice.actions;
 export default nftSlice.reducer;

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { handleCopy } from "../HelperCom/handleCopy";
 import { AppDispatch, RootState } from "../store/store";
-import { shortenAddress } from "./ShortenAddress";
+import { shortenAddress } from "../../utils/ShortenAddress";
 import { GoCopy } from "react-icons/go";
 import Image from "next/image";
 

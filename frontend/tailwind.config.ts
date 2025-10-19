@@ -39,12 +39,22 @@ const config: Config = {
           muted: "#6B7280",
         },
         blueGradientStart: "#3B82F6",
-        blueGradientEnd: "#2563EB",
-
-        purple: "#7e5bef",
+        blueGradientEnd: "#2563EB",   
         orange: "#ff7849",
         yellow: "#ffc82c",
         "gray-dark": "#273444",
+        purple: {
+          50:  '#faf5ff',
+          100: '#f3e8ff',
+          200: '#e9d5ff',
+          300: '#d8b4fe',
+          400: '#c084fc',
+          500: '#a855f7', // default purple
+          600: '#9333ea',
+          700: '#7e22ce',
+          800: '#6b21a8',
+          900: '#581c87',
+        },
         blue: {
           50: "#eff6ff",
           100: "#dbeafe",

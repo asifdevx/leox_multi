@@ -1,0 +1,1 @@
+export const ShortenPrecisionPrice =(price:string)=> price ? parseFloat(Number(price).toPrecision(6)) : 0
