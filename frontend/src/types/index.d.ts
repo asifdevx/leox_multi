@@ -229,17 +229,19 @@ type BidHistory={
 
 
 type BuyInitialStateProps = {
-  bidHistory: BidHistory;
+  bidHistory: Record<string, Record<string, t.getBidsProps[]>>;
   loading: boolean;
   error: string | null;
 };
-
-interface getBidsProps {
-  tokenId:string;
-  seller:string;
+type SingleBids={
   bidder:string;
   bid:string;
   txHash:string;
   createdAt:string
+}
+interface getBidsProps {
+  tokenId:string;
+  seller:string;
+ bids:SingleBids[];
 }
 

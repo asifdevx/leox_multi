@@ -51,10 +51,12 @@ query GetBidHistory($tokenId:String!,$seller:String!){
   getBids(tokenId:$tokenId,seller:$seller){
   tokenId
   seller
-  bidder
-  bid
-  txHash
-  createdAt
+  bids {
+    bidder
+    bid
+    txHash
+    createdAt
+  }
   }
 }
 `;

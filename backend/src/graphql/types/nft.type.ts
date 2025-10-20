@@ -5,6 +5,7 @@ import {
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
+  GraphQLFloat,
 } from "graphql";
 
 export const NftType = new GraphQLObjectType({
@@ -41,15 +42,23 @@ export const UserInfoType = new GraphQLObjectType({
     isFirstTime:{type :GraphQLBoolean}
   },
 });
+
+
+const SingleBidType = new GraphQLObjectType({
+  name: "SingleBid",
+  fields: {
+    bidder: { type: GraphQLString },
+    bid: { type: GraphQLFloat },
+    txHash: { type: GraphQLString },
+    createdAt: { type: GraphQLString },
+  },
+});
 export const BidType = new GraphQLObjectType({
   name: "bid",
   fields:{
     tokenId: { type: new GraphQLNonNull(GraphQLString)},
   seller: { type: new GraphQLNonNull(GraphQLString)},
-  bidder: { type: new GraphQLNonNull(GraphQLString)},
-  bid: { type: new GraphQLNonNull(GraphQLString)},
-  txHash: { type: GraphQLString },
-  createdAt: { type: GraphQLString},
+  bids:{type : new GraphQLList(SingleBidType)}
   }
 
 })

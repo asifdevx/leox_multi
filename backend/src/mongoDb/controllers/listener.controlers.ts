@@ -3,6 +3,8 @@ import { createEthContract } from "../../config/bsc.service";
 import { io } from "../../index";
 import { syncSingleNFT } from "./nft.controlers";
 import { findNFT } from "./userInfo.controlers";
+import { bids, changeHigestBiderInfo } from "./AuctionBid.controlers";
+import { ethers } from "ethers";
 
 export async function startNFTListener() {
   const contract = await createEthContract();
@@ -40,18 +42,33 @@ export async function startNFTListener() {
 
   //update Bid
 
-  contract.on("NewBid", async (tokenId, seller, bidder, bid, event) => {
+  contract.on("NewBid", 
+  async (tokenId, seller, bidder, bid, event) => {
     try {
-      const bidHistory = await Bid.create({
+      await bids({
+        tokenId: tokenId.toString(),
+        seller,
+        bidder,
+        totalBid: parseFloat(ethers.formatEther(bid)),
+        txHash: event.transactionHash,
+      });
+      await changeHigestBiderInfo(tokenId, seller, bid, bidder);
+
+      const updatedBidDoc = await Bid.findOne({
         tokenId: tokenId.toString(),
         seller: seller.toLowerCase(),
-        bidder: bidder.toLowerCase(),
-        bid: bid.toString(),
-        txHash: event.transactionHash,
-        createdAt: new Date(),
+      }).lean();
+
+      io.emit("NewBid", {
+        tokenId: tokenId.toString(),
+        seller: seller.toLowerCase(),
+        bids: updatedBidDoc?.bids || [],
       });
-      io.emit("NewBid", bidHistory.toObject());
-      console.log(`💰 New Bid on Token ${tokenId}: ${bidder} bid ${bid}`);
+      console.log(
+        `💰 New/Updated bid for Token ${tokenId}: ${bidder} bid ${ethers.formatEther(
+          bid
+        )}`
+      );
     } catch (error) {
       console.warn("Failed to update bid :", error.message);
     }
@@ -59,15 +76,12 @@ export async function startNFTListener() {
 
   // Buy Nft
 
-  contract.on(
-    "TokenBought",
+  contract.on("TokenBought",
     async (tokenId, buyer, seller, quantity, totalPrice, event) => {
       try {
         const Nft = await findNFT({ tokenId, seller });
         if (!Nft) {
-          console.warn(
-            `⚠️ NFT not found for tokenId: ${tokenId}, seller: ${seller}`
-          );
+          console.warn(`⚠️ NFT not found for tokenId: ${tokenId}, seller: ${seller}`);
           return; // exit early so you don't try to access null
         }
         const tokenStr = tokenId.toString();

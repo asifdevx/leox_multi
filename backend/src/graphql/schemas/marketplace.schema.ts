@@ -1,4 +1,5 @@
 import {
+  GraphQLFloat,
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
@@ -12,7 +13,7 @@ import {
   createUser,
   findUser,
 } from "../../mongoDb/controllers/userInfo.controlers";
-import {bids} from "../../mongoDb/controllers/AuctionBid.controlers";
+import {bids, findAuctionNft} from "../../mongoDb/controllers/AuctionBid.controlers";
 
 const RootQuery = new GraphQLObjectType({
   name: "Query",
@@ -54,13 +55,15 @@ const RootQuery = new GraphQLObjectType({
       },
     },
     getBids: {
-      type: new GraphQLList(BidType),
+      type: BidType,
       args: {
         tokenId: { type: new GraphQLNonNull(GraphQLString) },
         seller: { type: new GraphQLNonNull(GraphQLString) },
       },
-      resolve: async (_, { tokenId, seller }) => {
-        return await bids(tokenId,seller)
+      resolve: async (_, { tokenId, seller}) => {
+        const bidDoc = await findAuctionNft({ tokenId, seller });
+       
+        return bidDoc; // ✅ Wrap in an array
       },
     }
   }

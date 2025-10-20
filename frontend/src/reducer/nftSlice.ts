@@ -5,6 +5,7 @@ import abi from "@/components/ABI/abi.json";
 import { CreateNFTArgs, NFT, NftState } from "@/types";
 import { fetchGraphQL } from "@/api/graphql";
 import { GET_NFT } from "@/config/graphql";
+import { parseEther } from "ethers";
 
 dotenv.config();
 
@@ -83,6 +84,18 @@ const nftSlice = createSlice({
         listing.isListed = isListed;
       }
     },
+    updateBidInfo(state,action){
+      const { tokenId,seller,highestBid,highestBidder}=action.payload;
+      console.log(highestBid,"highestBid");
+      
+      const listing=state.listings.find((e)=>e.tokenId ==tokenId && e.seller == seller );
+      if(listing){
+        listing.highestBidder=highestBidder;
+        listing.highestBid=parseEther(highestBid).toString();
+        listing.updatedAt=new Date();
+
+      }
+    },
     resetListings(state) {
       state.listings = [];
       state.offset = 0;
@@ -95,6 +108,7 @@ const nftSlice = createSlice({
       state.offset = 0;
       state.hasMore = true;
     },
+    
     addNewNFT(state, action) {
       const newNFT = action.payload;
       const key = `${newNFT.tokenId}-${newNFT.seller}`;
@@ -147,5 +161,5 @@ const nftSlice = createSlice({
   },
 });
 
-export const { resetListings, setSortBy, addNewNFT,updateListing } = nftSlice.actions;
+export const { resetListings, setSortBy, addNewNFT,updateListing,updateBidInfo } = nftSlice.actions;
 export default nftSlice.reducer;

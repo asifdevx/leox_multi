@@ -92,7 +92,6 @@ export const getNFTs = async (
         ? n.updatedAt.toISOString()
         : new Date(n.updatedAt).toISOString(),
   }));
-  console.log("normalized");
   
   return normalized;
 };

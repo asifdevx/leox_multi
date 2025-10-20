@@ -1,103 +1,109 @@
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useAccount } from "wagmi";
+import { notFound } from "next/navigation";
+
 import FormInput from "@/components/HelperCom/FormInput";
-import { AppDispatch, RootState } from "@/components/store/store";
+import TimerDisplay from "@/components/HelperCom/TimerDisplay";
 import Button from "@/components/ui/Button";
-import { bidToken } from "@/reducer/BuySlice";
+import { bidToken, getBidHistory } from "@/reducer/BuySlice";
+import { AppDispatch, RootState } from "@/components/store/store";
 import { NFT } from "@/types";
 import { cn } from "@/utils/cn";
 import { ShortenPrecisionPrice } from "@/utils/ShortenPrecisionPrice";
-import { notFound } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useAccount } from "wagmi";
+import {  formatEther, parseEther } from "ethers";
 
 const AuctionCollection = ({ nft }: { nft: NFT }) => {
+  // ========== Hooks & Redux Setup ==========
   const dispatch = useDispatch<AppDispatch>();
   const { address } = useAccount();
-  const { bidHistory, error, loading } = useSelector(
+  const { bidHistory, loading } = useSelector(
     (state: RootState) => state.buyOrBid
   );
+
   if (!nft) notFound();
+
+  // ========== Destructure NFT ==========
   const { tokenId, seller } = nft;
-const bids = bidHistory?.[tokenId]?.[seller]||[];
-
-  const isAuction = nft.saleType === 1;
+  const lowerSeller = seller.toLowerCase();
+  const lowerAddress=address?.toLowerCase();
+ 
+  
+  
+  // ========== Local State ==========
   const [bidAmount, setBidAmount] = useState("");
-  const [timeLeft, setTimeLeft] = useState({
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-    progress: 0,
-  });
 
-  const onPlaceBid = () => {
-    dispatch(
-      bidToken({
-        tokenId: Number(tokenId),
-        seller,
-        bidder: address!,
-        bidAmount: Number(bidAmount),
-      })
-    );
-  };
+  // ========== Derived Data ==========
+  const bids = useMemo(() => {
+    const list = bidHistory?.[tokenId]?.[lowerSeller] || [];
+    return list.slice().sort((a, b) => parseFloat(b.bid) - parseFloat(a.bid));
+  }, [bidHistory, tokenId, lowerSeller]);
+
+  const myBid = useMemo(() => {
+    if (!lowerAddress) return null;
+    return bids.find(b => b.bidder.toLowerCase() === lowerAddress) || null;
+  }, [bids, lowerAddress]);
+  
+    
+  // ========== Handlers ==========
+  const onPlaceBid = useCallback(() => {
+    if (!bidAmount || Number(bidAmount) <= 0) {
+      alert("Enter a valid bid");
+      return;
+    }
+      const previousBid = myBid ? parseEther(myBid.bid.toString()) : parseEther("0");
+    const newBid = parseEther(bidAmount.toString());
+    const totalBid = previousBid + newBid 
+  
+    const highest =Number(nft.highestBid);
+  
+    if (totalBid <= highest) { 
+      alert("Increase your bid");
+      return;
+    }
+    try {
+      dispatch(
+        bidToken({
+          tokenId: Number(tokenId),
+          seller,
+          bidder: address!,
+          bidAmount: Number(bidAmount),
+        })
+      );
+      setBidAmount("");
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch, tokenId, seller, address, bidAmount]);
+
   const onClaim = () => {};
 
+  // ========== Effects ==========
   useEffect(() => {
-    if (!isAuction) return;
-    const endTime = nft.auctionEndTime * 1000;
-    const startTime = nft.auctionStartTime * 1000;
+    if (!tokenId || !seller) return;
+    dispatch(getBidHistory({ tokenId, seller }));
+  }, [dispatch, tokenId, seller]);
 
-    const timer = setInterval(() => {
-      const now = Date.now();
-      const remaining = endTime - now;
-
-      if (remaining <= 0) {
-        clearInterval(timer);
-        setTimeLeft({ hours: 0, minutes: 0, seconds: 0, progress: 100 });
-        return;
-      }
-
-      const hours = Math.floor(remaining / 1000 / 60 / 60);
-      const minutes = Math.floor((remaining / 1000 / 60) % 60);
-      const seconds = Math.floor((remaining / 1000) % 60);
-
-      const progress = Math.min(
-        100,
-        Math.max(0, ((now - startTime) / (endTime - startTime)) * 100)
-      );
-
-      setTimeLeft({ hours, minutes, seconds, progress });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [nft.auctionEndTime, nft.auctionStartTime, isAuction]);
-
+  // ========== Computed Auction States ==========
   const auctionEnded = Date.now() > nft.auctionEndTime * 1000;
   const canClaim = auctionEnded && !nft.claimed;
 
+  // ========== Render ==========
   return (
     <>
+      {/* Auction Info */}
       <div className="bg-[#151c36] p-6 rounded-xl border border-purple-800/50 mb-8 shadow-xl">
         <p className="text-sm text-gray-400 uppercase font-medium mb-2">
           AUCTION {auctionEnded ? "ENDED" : "ENDS IN"}:
         </p>
-        {!auctionEnded && (
-          <h2 className="text-3xl font-bold text-glow-purple mb-4">
-            {timeLeft.hours.toString().padStart(2, "0")}:
-            {timeLeft.minutes.toString().padStart(2, "0")}:
-            {timeLeft.seconds.toString().padStart(2, "0")}
-          </h2>
-        )}
-        {/* Progress Bar */}
-        <div className="h-2 w-full bg-[#1f2847] rounded-full overflow-hidden mb-2">
-          <div
-            className="h-full bg-gradient-to-r from-blue-400 to-purple-500 rounded-full transition-all duration-500"
-            style={{ width: `${timeLeft.progress}%` }}
-          />
-        </div>
 
-        <p className="text-xs text-gray-400 text-right">
-          {Math.floor(timeLeft.progress)}% completed
-        </p>
+        {!auctionEnded && (
+          <TimerDisplay
+            startTime={nft.auctionStartTime * 1000}
+            endTime={nft.auctionEndTime * 1000}
+          />
+        )}
+
         {/* Highest Bid Info */}
         <div className="text-white mb-4">
           <p>
@@ -107,16 +113,20 @@ const bids = bidHistory?.[tokenId]?.[seller]||[];
             {" : "}
             <span className="text-glow-purple font-bold">
               {ShortenPrecisionPrice(
-                nft.highestBid == "0" ? nft.price : nft.highestBid
+                nft.highestBid == "0" ? nft.price :formatEther(nft.highestBid)
               )}{" "}
               ETH
             </span>
           </p>
           <p>
             <span className="text-gray-400">Highest Bidder:</span>{" "}
-            <span className="text-purple-400 break-words">{}</span>
+            <span className="text-purple-400 break-words">
+              {nft.highestBidder}
+            </span>
           </p>
         </div>
+
+        {/* Bid Input */}
         <FormInput
           label="Add Bid :"
           placeholder="Enter price"
@@ -135,6 +145,8 @@ const bids = bidHistory?.[tokenId]?.[seller]||[];
             setBidAmount(value);
           }}
         />
+
+        {/* Action Button */}
         <Button
           title={
             auctionEnded
@@ -155,21 +167,25 @@ const bids = bidHistory?.[tokenId]?.[seller]||[];
           )}
         />
       </div>
+
+      {/* Bid History */}
       <div className="mt-6 bg-[#10172b] p-4 rounded-lg border border-purple-700/40 max-h-56 overflow-y-auto">
         <h3 className="text-lg font-semibold text-purple-400 mb-3">
           Bid History
         </h3>
+
         {loading && <p className="text-gray-400">Loading bids...</p>}
         {!loading && bids.length === 0 && (
           <p className="text-gray-500 text-sm">No bids yet.</p>
         )}
+
         {bids.map((b, i) => (
           <div
             key={i}
             className="flex justify-between text-sm py-1 border-b border-gray-700/30 last:border-none"
           >
             <span className="text-purple-300 break-words">
-              {b.bidder.slice(0, 6)}...{b.bidder.slice(-4)}
+              {b?.bidder?.slice(0, 6)}...{b?.bidder?.slice(-4)}
             </span>
             <span className="text-gray-300">{b.bid} ETH</span>
           </div>
@@ -179,4 +195,4 @@ const bids = bidHistory?.[tokenId]?.[seller]||[];
   );
 };
 
-export default AuctionCollection;
+export default React.memo(AuctionCollection);
