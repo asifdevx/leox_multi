@@ -1,26 +1,42 @@
 import { useState, useEffect } from "react";
 import { notFound, useParams } from "next/navigation";
 import Image from "next/image";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/components/store/store";
 import AuctionCollection from "./AuctionCollection";
 import FixedCollection from "./FixedCollection";
+import { getNftData } from "@/api/api";
+
+
 
 export default function NftDetail() {
   const params = useParams<{ tokenId: string; seller: string }>();
-
+  const [fetchedNft, setFetchedNft] = useState<any>(null);
 
   const nft = useSelector((state: RootState) =>
-    state.nft.listings.find((e) => e.tokenId.toString() == params?.tokenId)
+    state.nft.listings.find((e) => e.tokenId.toString() === params?.tokenId)
   );
 
-  if (!nft) notFound();  
-  const isAuction = nft.saleType === 1;
+  useEffect(() => {
+    if (!nft && params?.tokenId && params?.seller) {
+      (async () => {
+        const data = await getNftData({
+          tokenId: params.tokenId,
+          seller: params.seller,
+        });
+        setFetchedNft(data);
+      })();
+    }
+    
+    
+  }, [nft, params?.tokenId, params?.seller]);
 
+  const activeNft = nft || fetchedNft;
 
+  if (!activeNft) return <div className="text-white p-8">Loading...</div>;
 
-
- 
+  const isAuction =
+    activeNft.saleType === 1 || activeNft.saleType === "Auction";
 
   return (
     <div className="h-fit p-8 flex justify-center items-center relative overflow-hidden">
@@ -34,14 +50,15 @@ export default function NftDetail() {
         <div className="flex flex-col gap-8">
           <div className="relative w-full aspect-square nft-card-glow rounded-2xl overflow-hidden rotate-xz">
             <Image
-              src={nft.image}
-              alt={nft.name}
+              src={activeNft.image}
+              alt={activeNft.name}
               width={500}
               height={500}
               className="object-cover w-full h-full pointer-events-none"
             />
           </div>
 
+          {/* NFT traits (example) */}
           <div>
             <h3 className="text-white text-lg font-semibold mb-4 opacity-80">
               PROPERTIES
@@ -72,36 +89,35 @@ export default function NftDetail() {
         {/* Right Column */}
         <div className="flex flex-col ">
           <h1 className="text-4xl font-extrabold text-glow-purple mb-4">
-            {nft.name}
+            {activeNft.name}{" "}#{params?.tokenId}
           </h1>
-          <p className="text-gray-400 mb-8 break-words">{nft.description}</p>
+          <p className="text-gray-400 mb-8 break-words">
+            {activeNft.description}
+          </p>
 
           <div className="text-sm space-y-4 mb-8">
             <p>
               <span className="text-gray-400">OWNED BY:</span>{" "}
               <span className="text-purple-400 cursor-pointer text-purple break-words">
-                {nft.seller}
+                {activeNft.seller}
               </span>
             </p>
             <p>
               <span className="text-gray-400">ARTIST:</span>{" "}
               <span className="text-purple-400 cursor-pointer text-glow-purple">
-                {nft.name}
+                {activeNft.name}
               </span>
             </p>
           </div>
 
-          {/* Auction Section */}
+          {/* Auction or Fixed */}
           {isAuction ? (
-            <AuctionCollection nft={nft}/>
+            <AuctionCollection nft={activeNft} />
           ) : (
-           <FixedCollection nft={nft}/>
+            <FixedCollection nft={activeNft} />
           )}
         </div>
       </div>
     </div>
   );
 }
-
-
-

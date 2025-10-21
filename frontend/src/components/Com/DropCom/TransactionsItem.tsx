@@ -29,7 +29,8 @@ const TransactionsItem = ({
           loading="lazy"
           src={item.image || "/eth.svg"}
           alt={item.name || "NFT image"}
-          className={`object-cover rounded-lg ${
+          
+          className={`object-cover rounded-lg w-full h-full ${
             isLoading ? "opacity-0" : "opacity-100"
           }`}
           onLoadingComplete={() => setIsLoading(false)}

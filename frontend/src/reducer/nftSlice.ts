@@ -5,7 +5,7 @@ import abi from "@/components/ABI/abi.json";
 import { CreateNFTArgs, NFT, NftState } from "@/types";
 import { fetchGraphQL } from "@/api/graphql";
 import { GET_NFT } from "@/config/graphql";
-import { parseEther } from "ethers";
+
 
 dotenv.config();
 
@@ -16,6 +16,7 @@ console.log(CONTRACT_ADDRESS);
 export const createEthContract = async () => {
   if (!window.ethereum) return;
   const provider = new ethers.BrowserProvider(window.ethereum);
+  await provider.send("eth_requestAccounts", []);
   const signer = await provider.getSigner();
   return new ethers.Contract(CONTRACT_ADDRESS!, abi, signer);
 };
@@ -86,13 +87,15 @@ const nftSlice = createSlice({
     },
     updateBidInfo(state,action){
       const { tokenId,seller,highestBid,highestBidder}=action.payload;
-      console.log(highestBid,"highestBid");
-      
+      const weiValue = ethers.parseEther(highestBid.toString());
+      const numberHighestBid = weiValue.toString();
+           
       const listing=state.listings.find((e)=>e.tokenId ==tokenId && e.seller == seller );
       if(listing){
         listing.highestBidder=highestBidder;
-        listing.highestBid=parseEther(highestBid).toString();
-        listing.updatedAt=new Date();
+        listing.highestBid=numberHighestBid;
+        listing.updatedAt = new Date().toISOString();
+
 
       }
     },

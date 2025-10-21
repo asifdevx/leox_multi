@@ -40,7 +40,7 @@ interface NFT {
   highestBidder: string;
   highestBid: string;
   claimed: boolean;
-  updatedAt:Date,
+  updatedAt:string,
 }
 
 interface NftState {
