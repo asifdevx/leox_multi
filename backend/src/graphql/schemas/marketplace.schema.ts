@@ -63,7 +63,7 @@ const RootQuery = new GraphQLObjectType({
       resolve: async (_, { tokenId, seller}) => {
         const bidDoc = await findAuctionNft({ tokenId, seller });
        
-        return bidDoc; // ✅ Wrap in an array
+        return bidDoc; 
       },
     }
   }

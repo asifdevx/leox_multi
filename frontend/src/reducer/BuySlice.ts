@@ -1,41 +1,35 @@
-import { fetchGraphQL } from "@/api/graphql";
-import { GET_BID_HISTORY } from "@/config/graphql";
-import * as t from "@/types";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { ethers } from "ethers";
+import { fetchGraphQL } from '@/api/graphql';
+import { GET_BID_HISTORY } from '@/config/graphql';
+import * as t from '@/types';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { ethers } from 'ethers';
 
-import { createEthContract } from "./nftSlice";
+import { createEthContract } from './nftSlice';
 
 export const buyToken = createAsyncThunk(
-  "buy/token",
-  async (
-    { tokenId, seller, quantity, totalPrice }: t.BuyTokenProps,
-    { rejectWithValue }
-  ) => {
+  'buy/token',
+  async ({ tokenId, seller, quantity, totalPrice }: t.BuyTokenProps, { rejectWithValue }) => {
     try {
       const contract = await createEthContract();
-      if (!contract) return rejectWithValue("Ethereum contract not available");
+      if (!contract) return rejectWithValue('Ethereum contract not available');
       const buyNft = await contract.buy(tokenId, seller, quantity, {
         value: ethers.parseEther(totalPrice.toString()),
       });
       await buyNft.wait();
       return { tokenId, seller, quantity };
     } catch (error: any) {
-      return rejectWithValue(error?.message || " buyToken Failed");
+      return rejectWithValue(error?.message || ' buyToken Failed');
     }
-  }
+  },
 );
 
 export const bidToken = createAsyncThunk(
-  "buy/bidToken",
-  async (
-    { tokenId, seller, bidder, bidAmount }: t.BidTokenProps,
-    { rejectWithValue }
-  ) => {
+  'buy/bidToken',
+  async ({ tokenId, seller, bidder, bidAmount }: t.BidTokenProps, { rejectWithValue }) => {
     try {
       const contract = await createEthContract();
 
-      if (!contract) return rejectWithValue("Ethereum contract not available");
+      if (!contract) return rejectWithValue('Ethereum contract not available');
       const tx = await contract.bid(tokenId, seller, {
         value: ethers.parseEther(bidAmount.toString()),
       });
@@ -43,31 +37,45 @@ export const bidToken = createAsyncThunk(
 
       return { tokenId, seller, bidder, bidAmount };
     } catch (error: any) {
-      return rejectWithValue(error?.message || " bidToken Failed");
+      return rejectWithValue(error?.message || ' bidToken Failed');
     }
-  }
+  },
+);
+
+export const claimAuction = createAsyncThunk(
+  'auction/claim',
+  async ({ tokenId, seller }: { tokenId: number; seller: string }, { rejectWithValue }) => {
+    try {
+      const contract = await createEthContract();
+
+      if (!contract) return rejectWithValue('Ethereum contract not available');
+      const tx = await contract.claimAuction(tokenId, seller);
+      if (!tx) throw new Error('Transaction failed to initialize.');
+      await tx.wait();
+      return { success: true, txHash: tx.hash };
+    } catch (error: any) {
+      return rejectWithValue(error?.message || ' claimAuction Failed');
+    }
+  },
 );
 
 export const getBidHistory = createAsyncThunk(
-  "buy/getBidHistory",
-  async (
-    { tokenId, seller }: { tokenId: string; seller: string },
-    { rejectWithValue }
-  ) => {
+  'buy/getBidHistory',
+  async ({ tokenId, seller }: { tokenId: string; seller: string }, { rejectWithValue }) => {
     try {
-      const data = await fetchGraphQL<{ getBids: t.getBidsProps }>(
-        GET_BID_HISTORY,
-        { tokenId, seller }
-      );
+      const data = await fetchGraphQL<{ getBids: t.getBidsProps }>(GET_BID_HISTORY, {
+        tokenId,
+        seller,
+      });
       const bids = data?.getBids.bids || [];
-      console.log("bids", bids);
+      console.log('bids', bids);
 
       // Return both tokenId, seller, and fetched bids
       return { tokenId, seller, bids };
     } catch (error: any) {
-      return rejectWithValue(error?.message || "Failed to fetch bid history");
+      return rejectWithValue(error?.message || 'Failed to fetch bid history');
     }
-  }
+  },
 );
 
 const initialState: t.BuyInitialStateProps = {
@@ -77,25 +85,22 @@ const initialState: t.BuyInitialStateProps = {
 };
 
 const buySlice = createSlice({
-  name: "buy",
+  name: 'buy',
   initialState,
   reducers: {
     addBidEvent(state, action) {
       const { tokenId, seller, bids } = action.payload;
-      console.log("bids", bids);
+      console.log('bids', bids);
 
       state.bidHistory[tokenId] = state.bidHistory[tokenId] || {};
-      state.bidHistory[tokenId][seller] =
-        state.bidHistory[tokenId][seller] || [];
+      state.bidHistory[tokenId][seller] = state.bidHistory[tokenId][seller] || [];
       state.bidHistory[tokenId][seller] = bids.map((b: any) => ({
         bidder: b.bidder,
         bid: b.bid,
         createdAt: b.createdAt,
       }));
 
-      state.bidHistory[tokenId][seller].sort(
-        (a, b) => parseFloat(b.bid) - parseFloat(a.bid)
-      );
+      state.bidHistory[tokenId][seller].sort((a, b) => parseFloat(b.bid) - parseFloat(a.bid));
     },
   },
   extraReducers: (builder) => {
@@ -136,11 +141,20 @@ const buySlice = createSlice({
           bid: b.bid,
           createdAt: b.createdAt,
         }));
-        state.bidHistory[tokenId][seller].sort(
-          (a, b) => parseFloat(b.bid) - parseFloat(a.bid)
-        );
+        state.bidHistory[tokenId][seller].sort((a, b) => parseFloat(b.bid) - parseFloat(a.bid));
       })
       .addCase(getBidHistory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(claimAuction.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(claimAuction.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(claimAuction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

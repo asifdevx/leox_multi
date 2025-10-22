@@ -51,7 +51,7 @@ const UserInfo = new mongoose.Schema(
   },
   { timestamps: true }
 );
-const bidSchema = new mongoose.Schema({
+const BidSchema = new mongoose.Schema({
   tokenId: { type: String, required: true },
   seller: { type: String, lowercase: true,required: true },
   bids: [
@@ -59,12 +59,14 @@ const bidSchema = new mongoose.Schema({
       bidder: { type: String,lowercase: true },
       bid: { type: Number },
       txHash: { type: String },
+      claim: {type:Boolean,default:false},
       createdAt: { type: Date, default: Date.now },
     },
   ],
 });
+BidSchema.index({ tokenId: 1, seller: 1 }, { unique: true });
 
 export const NFT = mongoose.model("Nfts", nftSchema);
 export const Fee = mongoose.model("MarketplaceFee", feeSchema);
 export const UsersInfo = mongoose.model("UserInfos", UserInfo);
-export const Bid = mongoose.model("Bid", bidSchema);
+export const Bid = mongoose.model("Bid", BidSchema);

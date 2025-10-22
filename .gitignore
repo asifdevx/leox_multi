@@ -40,7 +40,9 @@ backend/node_modules/
 
 # ignore next file 
 frontend/.next/
-
+.prettierignore
+.prettierrc
+settings.json
 
 # Ignore environment files
 frontend/.env

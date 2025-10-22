@@ -50,6 +50,7 @@ const SingleBidType = new GraphQLObjectType({
     bidder: { type: GraphQLString },
     bid: { type: GraphQLFloat },
     txHash: { type: GraphQLString },
+    claim:{type:GraphQLBoolean},
     createdAt: { type: GraphQLString },
   },
 });

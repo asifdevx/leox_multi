@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import FormInput from "@/components/HelperCom/FormInput";
 import TimerDisplay from "@/components/HelperCom/TimerDisplay";
 import Button from "@/components/ui/Button";
-import { bidToken, getBidHistory } from "@/reducer/BuySlice";
+import { bidToken, claimAuction, getBidHistory } from "@/reducer/BuySlice";
 import { AppDispatch, RootState } from "@/components/store/store";
 import { NFT } from "@/types";
 import { cn } from "@/utils/cn";
@@ -74,7 +74,16 @@ const AuctionCollection = ({ nft }: { nft: NFT }) => {
     }
   }, [dispatch, tokenId, seller, address, bidAmount]);
 
-  const onClaim = () => {};
+  const onClaim = () => {
+    try {
+      const response = dispatch(claimAuction({tokenId:Number(tokenId),seller}));
+      console.log(response);
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  };
 
   // ========== Effects ==========
   useEffect(() => {

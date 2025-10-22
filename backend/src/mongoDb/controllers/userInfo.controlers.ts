@@ -18,4 +18,4 @@ export const findByRole = async (role:string) =>{
   return await s.UsersInfo.find({roles : role},{name:1,address:1,_id:0});
 }
 
-export const findNFT = async ({tokenId,seller}:{tokenId:string,seller:string})=>await s.NFT.findOne({tokenId:tokenId.toString(),seller:seller.toLowerCase()})
+export const findNFT = async ({tokenId,seller}:{tokenId:string,seller:string})=>await s.NFT.findOne({tokenId,seller:seller.toLowerCase()})
