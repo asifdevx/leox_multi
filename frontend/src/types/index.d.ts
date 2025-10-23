@@ -236,6 +236,7 @@ type BuyInitialStateProps = {
 type SingleBids={
   bidder:string;
   bid:string;
+  claim:boolean;
   txHash:string;
   createdAt:string
 }

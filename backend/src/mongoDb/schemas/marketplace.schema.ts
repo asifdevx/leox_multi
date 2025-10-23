@@ -64,7 +64,7 @@ const BidSchema = new mongoose.Schema({
     },
   ],
 });
-BidSchema.index({ tokenId: 1, seller: 1 }, { unique: true });
+BidSchema.index({ tokenId: 1, seller: 1, 'bids.bidder': 1 });
 
 export const NFT = mongoose.model("Nfts", nftSchema);
 export const Fee = mongoose.model("MarketplaceFee", feeSchema);

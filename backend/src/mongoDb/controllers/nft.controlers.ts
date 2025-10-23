@@ -68,7 +68,7 @@ export const newBuyer = async ({ tokenId, buyer, seller, quantity }: NewBuyerPro
     seller: seller.toLowerCase(),
   });
   const buyerNft = await findNFT({ tokenId: tokenStr, seller: buyer });
-
+  let resultNFT;
   if (!buyerNft) {
     const newBuyerNFT = {
       tokenId: tokenStr,
@@ -90,15 +90,16 @@ export const newBuyer = async ({ tokenId, buyer, seller, quantity }: NewBuyerPro
       tokenURI,
       updatedAt: new Date(),
     };
-    await NFT.create(newBuyerNFT);
+    resultNFT = await NFT.create(newBuyerNFT);
     console.log(`🟢 Created buyer record for ${buyer} (tokenId: ${tokenStr})`);
   } else {
     const newSupply = Number(buyerNft.remainingSupply || 0) + quantity;
     buyerNft.remainingSupply = newSupply;
     buyerNft.updatedAt = new Date();
-    await buyerNft.save();
+    resultNFT = await buyerNft.save()
     console.log(`🟢 Updated buyer record for ${buyer} (tokenId: ${tokenStr})`);
   }
+  return resultNFT.toObject ? resultNFT.toObject() : resultNFT;
 };
 
 export const getNFTs = async (start: number, limit: number, sortBy: sortByProps) => {

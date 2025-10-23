@@ -95,5 +95,6 @@ const FixedCollection = ({ nft }: { nft: NFT }) => {
     </>
   );
 };
+export default React.memo(FixedCollection);
 
-export default FixedCollection;
+

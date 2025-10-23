@@ -3,7 +3,7 @@ import { createEthContract } from '../../config/bsc.service';
 import { io } from '../../index';
 import { newBuyer, syncSingleNFT } from './nft.controlers';
 import { findNFT } from './userInfo.controlers';
-import { bids, changeHigestBiderInfo, handleAuctionClaimed } from './AuctionBid.controlers';
+import { bids, changeHigestBiderInfo, handleAuctionClaimed, handleBidRefunded } from './AuctionBid.controlers';
 import { ethers } from 'ethers';
 
 export async function startNFTListener() {
@@ -46,6 +46,7 @@ export async function startNFTListener() {
         tokenId: tokenId.toString(),
         seller,
         bidder,
+        claim:false,
         totalBid: parseFloat(ethers.formatEther(bid)),
         txHash: event.transactionHash,
       });
@@ -73,13 +74,14 @@ export async function startNFTListener() {
 
   contract.on('TokenBought', async (tokenId, buyer, seller, quantity, totalPrice, event) => {
     try {
-      const Nft = await findNFT({ tokenId, seller });
-      if (!Nft) {
+      const nft = await findNFT({ tokenId, seller });
+      if (!nft) {
         console.warn(`⚠️ NFT not found for tokenId: ${tokenId}, seller: ${seller}`);
         return; // exit early so you don't try to access null
       }
       const tokenStr = tokenId.toString();
-      const newRemaining = Nft.remainingSupply - Number(quantity);
+      const newRemaining = nft.remainingSupply - Number(quantity);
+
       const update = {
         $set: {
           remainingSupply: newRemaining,
@@ -97,6 +99,8 @@ export async function startNFTListener() {
         update,
         { new: true },
       );
+      const buyerNFT = await newBuyer({ tokenId, buyer, seller, quantity });
+
       io.emit('TokenBought', {
         tokenId: tokenStr,
         buyer: buyer.toLowerCase(),
@@ -104,10 +108,10 @@ export async function startNFTListener() {
         quantity: quantity.toString(),
         totalPrice: totalPrice.toString(),
         remainingSupply: newRemaining,
+        buyerNFT
       });
       console.log('updatedNFT', updatedNFT);
 
-      await newBuyer({ tokenId, buyer, seller, quantity });
     } catch (error) {
       console.error('❌ Error handling TokenBought:', error);
     }
@@ -115,10 +119,20 @@ export async function startNFTListener() {
 
   contract.on(
     'AuctionClaimed',
-    async (tokenId, seller, highestBidder, highestBid, event) => {
-      await handleAuctionClaimed(tokenId, seller, highestBidder, event);
+    async (tokenId, seller, winner, amount, event) => {
+      const caller = (await event.getTransaction()).from.toLowerCase();
+
+      await handleAuctionClaimed(tokenId, seller, winner, caller,io);
+
+     
     },
   );
+
+
+
+  contract.on("BidRefunded",async(tokenId,seller,bidder)=>{
+    await handleBidRefunded(tokenId,seller,bidder,io)
+  })
   
   
 }

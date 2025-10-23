@@ -54,6 +54,7 @@ query GetBidHistory($tokenId:String!,$seller:String!){
   bids {
     bidder
     bid
+    claim
     txHash
     createdAt
   }

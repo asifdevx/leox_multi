@@ -81,7 +81,7 @@ const TransactionsItem = ({
             {item.isListed ? (
               <span className="text-green-300 font-semibold">Now</span>
             ) : (
-              <span className="text-gray-400">Not listed</span>
+              <span className="text-red-400">Sold</span>
             )}
           </p>
           <p className="font-semibold text-[11px]/[15px] text-indigo-600">
@@ -94,4 +94,4 @@ const TransactionsItem = ({
   );
 };
 
-export default TransactionsItem;
+export default React.memo(TransactionsItem);

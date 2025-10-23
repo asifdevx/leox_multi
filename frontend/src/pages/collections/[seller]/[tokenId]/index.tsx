@@ -14,8 +14,12 @@ export default function NftDetail() {
   const [fetchedNft, setFetchedNft] = useState<any>(null);
 
   const nft = useSelector((state: RootState) =>
-    state.nft.listings.find((e) => e.tokenId.toString() === params?.tokenId)
-  );
+  state.nft.listings.find(
+    (e) =>
+      e.tokenId.toString() === params?.tokenId &&
+      e.seller.toLowerCase() === params?.seller.toLowerCase()
+  )
+);
 
   useEffect(() => {
     if (!nft && params?.tokenId && params?.seller) {
@@ -32,7 +36,6 @@ export default function NftDetail() {
   }, [nft, params?.tokenId, params?.seller]);
 
   const activeNft = nft || fetchedNft;
-
   if (!activeNft) return <div className="text-white p-8">Loading...</div>;
 
   const isAuction =
@@ -99,7 +102,7 @@ export default function NftDetail() {
             <p>
               <span className="text-gray-400">OWNED BY:</span>{" "}
               <span className="text-purple-400 cursor-pointer text-purple break-words">
-                {activeNft.seller}
+                {activeNft.seller} 
               </span>
             </p>
             <p>

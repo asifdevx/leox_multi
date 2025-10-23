@@ -1,7 +1,8 @@
+
 import { AppDispatch, RootState } from "@/components/store/store";
 import { fetchNFT } from "@/reducer/nftSlice";
 import { NftState } from "@/types";
-import { useEffect } from "react";
+import { useEffect,useCallback,useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "usehooks-ts";
 import Button from "../../ui/Button";
@@ -9,6 +10,9 @@ import { TransactionSkeleton } from "../../ui/skeleton";
 import TransactionsItem from "./TransactionsItem";
 
 export default function LatestTransaction() {
+  
+  console.count("transaction items rendered");
+
   const dispatch = useDispatch<AppDispatch>();
   const isDesktop = useMediaQuery("(min-width: 450px)");
 
@@ -21,19 +25,21 @@ export default function LatestTransaction() {
     }
   }, [dispatch, listings.length, limit, sortBy]);
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     if (!loading && hasMore) {
       dispatch(fetchNFT({ start: offset, limit, sortBy: "recent" }));
     }
-  };
+  }, [loading, hasMore, dispatch, offset, limit, sortBy]);
   
+  const skeletons = useMemo(() => Array.from({ length: limit }), [limit]);
+
   return (
     <div className="mx-auto px-4 py-8 bg-nft-dark-gradient text-white min-h-screen">
       <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {/* 🧱 Case 1: Initial load */}
         {loading &&
           listings.length === 0 &&
-          Array.from({ length: limit }).map((_, idx) => (
+          skeletons.map((_, idx) => (
             <TransactionSkeleton key={`initial-skeleton-${idx}`} />
           ))}
 
@@ -50,7 +56,7 @@ export default function LatestTransaction() {
         {/* 🧱 Case 3: Loading more (append skeletons at end) */}
         {loading &&
           listings.length > 0 &&
-          Array.from({ length: limit }).map((_, idx) => (
+          skeletons.map((_, idx) => (
             <TransactionSkeleton key={`loadmore-skeleton-${idx}`} />
           ))}
       </div>

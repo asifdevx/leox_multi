@@ -1,7 +1,8 @@
 import LatestTransaction from '@/components/Com/DropCom/TransactionItems'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const drops = () => {
+
   return (
     <div>
       <LatestTransaction />

@@ -1,65 +1,55 @@
 import dotenv from "dotenv";
-import * as ethers from "ethers";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { ethers } from "ethers";
 import abi from "@/components/ABI/abi.json";
 import { CreateNFTArgs, NFT, NftState } from "@/types";
 import { fetchGraphQL } from "@/api/graphql";
 import { GET_NFT } from "@/config/graphql";
 
-
 dotenv.config();
 
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
-console.log(CONTRACT_ADDRESS);
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
 
 
+
+// 🪙 Create or reuse contract instance
 export const createEthContract = async () => {
-  if (!window.ethereum) return;
+  if (!window.ethereum) throw new Error("MetaMask not found");
+
+  // ✅ Return cached contract if already exists
+
   const provider = new ethers.BrowserProvider(window.ethereum);
-  await provider.send("eth_requestAccounts", []);
+  await provider.send("eth_requestAccounts", []); // ensure connection once
   const signer = await provider.getSigner();
-  return new ethers.Contract(CONTRACT_ADDRESS!, abi, signer);
+
+ return new ethers.Contract(CONTRACT_ADDRESS!, abi, signer);
+  
 };
 
+// 🧱 Mint NFT
 export const createNFT = createAsyncThunk(
   "nft/createNFT",
-  async ({ tokenURI, supply, price,saleType,auctionDuration   }: CreateNFTArgs) => {
-    try {
-      const contract = await createEthContract();
-      const duration = saleType === "Fixed" ? 0 : Math.floor(auctionDuration);
-      console.log("duration",duration);
-      
-      const saleTypeString = saleType === "Fixed" ? "Fixed" : "Auction";
-      console.log("saleTypeString",saleTypeString);
-      
-      const tx = await contract?.mint(
-        tokenURI,
-        supply,
-        ethers.parseEther(price.toString()),
-        saleTypeString,
-        duration 
-      );
-      if (!tx) throw new Error("Transaction failed to initialize.");
-      await tx.wait();
-      return { success: true, txHash: tx.hash };
-    } catch (error) {
-      console.error("Error creating NFT:", error);
-      throw error;
-    }
+  async ({ tokenURI, supply, price, saleType, auctionDuration }: CreateNFTArgs) => {
+    const contract = await createEthContract();
+    const duration = saleType === "Fixed" ? 0 : Math.floor(auctionDuration);
+    const tx = await contract.mint(
+      tokenURI,
+      supply,
+      ethers.parseEther(price.toString()),
+      saleType,
+      duration
+    );
+    await tx.wait(1);
+    return { success: true, txHash: tx.hash };
   }
 );
 
+// 📦 Fetch NFTs from backend
 export const fetchNFT = createAsyncThunk<
   NFT[],
   { start: number; limit: number; sortBy?: string }
 >("nft/fetchNFT", async ({ start, limit, sortBy }) => {
-  const data = await fetchGraphQL<{ nfts: NFT[] }>(GET_NFT, {
-    start,
-    limit,
-    sortBy,
-  });
-  console.log("nft Datas", data?.nfts || []);
-
+  const data = await fetchGraphQL<{ nfts: NFT[] }>(GET_NFT, { start, limit, sortBy });
   return data?.nfts || [];
 });
 
@@ -77,50 +67,64 @@ const nftSlice = createSlice({
   name: "nft",
   initialState,
   reducers: {
-    updateListing (state,action) { 
-      const {tokenId, seller, remainingSupply, isListed}=action.payload;
-      const listing=state.listings.find((e)=>e.tokenId ==tokenId && e.seller == seller );
-      if(listing){
-        listing.remainingSupply= remainingSupply;
-        listing.isListed = isListed;
+    updateListing(state, { payload }) {
+      const { tokenId, seller, remainingSupply, isListed } = payload;
+      const listing = state.listings.find(
+        (e) => e.tokenId == tokenId && e.seller.toLowerCase() === seller.toLowerCase()
+      );
+      if (listing) {
+        Object.assign(listing, { remainingSupply, isListed });
       }
     },
-    updateBidInfo(state,action){
-      const { tokenId,seller,highestBid,highestBidder}=action.payload;
-      const weiValue = ethers.parseEther(highestBid.toString());
-      const numberHighestBid = weiValue.toString();
-           
-      const listing=state.listings.find((e)=>e.tokenId ==tokenId && e.seller == seller );
-      if(listing){
-        listing.highestBidder=highestBidder;
-        listing.highestBid=numberHighestBid;
-        listing.updatedAt = new Date().toISOString();
-
-
+    updateAuctionEnd(state, { payload }) {
+      const { tokenId, seller, claim } = payload;
+      const listing = state.listings.find(
+        (e) => e.tokenId == tokenId && e.seller.toLowerCase() === seller.toLowerCase()
+      );
+      if (listing) {
+        Object.assign(listing, {
+          claimed: claim,
+          isListed: false,
+          updatedAt: new Date().toISOString(),
+        });
+      }
+    },
+    updateBidInfo(state, { payload }) {
+      const { tokenId, seller, highestBid, highestBidder } = payload;
+      const listing = state.listings.find(
+        (e) => e.tokenId == tokenId && e.seller.toLowerCase() === seller.toLowerCase()
+      );
+      if (listing) {
+        Object.assign(listing, {
+          highestBidder,
+          highestBid: ethers.parseEther(highestBid.toString()).toString(),
+          updatedAt: new Date().toISOString(),
+        });
+      } else {
+        console.warn(`⚠️ No listing found for token ${tokenId}, seller ${seller}`);
       }
     },
     resetListings(state) {
-      state.listings = [];
-      state.offset = 0;
-      state.hasMore = true;
-      state.error = null;
+      Object.assign(state, {
+        listings: [],
+        offset: 0,
+        hasMore: true,
+        error: null,
+      });
     },
-    setSortBy(state, action) {
-      state.sortBy = action.payload;
-      state.listings = [];
-      state.offset = 0;
-      state.hasMore = true;
+    setSortBy(state, { payload }) {
+      Object.assign(state, {
+        sortBy: payload,
+        listings: [],
+        offset: 0,
+        hasMore: true,
+      });
     },
-    
-    addNewNFT(state, action) {
-      const newNFT = action.payload;
-      const key = `${newNFT.tokenId}-${newNFT.seller}`;
+    addNewNFT(state, { payload: newNFT }) {
       const exists = state.listings.some(
-        (item) => `${item.tokenId}-${item.seller}` === key
+        (i) => `${i.tokenId}-${i.seller}` === `${newNFT.tokenId}-${newNFT.seller}`
       );
-
       if (!exists) {
-        // Add the new NFT to the beginning (most recent first)
         state.listings.unshift(newNFT);
         state.offset += 1;
       }
@@ -128,41 +132,36 @@ const nftSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createNFT.pending, (state) => {
-        state.loading = true;
+      .addCase(createNFT.pending, (s) => void (s.loading = true))
+      .addCase(createNFT.fulfilled, (s) => void (s.loading = false))
+      .addCase(createNFT.rejected, (s) => void (s.loading = false))
+      .addCase(fetchNFT.pending, (s) => {
+        s.loading = true;
+        s.error = null;
       })
-      .addCase(createNFT.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(createNFT.rejected, (state) => {
-        state.loading = false;
-      })
-      .addCase(fetchNFT.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchNFT.fulfilled, (state, action) => {
-        state.loading = false;
-
-        let fetched: NFT[] = action.payload || [];
-
-        const existingKeys = new Set(
-          state.listings.map((i) => `${i.tokenId}-${i.seller}`)
+      .addCase(fetchNFT.fulfilled, (s, { payload }) => {
+        s.loading = false;
+        const newItems = (payload || []).filter(
+          (item) => !s.listings.some((i) => `${i.tokenId}-${i.seller}` === `${item.tokenId}-${item.seller}`)
         );
-        const newUnique = fetched.filter(
-          (item) => !existingKeys.has(`${item.tokenId}-${item.seller}`)
-        );
-
-        state.listings.push(...newUnique);
-        state.offset += newUnique.length;
-        state.hasMore = fetched.length === state.limit
+        s.listings.push(...newItems);
+        s.offset += newItems.length;
+        s.hasMore = newItems.length === s.limit;
       })
-      .addCase(fetchNFT.rejected, (state) => {
-        state.loading = false;
-        state.error = "Failed to fetch listings";
+      .addCase(fetchNFT.rejected, (s) => {
+        s.loading = false;
+        s.error = "Failed to fetch listings";
       });
   },
 });
 
-export const { resetListings, setSortBy, addNewNFT,updateListing,updateBidInfo } = nftSlice.actions;
+export const {
+  resetListings,
+  setSortBy,
+  addNewNFT,
+  updateListing,
+  updateBidInfo,
+  updateAuctionEnd,
+} = nftSlice.actions;
+
 export default nftSlice.reducer;

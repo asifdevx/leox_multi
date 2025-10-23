@@ -29,4 +29,4 @@ const FormInput: React.FC<FormInputProps> = ({
       </div>
     );
   };
-export default FormInput
+export default React.memo(FormInput)

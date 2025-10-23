@@ -44,7 +44,6 @@ const AuctionNFTForm = ({
     setDuration(seconds.toString()); // store seconds
     const endDate = new Date(Date.now() + seconds * 1000);
     setDisplayValue(format(endDate, 'PP p')); // human-readable
-   
   };
 
   return (
@@ -53,32 +52,39 @@ const AuctionNFTForm = ({
       <FormInput
         label="Starting Bid (ETH)"
         value={startingBid}
-        onChange={(e) => setStartingBid(e.target.value.replace(/[^0-9.]/g, ''))}
+        onChange={(e) => {
+          let value = e.target.value.replace(/[^0-9.]/g, ""); 
+          if ((value.match(/\./g) || []).length > 1) return; 
+      
+ 
+          const parts = value.split(".");
+          if (parts[1]?.length > 5) parts[1] = parts[1].slice(0, 5); 
+          value = parts.join(".");
+          setStartingBid(value);
+        }}
         placeholder="Enter starting bid"
       />
 
       {/* Duration Input */}
-  
-        <FormInput
 
-          label="Auction End"
-          value={displayValue}
-          onChange={() => {}}
-          onFocus={() => setShowDurationPicker(true)}
-          placeholder="Select auction end date/time"
-          inputClass="cursor-pointer"
-        />
+      <FormInput
+        label="Auction End"
+        value={displayValue}
+        onChange={() => {}}
+        onFocus={() => setShowDurationPicker(true)}
+        placeholder="Select auction end date/time"
+        inputClass="cursor-pointer"
+      />
 
-        {/* Picker Dropdown */}
-        {showDurationPicker && (
-          <div
-            ref={pickerRef}
-            className=" mt-1 w-full mx-auto bg-[#1a1b2e] border border-purple-700 rounded-xl shadow-lg z-20 p-4 transition-all duration-500"
-          >
-            <AuctionDurationPicker onDurationChange={handleDurationChange} />
-          </div>
-        )}
-      
+      {/* Picker Dropdown */}
+      {showDurationPicker && (
+        <div
+          ref={pickerRef}
+          className=" mt-1 w-full mx-auto bg-[#1a1b2e] border border-purple-700 rounded-xl shadow-lg z-20 p-4 transition-all duration-500"
+        >
+          <AuctionDurationPicker onDurationChange={handleDurationChange} />
+        </div>
+      )}
     </div>
   );
 };
