@@ -18,7 +18,13 @@ export default function LatestTransaction() {
 
   const { listings, loading, error, hasMore, offset, limit, sortBy } =
     useSelector((state: RootState) => state.nft as NftState);
+  useEffect(() => {
 
+    console.log(listings);
+    
+   
+  }, [])
+  
   useEffect(() => {
     if (listings.length === 0) {
       dispatch(fetchNFT({ start: 0, limit, sortBy: "recent" }));

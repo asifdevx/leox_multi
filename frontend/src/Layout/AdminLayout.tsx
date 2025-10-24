@@ -12,9 +12,7 @@ export default function AdminLayout(props: any) {
   const router = useRouter();
   const { roles,fetched } = useFetchUserRole();
 
-  const isAdmin = roles?.includes("Admin") || roles?.includes("Moderator");
-  console.log("roles",roles);
-  
+  const isAdmin = roles?.includes("Admin") || roles?.includes("Moderator");  
 
 
   useEffect(() => {

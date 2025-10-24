@@ -13,7 +13,8 @@ import {
   createUser,
   findUser,
 } from "../../mongoDb/controllers/userInfo.controlers";
-import {bids, findAuctionNft} from "../../mongoDb/controllers/AuctionBid.controlers";
+import { findAuctionNft} from "../../mongoDb/controllers/AuctionBid.controlers";
+import { NFT } from "../../mongoDb/schemas/marketplace.schema";
 
 const RootQuery = new GraphQLObjectType({
   name: "Query",
@@ -103,7 +104,14 @@ const Mutation = new GraphQLObjectType({
         }
 
         await user.save();
-        console.log("user", user.toObject());
+        
+        if (name) {
+          await NFT.updateMany(
+            { seller: address.toLowerCase() },
+            { $set: { username: name } }
+          );
+          console.log(`✅ Updated NFTs for ${address} with new username ${name}`);
+        }
 
         return user.toObject ? user.toObject() : user;
       },

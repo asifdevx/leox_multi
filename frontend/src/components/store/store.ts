@@ -4,6 +4,7 @@ import feeReducer from "@/reducer/feeSlice";
 import userReducer from "@/reducer/userSlice";
 import RoleByUserReducer from "@/reducer/RoleByUserSlice";
 import BuySliceReducer from "@/reducer/BuySlice";
+import { useSelector } from "react-redux";
 
 export const store = configureStore({
   reducer: {
@@ -17,3 +18,5 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export const selector =()=>useSelector((s:RootState)=> s)

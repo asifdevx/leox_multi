@@ -49,7 +49,7 @@ const TransactionsItem = ({
       </div>
 
       {/* Name */}
-      {isDesktop && <p className="text-lg text-gray-600">User Name</p>}
+      {isDesktop && <p className="text-lg text-gray-600">{item.username || "anonyoumus"}</p>}
       <p className="mt-2 text-lg md:text-xl text-white w-full truncate">
         {item.name}
       </p>

@@ -1,9 +1,10 @@
 import { NFT } from '../schemas/marketplace.schema';
 import { createEthContract } from '../../config/bsc.service';
-
 import { fetchMetadata } from '../../config/ipfs.service';
 import { ethers } from 'ethers';
-import { findNFT } from './userInfo.controlers';
+import { findNFT} from './userInfo.controlers';
+import {findNameByNftAddress} from "../../utils";
+
 type sortByProps = 'highestPrice' | 'lowestPrice' | 'recent' | 'oldest';
 
 export const syncSingleNFT = async ({ tokenId, address }: { tokenId: string; address: string }) => {
@@ -11,15 +12,16 @@ export const syncSingleNFT = async ({ tokenId, address }: { tokenId: string; add
 
   try {
     const nft = await contract.Listings(tokenId, address);
-    console.log('nft', nft);
-
     const tokenURI = await contract.uri(tokenId);
     const meta = await fetchMetadata(tokenURI);
+
+   const username = await findNameByNftAddress(nft[2]);
 
     const transformedNFT = {
       tokenId,
       owner: nft[1],
       seller: nft[2],
+      username,
       name: meta.name || `Token #${tokenId}`,
       description: meta.description || '',
       image: meta.image || '',
@@ -68,12 +70,15 @@ export const newBuyer = async ({ tokenId, buyer, seller, quantity }: NewBuyerPro
     seller: seller.toLowerCase(),
   });
   const buyerNft = await findNFT({ tokenId: tokenStr, seller: buyer });
+  const username = await findNameByNftAddress(lowerBuyer)
   let resultNFT;
+
   if (!buyerNft) {
     const newBuyerNFT = {
       tokenId: tokenStr,
       owner: owner,
       seller: lowerBuyer,
+      username,
       name,
       description,
       image,

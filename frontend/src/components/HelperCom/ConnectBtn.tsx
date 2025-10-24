@@ -4,7 +4,6 @@ import { shortenAddress } from "../../utils/ShortenAddress";
 import { IoMdClose } from "react-icons/io";
 import { GoCopy } from "react-icons/go";
 import { FaExternalLinkAlt } from "react-icons/fa";
-import blockies from "ethereum-blockies";
 import Image from "next/image";
 import { handleCopy } from "./handleCopy";
 import { WalletBalance } from "./WalletBalance";
@@ -14,7 +13,8 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 import { getUserInfo } from "@/reducer/userSlice";
 import AddUserName from "./AddUserName";
-
+import Link from "next/link";
+import ProfileIcon from "./ProfileIcon";
 const ConnectBtn: React.FC = () => {
   const { address, isConnected, isConnecting, isReconnecting, status } =
     useAccount();
@@ -28,11 +28,7 @@ const ConnectBtn: React.FC = () => {
 
   const metaMaskConnector = connectors.find((c) => c.name === "MetaMask");
 
-  const icon =
-    address &&
-    blockies
-      .create({ seed: address.toLowerCase(), size: 8, scale: 4 })
-      .toDataURL();
+  
 
   useEffect(() => {
     async function fatch() {
@@ -188,19 +184,10 @@ const ConnectBtn: React.FC = () => {
                       onClick={() => setIsModalOpen(false)}
                     />
                   </div>
-                  <div className="p-2 bg-gray-800 rounded-full">
-                    <Image
-                      src={icon!}
-                      width={72}
-                      height={72}
-                      alt="Identicon"
-                      fetchPriority="high"
-                      className="rounded-full"
-                    />
-                  </div>
+                <ProfileIcon width={72} height={72}/>
                   <div className="flex items-center gap-2">
                     <p className="text-2xl font-bold text-white">
-                      {shortenAddress(address)}
+                     {shortenAddress(address)} 
                     </p>
                     <GoCopy
                       className="text-white/60 cursor-pointer hover:text-white transition-colors"
@@ -210,6 +197,10 @@ const ConnectBtn: React.FC = () => {
                   <p className="text-gray-400">
                     {formate} {symbol}
                   </p>
+                  <Link href="/items/owned">
+                  <Button title="My NFTS" othercss="mt-3 flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-600 text-white hover:bg-gray-700 transition-all duration-200 shadow-md"
+                  handleClick={()=>setIsModalOpen(false)}/>
+                  </Link>
                   <button
                     onClick={() => console.log("Open explorer")}
                     className="mt-3 flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-600 text-white hover:bg-gray-700 transition-all duration-200 shadow-md"

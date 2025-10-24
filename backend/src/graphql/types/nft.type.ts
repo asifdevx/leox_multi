@@ -13,6 +13,7 @@ export const NftType = new GraphQLObjectType({
   fields: {
     tokenId: { type: GraphQLString },
     seller: { type: GraphQLString },
+    username: { type: GraphQLString },
     owner: { type: GraphQLString },
     name: { type: GraphQLString },
     description: { type: GraphQLString },

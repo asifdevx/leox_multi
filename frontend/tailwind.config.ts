@@ -171,10 +171,8 @@ const config: Config = {
       backgroundImage: {
         "bank-gradient": "linear-gradient(90deg, #0179FE 0%, #4893FF 100%)",
         "nft-dark-gradient":
-          " linear-gradient(135deg, #0b1a2a, #102b44, #15405c)",
-
+          "linear-gradient(135deg, #0b1a2a, #102b44, #15405c)",
         sidebarActiveGradient: "linear-gradient(90deg, #102b44, #15405c)",
-
         connectButton:
           "linear-gradient(0deg, rgba(159,149,231,1) 37%, rgba(59,181,226,1) 100%)",
         mobileBg:
@@ -182,7 +180,10 @@ const config: Config = {
         moving_button_bg: "linear-gradient(145deg, #e2e8ec, #ffffff)",
         hover_moving_button_bg:
           "linear-gradient(317deg, #13fdfd 0%, rgba(19, 215, 253, 1) 50%, rgba(19, 191, 253, 1) 62.96%, #139bfd 100%)",
-      },
+        //items/owned
+        "profile_bg":"linear-gradient(135deg, #0b1a2a, #102b44, #15405c)",
+     
+        },
     },
     fontFamily: {
       ponomar: ["Ponomar", "system-ui"],

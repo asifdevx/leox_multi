@@ -27,6 +27,7 @@ interface NFT {
   tokenId: string;
   name: string;
   description: string;
+  username:string;
   image: string;
   seller: string;
   owner: string;

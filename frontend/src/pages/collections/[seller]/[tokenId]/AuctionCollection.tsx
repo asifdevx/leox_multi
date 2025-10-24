@@ -25,6 +25,7 @@ const AuctionCollection = ({ nft }: { nft: NFT }) => {
 
   // ========== Local State ==========
   const [bidAmount, setBidAmount] = useState('');
+  const [isAuctionEnded, setIsAuctionEnded] = useState(Date.now() > nft.auctionEndTime * 1000);
 
   // ========== Destructure NFT ==========
   const { tokenId, seller, highestBid } = nft;
@@ -48,6 +49,10 @@ const AuctionCollection = ({ nft }: { nft: NFT }) => {
     () => parseEther(bidAmount || '0') + parseEther(myBid?.bid.toString() || '0'),
     [bidAmount, myBid],
   );
+
+  const handleAuctionEnd = useCallback(() => {
+    setIsAuctionEnded(true);
+  }, [ ]);
 
   const totalBidEth = useMemo(() => formatEther(totalWei), [totalWei]);
 
@@ -99,9 +104,11 @@ const AuctionCollection = ({ nft }: { nft: NFT }) => {
     dispatch(getBidHistory({ tokenId, seller }));
   }, [dispatch, tokenId, seller]);
 
-  // ========== Computed Auction States ==========
-  const auctionEnded = Date.now() > nft.auctionEndTime * 1000;
 
+
+  // ========== Computed Auction States ==========
+
+  
   const isSeller = useMemo(() => {
     const canBid = nft.seller == address?.toLowerCase();
     return canBid;
@@ -117,13 +124,14 @@ const AuctionCollection = ({ nft }: { nft: NFT }) => {
       {/* Auction Info */}
       <div className="bg-[#151c36] p-6 rounded-xl border border-purple-800/50 mb-8 shadow-xl">
         <p className="text-sm text-gray-400 uppercase font-medium mb-2">
-          AUCTION {auctionEnded ? 'ENDED' : 'ENDS IN'}:
+          AUCTION {isAuctionEnded ? 'ENDED' : 'ENDS IN'}:
         </p>
 
-        {!auctionEnded && (
+        {!isAuctionEnded && (
           <TimerDisplay
             startTime={nft.auctionStartTime * 1000}
             endTime={nft.auctionEndTime * 1000}
+            onAuctionEnd={handleAuctionEnd}
           />
         )}
 
@@ -143,7 +151,7 @@ const AuctionCollection = ({ nft }: { nft: NFT }) => {
         </div>
 
         {/* Bid Input */}
-        {!auctionEnded && !isSeller && (
+        {!isAuctionEnded && !isSeller && (
           <>
             <FormInput
               label={myBid ? 'Increase Your Bid :' : 'Place a Bid:'}
@@ -164,7 +172,7 @@ const AuctionCollection = ({ nft }: { nft: NFT }) => {
         {/* Action Button */}
         <Button
           title={
-            auctionEnded ? (
+            isAuctionEnded ? (
               canClaim ? (
                 loading ? (
                   <>
@@ -181,11 +189,11 @@ const AuctionCollection = ({ nft }: { nft: NFT }) => {
               'PLACE BID'
             )
           }
-          loading={(auctionEnded && !canClaim) || loading}
-          handleClick={auctionEnded ? onClaim : onPlaceBid}
+          loading={(isAuctionEnded && !canClaim) || loading}
+          handleClick={isAuctionEnded ? onClaim : onPlaceBid}
           othercss={cn(
             'font-bold py-3 px-6 rounded-xl text-lg shadow-lg transition-all',
-            auctionEnded
+            isAuctionEnded
               ? canClaim
                 ? 'bg-green-600 hover:bg-green-700 text-white'
                 : 'bg-gray-700 text-gray-400 cursor-not-allowed'
@@ -207,7 +215,7 @@ const AuctionCollection = ({ nft }: { nft: NFT }) => {
 
         {bids.map((b, i) => {
           const isWinner =
-            auctionEnded && b.bidder.toLowerCase() === nft.highestBidder.toLowerCase();
+            isAuctionEnded && b.bidder.toLowerCase() === nft.highestBidder.toLowerCase();
           return <BidItem key={i} bidder={b.bidder} bid={b.bid} isWinner={isWinner} />;
         })}
       </div>

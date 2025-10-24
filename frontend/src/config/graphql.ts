@@ -3,6 +3,7 @@ query GetNFTs($start:Int!,$limit:Int!,$sortBy: String) {
   nfts(start:$start,limit:$limit,sortBy: $sortBy) {
     tokenId
     name
+    username
     description
     image
     seller
