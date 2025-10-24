@@ -3,10 +3,12 @@ import Header from "@/components/Header";
 import ItemsBanner from "@/components/itemsComponents/ItemsBanner";
 import { useFetchUserRole } from "@/hooks/fatchUserRole";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 const RootLayout = (props: any) => {
-  const pathname =usePathname();
+  const router = useRouter();
+  const pathname = router.pathname;
  
   
   

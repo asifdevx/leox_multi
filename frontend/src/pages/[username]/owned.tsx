@@ -1,10 +1,12 @@
 import OwnedPage from '@/components/Profile/OwnedPage';
 import { useParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 const owned = () => {
-  const {username}=useParams<{username:string}>();
-  if(!username) return null;
+  const router = useRouter();
+  const { username } = router.query;
+  if (!username || typeof username !== 'string') return null;
   return <OwnedPage username={username}/>;
 };
 export default owned;
