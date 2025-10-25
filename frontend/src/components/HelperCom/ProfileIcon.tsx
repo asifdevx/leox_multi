@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { useAccount } from 'wagmi';
 import { cn } from '@/utils/cn';
 
-const ProfileIcon = ({className,width,height}:{className?:string,width:number,height:number}) => {
-  const { address } = useAccount();
+const ProfileIcon = ({className,width,height,address}:{className?:string,address:string,width:number,height:number}) => {
+ 
   const icon = useMemo(() => {
     if (!address) return null;
     return blockies.create({ seed: address.toLowerCase(), size: 8, scale: 4 }).toDataURL();

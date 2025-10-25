@@ -9,7 +9,7 @@ import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import { shortenAddress } from '@/utils/ShortenAddress';
 import { profileUserDetails } from '@/config/Profile';
 
-const ItemsBanner = () => {
+const ItemsBanner = ({username}:{username?:string}) => {
   const { name, roles, address } = selector().userInfo;
   const isVerified = useMemo(() => roles?.includes('Seller') as boolean, [roles]);
   return (
@@ -20,6 +20,7 @@ const ItemsBanner = () => {
           className="w-fit h-fit absolute -bottom-9 left-5 bg-gray-600"
           width={100}
           height={100}
+          address={address}
         />
       </div>
       {/* ============ Details ============ */}
@@ -47,7 +48,7 @@ const ItemsBanner = () => {
           ))}
         </div>
       </div>
-      {/* ============ Menu ============ */}
+    
     </div>
   );
 };

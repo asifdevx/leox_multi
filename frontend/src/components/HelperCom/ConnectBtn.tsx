@@ -184,7 +184,7 @@ const ConnectBtn: React.FC = () => {
                       onClick={() => setIsModalOpen(false)}
                     />
                   </div>
-                <ProfileIcon width={72} height={72}/>
+                <ProfileIcon width={72} height={72} address={address}/>
                   <div className="flex items-center gap-2">
                     <p className="text-2xl font-bold text-white">
                      {shortenAddress(address)} 

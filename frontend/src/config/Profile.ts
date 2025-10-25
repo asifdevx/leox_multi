@@ -14,3 +14,12 @@ export const profileUserDetails = [
         
     },
 ]
+
+
+
+export const ProfileNavItems = [
+    { title: "Owned", path: `/owned` },
+    { title: "On Sale", path: `/sale` },
+    { title: "created", path: `/created` },
+    { title: "sold", path: `/sold` },
+  ];
