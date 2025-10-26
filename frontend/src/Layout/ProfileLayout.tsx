@@ -1,44 +1,54 @@
+// ProfileLayout.tsx
+import React, { useEffect } from 'react';
 import Header from '@/components/Header';
+import ProfileNav from '@/components/HelperCom/ProfileNav';
 import ItemsBanner from '@/components/itemsComponents/ItemsBanner';
-import { cn } from '@/utils/cn';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { AppDispatch, RootState } from '@/components/store/store';
+import { getUserProfile } from '@/reducer/userProfile';
+import { useDispatch, useSelector } from 'react-redux';
 
-const ProfileLayout = ({ username, children }: { username: string; children: React.ReactNode }) => {
-  const [showOwner, setShowOwner] = useState(0);
+interface ProfileLayoutProps {
+  username: string;
+  children:  React.ReactNode;
+}
 
-  const ProfileNavItems = [
-    { title: 'Owned', path: `/owned`, showOwner },
-    { title: 'On Sale', path: `/sale` },
-    { title: 'Created', path: `/created` },
-    { title: 'Sold', path: `/sold` },
-  ];
+const ProfileLayout = ({ username, children }: ProfileLayoutProps) => {
 
-  const { asPath } = useRouter();
-  const currentPath = asPath.split("?")[0];
+  const dispatch = useDispatch<AppDispatch>();
+  const { cache, loading } = useSelector((s: RootState) => s.userProfile);
+
+  const lowerUsername = username.toLowerCase();
+  const profile = cache[lowerUsername];
+
+  useEffect(() => {
+    if (lowerUsername && !profile) {
+      dispatch(getUserProfile({ name: lowerUsername }));
+    }
+  }, [lowerUsername, profile, dispatch]);
+
+  if (loading && !profile) {
+    return (
+      <div className="w-full min-h-screen flex justify-center items-center text-white">
+        <p>Loading profile...</p>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="w-full min-h-screen flex justify-center items-center text-white">
+        <p>User not found.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen flex flex-col bg-nft-dark-gradient text-white">
-      {/* <ItemsBanner username={""}/>
-      <Header /> */}
-      <nav className="flex gap-8 bg-black/20 py-4 text-white mt-20">
-        {ProfileNavItems.map((item) => (
-          <Link
-            key={item.title}
-            href={`/${username}${item.path}`}
-            className={cn(
-              'flex items-center gap-3 text-lg transition-colors',
-              currentPath === `/${username}${item.path}` ? 'text-purple-400' : 'hover:text-purple-300'
-            )}
-          >
-            <p>{item.title}</p>
-            {showOwner && <p>{item.showOwner}</p>}
-          </Link>
-        ))}
-      </nav>
-
-      <div className="mt-20">{children}</div>
+      <Header />
+      <ItemsBanner username={username} userData={profile.user}/>
+      <ProfileNav username={username} userData={profile.nfts}/>
+      <div className="w-[97%] h-[2px] mx-auto bg-gradient-to-r from-purple-800 via-purple-500 to-indigo-800 " />
+      <div className="mt-14">{children}</div>
     </div>
   );
 };

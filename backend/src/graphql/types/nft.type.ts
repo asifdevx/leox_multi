@@ -40,7 +40,9 @@ export const UserInfoType = new GraphQLObjectType({
     gmail:{type : GraphQLString},
     address: { type: new GraphQLNonNull(GraphQLString) },
     roles: { type: new GraphQLList(GraphQLString) },
-    isFirstTime:{type :GraphQLBoolean}
+    isFirstTime:{type :GraphQLBoolean},
+    follower:{type:GraphQLInt},
+    following:{type:GraphQLInt},
   },
 });
 
@@ -63,4 +65,33 @@ export const BidType = new GraphQLObjectType({
   bids:{type : new GraphQLList(SingleBidType)}
   }
 
+})
+
+
+ const minimalUserType = new GraphQLObjectType({
+  name: "MinimalUser",
+  fields: {
+    name:{type:GraphQLString},
+    address: { type: GraphQLString },
+    roles: { type: new GraphQLList(GraphQLString) },
+    follower:{type:GraphQLInt},
+    following:{type:GraphQLInt},
+  },
+});
+
+ const ProfileNFTsType = new GraphQLObjectType({
+  name: "ProfileNFTsType",
+  fields: {
+    owned: { type: new GraphQLList(NftType) },
+    sale: { type: new GraphQLList(NftType) },
+    created: { type: new GraphQLList(NftType) },
+    sold: { type: new GraphQLList(NftType) },
+  },
+});
+export const userProfile = new GraphQLObjectType({
+  name:"userProfile",
+  fields:{
+    user:{ type: minimalUserType },
+    nfts: { type: ProfileNFTsType }
+  }
 })

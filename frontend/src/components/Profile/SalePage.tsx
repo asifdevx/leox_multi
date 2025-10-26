@@ -1,6 +1,8 @@
-import React from 'react'
+import React from 'react';
+import { ProfilePageProps } from '@/types'
 
-const SalePage = () => {
+
+const SalePage = ({username,isOwner}:ProfilePageProps) => {
   return (
     <div>SalePage</div>
   )

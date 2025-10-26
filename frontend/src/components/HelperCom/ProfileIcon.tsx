@@ -14,7 +14,7 @@ const ProfileIcon = ({className,width,height,address}:{className?:string,address
   return (
     <div className={cn("p-2 bg-gray-800  rounded-full",className)}>
       <Image
-        src={icon!}
+        src={icon || "/eth.svg"}
         width={width}
         height={height}
         alt="Identicon"

@@ -14,7 +14,7 @@ import Button from "@/components/ui/Button";
 import ConnectBtn from "@/components/HelperCom/ConnectBtn";
 import FixedNFTForm from "@/components/Com/createCom/FixedNFTForm";
 import AuctionNFTForm from "@/components/Com/createCom/AuctionNFTForm";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+
 
 const createNft = () => {
   const history = useSelector((state: RootState) => state.fee.history);
@@ -245,16 +245,11 @@ const createNft = () => {
                 handleClick={handleCreateNFT}
                 othercss="rounded-lg px-3 py-3 flex items-center justify-center gap-2"
                 loading={loading}
-                title={
-                  loading ? (
-                    <div className="flex items-center gap-2">
-                      {/* Spinner SVG */}
-                      <AiOutlineLoading3Quarters className="text-black animate-spin"/>
-                      <span>Creating NFT...</span>
-                    </div>
-                  ) : (
+                title={             
+                  
+                 
                     "Create NFT"
-                  )
+                  
                 }
               />
             </div>

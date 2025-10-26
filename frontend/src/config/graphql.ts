@@ -31,6 +31,8 @@ query GetUserData($address:String!){
     address
     roles
     isFirstTime
+    follower
+    following
   }
 }
 `;
@@ -43,6 +45,9 @@ mutation addRole($name:String,$gmail:String,$address:String!,$roles:[String]){
     address
     roles
     isFirstTime
+    follower
+    following
+    
   }
 }
 `;
@@ -62,3 +67,25 @@ query GetBidHistory($tokenId:String!,$seller:String!){
   }
 }
 `;
+
+
+
+export const GET_USER_PROFILE = `
+query userProfile($name:String!){
+  userProfile(name:$name){
+    user{
+      name
+      address
+      roles
+      follower
+      following
+    }
+    nfts{
+      owned { tokenId,name,image,price}
+      sale { tokenId,name,image,price}
+      created { tokenId,name,image,price}
+      sold { tokenId,name,image,price}
+      
+    }
+  }
+}`

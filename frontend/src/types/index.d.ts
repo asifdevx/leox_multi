@@ -129,20 +129,15 @@ declare type SearchBarProps = {
 
 export type Role = "Admin" | "Moderator"  | "Seller" | "Buyer"| "Ban"; // Added "Ban" role
 
- interface UserInfoType  {
-  address: string;
-  name?: string;
-  gmail?: string | null;
-  roles?: Role[];
-  isFirstTime?: boolean;
-};
 
-declare type updateUserInfoType = {
+declare type UserInfoType = {
   address: string;
   name?: string;
   gmail?: string | null;
   roles?: Role[];
   isFirstTime?: boolean;
+  follower:number;
+  following:number;
 
 };
 
@@ -151,6 +146,33 @@ interface AddUserNameProps {
   isFirstTimeLogin: boolean;
 }
 
+
+// ---------------------- USER PROFILE   ------------------------
+type NftData ={
+  tokenId:string,name:string,image:string,price:string,
+}
+
+interface ProfileData {
+  user : {name:string,address:string,roles:Role[],follower:number,following:number},
+  nfts: {
+    owned:NftData[],
+    sale:NftData[],
+    created:NftData[],
+    sold:NftData[],
+  }
+}
+
+interface ProfilePageProps {
+  username:string,
+  
+}
+
+interface UserProfileState {
+  cache: Record<string, ProfileData>;
+  current: ProfileData | null;
+  loading: boolean;
+  error: string | null;
+}
 // ---------------------- ADMIN / ROLE ------------------------
 
 interface User {
