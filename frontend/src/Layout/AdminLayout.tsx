@@ -1,5 +1,6 @@
-import SideBar from "@/components/adminCom/SideBar";
-import MobileSideBar from "@/components/HelperCom/MobileSideBar";
+
+import SideBar from "@/components/Com/adminCom/SideBar";
+import MobileSideBar from "@/components/Com/HelperCom/MobileSideBar";
 import { sidebarLinks } from "@/config/HeaderLists";
 import { useFetchUserRole } from "@/hooks/fatchUserRole";
 import { useRouter } from "next/router";

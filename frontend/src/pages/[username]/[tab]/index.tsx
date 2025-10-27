@@ -23,7 +23,7 @@ const index = () => {
       case "sale":
         return <SalePage username={username} />;
       default:
-        return <p>Tab not found</p>;
+        return <OwnedPage username={username} />;
     }
   };
   return (

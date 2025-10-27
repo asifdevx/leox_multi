@@ -3,14 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import ConnectBtn from "../HelperCom/ConnectBtn";
+
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import Input from "../ui/Input";
 import { CiMenuBurger } from "react-icons/ci";
 import { IoMdClose } from "react-icons/io";
-import MobileSideBar from "../HelperCom/MobileSideBar";
+import MobileSideBar from "../Com/HelperCom/MobileSideBar";
 import SearchBar from "../ui/SearchBar";
 import { useMediaQuery } from "usehooks-ts";
+import ConnectBtn from "../Com/HelperCom/ConnectBtn";
 
 const index = () => {
   const pathname = usePathname();

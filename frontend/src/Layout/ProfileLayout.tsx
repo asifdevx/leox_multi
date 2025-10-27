@@ -1,11 +1,12 @@
 // ProfileLayout.tsx
 import React, { useEffect } from 'react';
 import Header from '@/components/Header';
-import ProfileNav from '@/components/HelperCom/ProfileNav';
-import ItemsBanner from '@/components/itemsComponents/ItemsBanner';
+
 import { AppDispatch, RootState } from '@/components/store/store';
 import { getUserProfile } from '@/reducer/userProfile';
 import { useDispatch, useSelector } from 'react-redux';
+import ItemsBanner from '@/components/Com/itemsComponents/ItemsBanner';
+import ProfileNav from '@/components/Com/HelperCom/ProfileNav';
 
 interface ProfileLayoutProps {
   username: string;

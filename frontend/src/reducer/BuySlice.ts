@@ -98,7 +98,8 @@ const buySlice = createSlice({
         createdAt: b.createdAt,
       }));
 
-      state.bidHistory[tokenId][seller].sort((a, b) => parseFloat(b.bid) - parseFloat(a.bid));
+      state.bidHistory[tokenId][seller].sort((a: t.Bid, b: t.Bid) => parseFloat(b.bid) - parseFloat(a.bid));
+
     },
     updateBidder(state, action) {
       const { tokenId, seller, bidder, claim = true } = action.payload;
@@ -150,7 +151,8 @@ const buySlice = createSlice({
           claim: b.claim,
           createdAt: b.createdAt,
         }));
-        state.bidHistory[tokenId][seller].sort((a, b) => parseFloat(b.bid) - parseFloat(a.bid));
+        state.bidHistory[tokenId][seller].sort((a: t.Bid, b: t.Bid) => parseFloat(b.bid) - parseFloat(a.bid));
+
       })
       .addCase(getBidHistory.rejected, (state, action) => {
         state.loading = false;

@@ -1,7 +1,7 @@
 import { ProfilePageProps } from '@/types'
 import React from 'react'
 
-const SoldPage = ({username,isOwner}:ProfilePageProps) => {
+const SoldPage = ({username}:ProfilePageProps) => {
   return (
     <div>SoldPage</div>
   )

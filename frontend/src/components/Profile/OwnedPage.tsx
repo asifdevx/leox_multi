@@ -5,7 +5,7 @@ import { AppDispatch, RootState } from '../store/store';
 
 
 const OwnedPage =  ({username}:ProfilePageProps) => {
-  const profile =useSelector((s:RootState)=>s.userProfile.cache[username]);
+  const profile =useSelector((s:RootState)=>s.userProfile.cache[username||""]);
 
   const {user,nfts}=profile;
   const {name,address} = user;

@@ -1,7 +1,7 @@
 import Footer from '@/components/footer/Footer';
 import Header from '@/components/Header';
-import ProfileNav from '@/components/HelperCom/ProfileNav';
-import ItemsBanner from '@/components/itemsComponents/ItemsBanner';
+import ItemsBanner from '@/components/Com/itemsComponents/ItemsBanner';
+import ProfileNav from '@/components/Com/HelperCom/ProfileNav';
 import { useRouter } from 'next/router';
 
 
@@ -13,7 +13,11 @@ const RootLayout = (props: any) => {
       <Header />
       {asPath.startsWith('/items') && (
         <>
-          <ItemsBanner />
+          <ItemsBanner userData={{
+            name: undefined,
+            roles: undefined,
+            address: ''
+          }} />
           <ProfileNav username={'items'} />
           <div className="w-[98%] h-[2px] mx-auto bg-gradient-to-r from-purple-800 via-purple-500 to-indigo-800 " />
         </>

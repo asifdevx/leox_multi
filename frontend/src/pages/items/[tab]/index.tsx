@@ -15,13 +15,13 @@ const index = () => {
  const renderTab = () => {
     switch (tab) {
       case "owned":
-        return <OwnedPage isOwner= {true}/>;
+        return <OwnedPage />;
       case "created":
-        return <CreatedPage isOwner= {true}/>;
+        return <CreatedPage />;
       case "sold":
-        return <SoldPage isOwner= {true}/>;
+        return <SoldPage />;
       case "sale":
-        return <SalePage isOwner= {true}/>;
+        return <SalePage />;
       default:
         return <p>Tab not found</p>;
     }

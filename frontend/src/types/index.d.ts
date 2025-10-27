@@ -136,8 +136,8 @@ declare type UserInfoType = {
   gmail?: string | null;
   roles?: Role[];
   isFirstTime?: boolean;
-  follower:number;
-  following:number;
+  follower?:number;
+  following?:number;
 
 };
 
@@ -163,7 +163,7 @@ interface ProfileData {
 }
 
 interface ProfilePageProps {
-  username:string,
+  username?:string,
   
 }
 

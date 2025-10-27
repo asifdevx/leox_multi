@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Dialog } from "@headlessui/react";
-import { shortenAddress } from "../../utils/ShortenAddress";
+import {  Dialog } from "@headlessui/react";
 import { IoMdClose } from "react-icons/io";
 import { GoCopy } from "react-icons/go";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import Image from "next/image";
-import { handleCopy } from "./handleCopy";
+import { handleCopy } from "../../../utils/handleCopy";
 import { WalletBalance } from "./WalletBalance";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import Button from "../ui/Button";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store/store";
 import { getUserInfo } from "@/reducer/userSlice";
 import AddUserName from "./AddUserName";
 import Link from "next/link";
 import ProfileIcon from "./ProfileIcon";
+import { AppDispatch } from "@/components/store/store";
+import { shortenAddress } from "@/utils/ShortenAddress";
+import Button from "@/components/ui/Button";
+
 const ConnectBtn: React.FC = () => {
   const { address, isConnected, isConnecting, isReconnecting, status } =
     useAccount();

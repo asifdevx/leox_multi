@@ -2,11 +2,11 @@ import { fetchUsersByRole } from "@/reducer/RoleByUserSlice";
 import { Disclosure, Transition } from "@headlessui/react";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { handleCopy } from "../HelperCom/handleCopy";
 import { AppDispatch, RootState } from "../store/store";
 import { shortenAddress } from "../../utils/ShortenAddress";
 import { GoCopy } from "react-icons/go";
 import Image from "next/image";
+import { handleCopy } from "@/utils/handleCopy";
 
 interface ShowDetailsProps {
   roleName: string;

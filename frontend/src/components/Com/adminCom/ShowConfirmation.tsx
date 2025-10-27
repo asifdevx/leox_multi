@@ -1,5 +1,5 @@
 import React from 'react'
-import Button from '../ui/Button'
+import Button from '@/components/ui/Button'
 import { ShowConfirmationProps } from '@/types'
 
 const ShowConfirmation = ({value,setShowConfirmation,handleClick,loading}:ShowConfirmationProps) => {

@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAccount } from 'wagmi';
 import { notFound } from 'next/navigation';
 
-import FormInput from '@/components/HelperCom/FormInput';
-import TimerDisplay from '@/components/HelperCom/TimerDisplay';
+import FormInput from '@/components/Com/HelperCom/FormInput';
+import TimerDisplay from '@/components/Com/HelperCom/TimerDisplay';
 import Button from '@/components/ui/Button';
 import { bidToken, claimAuction, getBidHistory } from '@/reducer/BuySlice';
 import { AppDispatch, RootState } from '@/components/store/store';
@@ -13,7 +13,7 @@ import { cn } from '@/utils/cn';
 import { ShortenPrecisionPrice } from '@/utils/ShortenPrecisionPrice';
 import { formatEther, parseEther } from 'ethers';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import BidItem from '@/components/HelperCom/BidItem';
+import BidItem from '@/components/Com/HelperCom/BidItem';
 
 const AuctionCollection = ({ nft }: { nft: NFT }) => {
   console.count('AuctionCollection items rendered');

@@ -2,7 +2,7 @@ import React from 'react';
 import { ProfilePageProps } from '@/types'
 
 
-const SalePage = ({username,isOwner}:ProfilePageProps) => {
+const SalePage = ({username}:ProfilePageProps) => {
   return (
     <div>SalePage</div>
   )

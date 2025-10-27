@@ -1,13 +1,16 @@
 import React, { useMemo } from 'react';
 import { MdCloudUpload, MdVerified } from 'react-icons/md';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+
 import ProfileIcon from '../HelperCom/ProfileIcon';
-import Button from '../ui/Button';
+
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import { shortenAddress } from '@/utils/ShortenAddress';
 import { profileUserDetails } from '@/config/Profile';
 import { Role } from '@/types';
+import { RootState } from '@/components/store/store';
+import Button from '@/components/ui/Button';
+
 type Data = {
   name?:string,roles?:Role[],address:string 
 }

@@ -5,13 +5,13 @@ import { AppDispatch, RootState } from "@/components/store/store";
 import { shortenAddress } from "@/utils/ShortenAddress";
 import { useAccount, useConnect } from "wagmi";
 import { uploadMetadataToIPFS, uploadToIPFS } from "@/utils/uploadIpfs";
-import PreviewNFT from "@/components/HelperCom/PreviewNFT";
+import PreviewNFT from "@/components/Com/HelperCom/PreviewNFT";
 import { createNFT } from "@/reducer/nftSlice";
-import FormInput from "@/components/HelperCom/FormInput";
+import FormInput from "@/components/Com/HelperCom/FormInput";
 import { IoCloseSharp } from "react-icons/io5";
 import { fatchFee } from "@/reducer/feeSlice";
 import Button from "@/components/ui/Button";
-import ConnectBtn from "@/components/HelperCom/ConnectBtn";
+import ConnectBtn from "@/components/Com/HelperCom/ConnectBtn";
 import FixedNFTForm from "@/components/Com/createCom/FixedNFTForm";
 import AuctionNFTForm from "@/components/Com/createCom/AuctionNFTForm";
 

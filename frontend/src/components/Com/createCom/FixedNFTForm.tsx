@@ -1,4 +1,4 @@
-import FormInput from "@/components/HelperCom/FormInput";
+import FormInput from "../HelperCom/FormInput";
 import { ShortenPrecisionPrice } from "@/utils/ShortenPrecisionPrice";
 
 interface FixedNFTFormProps {

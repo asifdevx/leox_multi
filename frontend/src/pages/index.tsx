@@ -1,5 +1,5 @@
 
-import HomeBanner from "@/components/HelperCom/HomeBanner";
+import HomeBanner from "@/components/Com/HelperCom/HomeBanner";
 import LatestTransaction from "@/components/ui/nftSlider";
 
 import React from "react";
