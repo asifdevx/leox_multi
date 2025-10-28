@@ -48,7 +48,7 @@ const ProfileLayout = ({ username, children }: ProfileLayoutProps) => {
       <Header />
       <ItemsBanner username={username} userData={profile.user}/>
       <ProfileNav username={username} userData={profile.nfts}/>
-      <div className="w-[97%] h-[2px] mx-auto bg-gradient-to-r from-purple-800 via-purple-500 to-indigo-800 " />
+      <div className="w-[97%] h-[2px] mx-auto bg-gradient-to-r from-purple-800/50 via-purple-500/50 to-indigo-800 relative inset-0 top-0" />
       <div className="mt-14">{children}</div>
     </div>
   );

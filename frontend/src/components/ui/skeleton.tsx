@@ -1,18 +1,25 @@
 import { cn } from "@/utils/cn";
+import React from "react";
 
-function Skeleton({
+export function Skeleton({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("animate-pulse rounded-md bg-primary/10", className)}
+      className={cn(
+        "relative overflow-hidden rounded-md bg-neutral-200 dark:bg-neutral-800",
+        className
+      )}
       {...props}
-    />
+    >
+      <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-neutral-600/20" />
+    </div>
   );
 }
 
-export { Skeleton };
+
+
 
 export function SkeletonCom() {
   return (
@@ -28,13 +35,13 @@ export function SkeletonCom() {
 
 export function SkeletonComRole() {
   return (
-    <div className="flex items-center gap-3 bg-gray-800 p-4 rounded-lg shadow-md">
-      <Skeleton className="h-10 w-10 rounded-full bg-gray-700" />
+    <div className="flex items-center gap-3 p-4 rounded-lg shadow-md">
+      <Skeleton className="h-10 w-10 rounded-full" />
 
       <div className="flex flex-col space-y-2 w-full">
-        <Skeleton className="h-4 w-[120px] bg-gray-700" />
-        <Skeleton className="h-3 w-[160px] bg-gray-700" />
-        <Skeleton className="h-3 w-[100px] bg-gray-700" />
+        <Skeleton className="h-4 w-[120px]" />
+        <Skeleton className="h-3 w-[160px]" />
+        <Skeleton className="h-3 w-[100px]" />
       </div>
     </div>
   );
@@ -48,16 +55,18 @@ export function TransactionSkeleton (){
       <div className="relative p-2 border border-white/40 rounded-lg overflow-hidden">
         {/* Image Skeleton */}
         <div className="relative w-full aspect-square">
-          <Skeleton className="w-full h-full rounded-lg bg-white" />
+          <Skeleton className="w-full h-full rounded-lg" />
         </div>
   
         {/* Text Skeletons */}
         <div className="mt-2 space-y-2">
-          <Skeleton className="h-5 w-3/4 bg-white rounded" />
+        <Skeleton className="h-3 w-[35%] rounded" />
+
+          <Skeleton className="h-5 w-3/4 rounded" />
   
-          <div className="flex items-center justify-between mt-1">
-            <Skeleton className="h-3 w-[60px] bg-white rounded" />
-            <Skeleton className="h-3 w-[40px] bg-white rounded" />
+          <div className=" w-full h-8 flex items-center justify-between mt-1 p-2 ">
+            <Skeleton className="h-3 w-[60px] rounded" />
+            <Skeleton className="h-3 w-[40px] rounded" />
           </div>
         </div>
       </div>
@@ -66,7 +75,7 @@ export function TransactionSkeleton (){
 }
 export function NFTimage(){
   return(
-    <Skeleton className="w-full h-full rounded-lg bg-white" />
+    <Skeleton className="w-full h-full rounded-lg" />
 
   )
 }

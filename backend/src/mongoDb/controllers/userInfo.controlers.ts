@@ -38,7 +38,7 @@ export const userProfileInfo = async (name:string)=>{
     s.NFT.find({ owner: address }).lean(), //created
     s.NFT.find({ seller: address, isListed: true, claimed: true }).lean(), // sold
   ]);
-  const [owned, sale, created, sold] = result.map((e) => e.status == 'fulfilled' ? e.value : [] )
+  const [owned, sale, created, sold] = result.map((e) => e.status === 'fulfilled' ? e.value : [] )
 
   return {
     user: {

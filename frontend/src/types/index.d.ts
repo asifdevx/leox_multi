@@ -155,10 +155,10 @@ type NftData ={
 interface ProfileData {
   user : {name:string,address:string,roles:Role[],follower:number,following:number},
   nfts: {
-    owned:NftData[],
-    sale:NftData[],
-    created:NftData[],
-    sold:NftData[],
+    owned:NFT[],
+    sale:NFT[],
+    created:NFT[],
+    sold:NFT[],
   }
 }
 

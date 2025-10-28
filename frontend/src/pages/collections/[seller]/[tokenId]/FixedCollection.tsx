@@ -28,71 +28,69 @@ const FixedCollection = ({ nft }: { nft: NFT }) => {
   };
 
   return (
-    <>
-      {/* Fixed Price Section */}
-      <div className="bg-[#151c36] p-6 rounded-xl border border-purple-800/50 mb-8 shadow-xl space-y-4">
-        <p className="text-sm text-gray-400 uppercase font-medium">
-          FIXED PRICE:
-        </p>
-        <h2 className="text-xl md:text-3xl font-bold mt-1 text-white">
-          {nft.price} ETH
-        </h2>
-        <p className="text-gray-400 text-sm">
-          ($
-          <span className="text-green-400">{(Number(nft.price) * 3000).toFixed(4)}</span>)
-        </p>
+    <div className="bg-gradient-to-br from-[#111933] to-[#181f3f] p-6 rounded-2xl border border-purple-700/40 shadow-lg space-y-4 hover:shadow-purple-600/40 transition-all duration-300">
+    <p className="text-sm text-gray-400 uppercase tracking-wider">
+      FIXED PRICE
+    </p>
+    <h2 className="text-3xl font-bold text-white">
+      {nft.price} <span className="text-cyan-400">ETH</span>
+    </h2>
+    <p className="text-gray-400 text-sm">
+      ($
+      <span className="text-green-400">
+        {(Number(nft.price) * 3000).toFixed(4)}
+      </span>)
+    </p>
 
-        {/* Quantity Selector */}
-        <div className="flex items-center flex-col lg:flex-row gap-2">
-          <p className="text-gray-400">Quantity:</p>
-          <div className="flex items-center border border-purple rounded-lg overflow-hidden">
-            <button
-              onClick={() => handleQuantityChange(-1)}
-              className="px-3 py-1 bg-purple-700 hover:bg-purple-600 rounded-s-lg text-white font-bold"
-            >
-              -
-            </button>
-            <span className="px-4 py-1 bg-[#1f2847] text-white font-medium w-12 text-center">
-              {quantity}
-            </span>
-            <button
-              onClick={() => handleQuantityChange(1)}
-              className="px-3 py-1 bg-purple-700 hover:bg-purple-600 text-white font-bold rounded-e-lg"
-            >
-              +
-            </button>
-          </div>
-          <span className="text-gray-400">
-            / {nft.remainingSupply} available
-          </span>
-        </div>
-
-        {/* Total Price */}
-        <p className="text-white font-bold text-lg">
-          Total:{" "}
-          <span className="text-glow-purple">{ShortenPrecisionPrice(totalPrice.toString())} ETH</span>
-        </p>
-
-        {/* Buy Now Button */}
-        <div className="flex flex-col space-y-4">
-          <Button
-            othercss="neon-button bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-xl text-lg shadow-lg"
-            handleClick={buyNft}
-            
-            loading={loading || userAddress?.toLowerCase() === nft.seller.toLowerCase()} 
-            title={
-              loading
-                ? (<>
-                 <AiOutlineLoading3Quarters className="text-black animate-spin"/>
-                  <span>Purchaseing</span>
-                </>
-                )
-                : `BUY ${quantity} NFT${quantity > 1 ? "s" : ""}`
-            }
-          />
-        </div>
+    {/* Quantity Selector */}
+    <div className="flex flex-wrap items-center gap-3 pt-2">
+      <p className="text-gray-400">Quantity:</p>
+      <div className="flex items-center border border-purple-700 rounded-lg overflow-hidden">
+        <button
+          onClick={() => handleQuantityChange(-1)}
+          className="px-3 py-1.5 bg-purple-700 hover:bg-purple-600 font-bold"
+        >
+          -
+        </button>
+        <span className="px-4 py-1.5 bg-[#1b2242] text-white w-12 text-center">
+          {quantity}
+        </span>
+        <button
+          onClick={() => handleQuantityChange(1)}
+          className="px-3 py-1.5 bg-purple-700 hover:bg-purple-600 font-bold"
+        >
+          +
+        </button>
       </div>
-    </>
+      <span className="text-gray-500 text-sm">
+        / {nft.remainingSupply} available
+      </span>
+    </div>
+
+    {/* Total */}
+    <p className="text-white font-semibold text-lg">
+      Total:{' '}
+      <span className="text-purple-400">
+        {ShortenPrecisionPrice(totalPrice.toString())} ETH
+      </span>
+    </p>
+
+    <Button
+      othercss="w-full mt-3 bg-gradient-to-r from-purple-600 to-indigo-500 hover:from-purple-700 hover:to-indigo-600 text-white font-bold py-3 px-6 rounded-xl text-lg shadow-md transition-all"
+      handleClick={buyNft}
+      loading={loading || userAddress?.toLowerCase() === nft.seller.toLowerCase()}
+      title={
+        loading ? (
+          <>
+            <AiOutlineLoading3Quarters className="text-white animate-spin inline-block mr-2" />
+            Purchasing...
+          </>
+        ) : (
+          `BUY ${quantity} NFT${quantity > 1 ? 's' : ''}`
+        )
+      }
+    />
+  </div>
   );
 };
 export default React.memo(FixedCollection);

@@ -68,9 +68,8 @@ query GetBidHistory($tokenId:String!,$seller:String!){
 }
 `;
 
-
-
 export const GET_USER_PROFILE = `
+
 query userProfile($name:String!){
   userProfile(name:$name){
     user{
@@ -81,11 +80,80 @@ query userProfile($name:String!){
       following
     }
     nfts{
-      owned { tokenId,name,image,price}
-      sale { tokenId,name,image,price}
-      created { tokenId,name,image,price}
-      sold { tokenId,name,image,price}
+      owned {
+  tokenId
+  name
+  username
+  description
+  image
+  seller
+  owner
+  price
+  supply
+  remainingSupply
+  isListed
+  saleType
+  auctionStartTime
+  auctionEndTime
+  highestBidder
+  highestBid
+  claimed
+  updatedAt}
+      sale {tokenId
+  name
+  username
+  description
+  image
+  seller
+  owner
+  price
+  supply
+  remainingSupply
+  isListed
+  saleType
+  auctionStartTime
+  auctionEndTime
+  highestBidder
+  highestBid
+  claimed
+  updatedAt}
+      created {tokenId
+  name
+  username
+  description
+  image
+  seller
+  owner
+  price
+  supply
+  remainingSupply
+  isListed
+  saleType
+  auctionStartTime
+  auctionEndTime
+  highestBidder
+  highestBid
+  claimed
+  updatedAt}
+      sold {tokenId
+  name
+  username
+  description
+  image
+  seller
+  owner
+  price
+  supply
+  remainingSupply
+  isListed
+  saleType
+  auctionStartTime
+  auctionEndTime
+  highestBidder
+  highestBid
+  claimed
+  updatedAt}
       
     }
   }
-}`
+}`;
