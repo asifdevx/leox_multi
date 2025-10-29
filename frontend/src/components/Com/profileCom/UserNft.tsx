@@ -11,14 +11,15 @@ type UserNftsProps = {
   loading?: boolean;
 };
 
-const UserNfts = ({ item }: UserNftsProps) => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isOwner,setIsOwner]=useState<boolean>(false)
-  const router = useRouter();
+const UserNft = ({ item }: UserNftsProps) => {
   const isDesktop = useMediaQuery('(min-width:768px)');
+  const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isOwner, setIsOwner] = useState<boolean>(false);
 
   const handleMintClick = () => {
-    // handle mint logic here
+    router.push(`/nft/${item.username}/${item.tokenId}`)
   };
 
   return (
@@ -46,29 +47,24 @@ const UserNfts = ({ item }: UserNftsProps) => {
           opacity-0 group-hover:opacity-100 transition-all duration-300"
         >
           <Button
-          title={"Show Details"}
+            title={'Show Details'}
             handleClick={handleMintClick}
             othercss="px-5 py-2.5 rounded-xl bg-indigo-500 text-white font-semibold 
             shadow-lg hover:bg-indigo-400 transition-all duration-300 
             translate-y-5 opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
           />
-            Mint
-          
         </div>
       </div>
 
       {/* Info Section */}
       <div className="p-4">
-     
-        <h3 className="text-lg md:text-xl text-white font-semibold truncate mt-1">
-          {item.name}
-        </h3>
+        <h3 className="text-lg md:text-xl text-white font-semibold truncate mt-1">{item.name}</h3>
 
         {/* Status + Price */}
         <div
           className="flex items-center justify-between bg-white/5 rounded-xl px-3 py-2 mt-3
           border border-white/10"
-         >
+        >
           <div className="flex items-center gap-1">
             <span
               className={`w-2.5 h-2.5 rounded-full ${
@@ -76,9 +72,7 @@ const UserNfts = ({ item }: UserNftsProps) => {
               }`}
             ></span>
             <p
-              className={`text-sm font-medium ${
-                item.isListed ? 'text-green-300' : 'text-red-300'
-              }`}
+              className={`text-sm font-medium ${item.isListed ? 'text-green-300' : 'text-red-300'}`}
             >
               {item.isListed ? 'Available' : 'Sold Out'}
             </p>
@@ -93,9 +87,9 @@ const UserNfts = ({ item }: UserNftsProps) => {
       </div>
 
       {/* Subtle Glow on Hover */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 blur-xl transition-all duration-500 pointer-events-none"/>
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 blur-xl transition-all duration-500 pointer-events-none" />
     </div>
   );
 };
 
-export default React.memo(UserNfts);
+export default React.memo(UserNft);

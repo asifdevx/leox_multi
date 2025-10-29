@@ -1,6 +1,7 @@
+import { ProfileNavItemFun } from '@/config/Profile';
 import { cn } from '@/utils/cn';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 type ProfileNavProps = {
   username?: string;
@@ -13,8 +14,10 @@ type ProfileNavProps = {
 };
 
 const ProfileNav = ({ username, userData }: ProfileNavProps) => {
+  console.count("ItemsBanner");
+
   const router = useRouter();
-  const currentPath = router.asPath.split('?')[0];
+  const currentPath =useMemo(()=> router.asPath.split('?')[0] ,[router])
 
   const ProfileNavItems = [
     { title: 'Owned', path: '/owned', count: userData?.owned?.length ?? 0 },
@@ -23,10 +26,12 @@ const ProfileNav = ({ username, userData }: ProfileNavProps) => {
     { title: 'Sold', path: '/sold', count: userData?.sold?.length ?? 0 },
   ];
 
-  const handleNavClick = (path: string) => {
+
+ 
+  const handleNavClick = useCallback((path: string) => {
     // Use shallow + scroll:false to keep layout & position
     router.push(`/${username}${path}`, undefined, { shallow: true, scroll: false });
-  };
+  },[]);
 
   return (
     <nav className="flex gap-3 mt-14 items-center justify-start px-3 md:px-7 text-[#E0E6F1]">

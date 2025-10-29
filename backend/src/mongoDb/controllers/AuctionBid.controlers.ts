@@ -108,12 +108,13 @@ export const handleAuctionClaimed = async (
   seller: string,
   highestBidder: string,
   caller: string,
-  io:any
+  io: any
 ) => {
   try {
     const tokenStr = tokenId.toString();
     const lowerSeller = seller.toLowerCase();
     const lowerHighestBidder = highestBidder.toLowerCase();
+    const lowerCaller = caller.toLowerCase();
     const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
     // Fetch NFT data
@@ -126,55 +127,52 @@ export const handleAuctionClaimed = async (
     const hasWinner = lowerHighestBidder !== ZERO_ADDRESS;
     let buyerNFT = null;
 
+    // ✅ Claim permission check
+    const canClaim = hasWinner
+      ? lowerCaller === lowerSeller || lowerCaller === lowerHighestBidder
+      : lowerCaller === lowerSeller;
+
+    if (!canClaim) {
+      console.warn(`🚫 Unauthorized claim attempt: ${caller} for token ${tokenId}`);
+      return;
+    }
+
+    // ✅ Update NFT as claimed/unlisted
+    await NFT.findOneAndUpdate(
+      { tokenId: tokenStr, seller: lowerSeller },
+      { $set: { claimed: true, updatedAt: new Date(), isListed: false } },
+    );
 
     if (hasWinner) {
-     
-      const isSellerOrWinner = caller === lowerSeller || caller === lowerHighestBidder;
+      // ✅ Refund and transfer to winner
+      await handleBidRefunded(tokenId, lowerSeller, lowerHighestBidder, io);
 
-      if (isSellerOrWinner) {
-        // Mark NFT as claimed
-        await NFT.findOneAndUpdate(
-          { tokenId: tokenStr, seller: lowerSeller },
-          { $set: { claimed: true, updatedAt: new Date() ,isListed:false } },
-        );
+      buyerNFT = await newBuyer({
+        tokenId: tokenStr,
+        seller: lowerSeller,
+        buyer: lowerHighestBidder,
+        quantity: 1,
+      });
 
-        // Create/update buyer record for winner
-        
-        await handleBidRefunded(tokenId, lowerSeller, lowerHighestBidder,io);
-
-         buyerNFT = await newBuyer({
-          tokenId: tokenStr,
-          seller: lowerSeller,
-          buyer: lowerHighestBidder,
-          quantity: 1,
-        });
-        console.log(`✅ NFT claimed: token ${tokenId}, winner ${highestBidder}`);
-      }
-
-      io.emit("AuctionClaimed",{
-        tokenId:tokenId.toString(),
-        seller:seller.toLowerCase(),
-        caller,
-        highestBidder:lowerHighestBidder,
-        buyerNFT: buyerNFT || null
-
-      })
-
-
-
+      console.log(`✅ Auction claimed: token ${tokenId}, winner ${highestBidder}`);
     } else {
-      // No bids, highestBidder is 0x0
-      console.log(`⚠️ Auction ended with no bids: token ${tokenId}`);
-      await NFT.findOneAndUpdate(
-        { tokenId: tokenStr, seller: lowerSeller },
-        { $set: { claimed: false, updatedAt: new Date(),isListed:false } },
-      );
+      console.log(`⚠️ Auction ended with no bids, seller reclaimed NFT ${tokenId}`);
     }
+
+    // ✅ Always emit event so frontend updates
+    io.emit("AuctionClaimed", {
+      tokenId: tokenStr,
+      seller: lowerSeller,
+      caller: lowerCaller,
+      highestBidder: hasWinner ? lowerHighestBidder : null,
+      buyerNFT: buyerNFT || null,
+      hasWinner,
+    });
+
   } catch (error) {
     console.error('❌ Error handling AuctionClaimed:', error);
   }
 };
-
 export const handleBidRefunded = async (tokenId: number, seller: string, caller: string,io:any) => {
   try {
     const tokenStr = tokenId.toString();

@@ -3,7 +3,7 @@ import React from "react";
 interface BidItemProps {
     bidder: string;
     bid: string;
-    isWinner: boolean;
+    isWinner?: boolean;
   }
   
   const BidItem =({ bidder, bid, isWinner }: BidItemProps) => (

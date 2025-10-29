@@ -21,7 +21,10 @@ export const getUserProfile = createAsyncThunk(
           GET_USER_PROFILE,
           {  name }
         );
-        if (!data?.userProfile) throw new Error("Profile not found");
+        if (!data || data.userProfile === null) {
+          // Instead of throwing, return null profile
+          return { cached: false, profile: null }
+        }
         return { cached: false, profile: data.userProfile };
   
       } catch (error: any) {
@@ -59,7 +62,7 @@ const userProfileSlice= createSlice({
         state.error = null;
         state.current = payload.profile;
         
-        if (!payload.cached) {
+        if (!payload.cached && payload.profile) {
           state.cache[payload.profile.user.name.toLowerCase()] = payload.profile;
         }
       })

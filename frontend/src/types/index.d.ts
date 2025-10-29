@@ -148,9 +148,7 @@ interface AddUserNameProps {
 
 
 // ---------------------- USER PROFILE   ------------------------
-type NftData ={
-  tokenId:string,name:string,image:string,price:string,
-}
+
 
 interface ProfileData {
   user : {name:string,address:string,roles:Role[],follower:number,following:number},

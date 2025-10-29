@@ -6,6 +6,8 @@ import { RootState } from "@/components/store/store";
 import AuctionCollection from "./AuctionCollection";
 import FixedCollection from "./FixedCollection";
 import { getNftData } from "@/api/api";
+import { Poperties } from "@/config/Nft";
+import ExpandableText from "@/components/Com/HelperCom/ExpandableText";
 
 
 
@@ -69,12 +71,7 @@ export default function NftDetail() {
               PROPERTIES
             </h3>
             <div className="flex flex-wrap gap-3">
-              {[
-                { trait: "TRAIT", value: "Fractal" },
-                { trait: "TYPE", value: "Generative Art" },
-                { trait: "YEAR", value: "EDITOOS" },
-                { trait: "EDITION", value: "9/1" },
-              ].map((prop, i) => (
+              {Poperties.map((prop, i) => (
                 <div
                   key={i}
                   className="min-w-[110px] bg-gradient-to-br from-[#1a1f38] to-[#232b4a] border border-[#3b4566] rounded-lg p-3 text-center shadow-md hover:shadow-purple-600/30 transition-all"
@@ -98,8 +95,8 @@ export default function NftDetail() {
             <h1 className="text-4xl md:text-5xl font-extrabold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 drop-shadow-lg mb-3">
               {activeNft.name} #{params?.tokenId}
             </h1>
-            <p className="text-gray-400 mb-8 text-sm md:text-base">
-              {activeNft.description}
+            <p className="text-gray-400 mb-8 text-sm md:text-base break-words">
+               <ExpandableText text={activeNft.description} maxChars={200} />  
             </p>
 
             {/* Meta Info */}

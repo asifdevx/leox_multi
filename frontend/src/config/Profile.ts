@@ -15,4 +15,10 @@ export const profileUserDetails = [
   },
 ];
 
+export const ProfileNavItemFun = ({title,arrayLength}:{title:string,arrayLength:number})=>[
+    { title, path: `/${title}`, count: arrayLength?? 0 },
+    { title, path: `/${title}`, count: arrayLength?? 0 },
+    { title, path: `/${title}` , count:arrayLength ?? 0 },
+    { title, path: `/${title}` , count: arrayLength?? 0 },
+  ]
 

@@ -7,18 +7,19 @@ import ProfileIcon from '../HelperCom/ProfileIcon';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import { shortenAddress } from '@/utils/ShortenAddress';
 import { profileUserDetails } from '@/config/Profile';
-import { Role } from '@/types';
+import { ProfileData, Role } from '@/types';
 import { RootState } from '@/components/store/store';
 import Button from '@/components/ui/Button';
 
 type Data = {
-  name?:string,roles?:Role[],address:string 
+ username:string,
+ userData?:ProfileData["user"]
 }
-const ItemsBanner = ({ username,userData }: { username?: string,userData:Data}) => {
-  const profile = useSelector((s: RootState) => s.userProfile.cache[username!]);
-  const user = profile?.user;
+const ItemsBanner = ({ username ,userData}:Data) => {
+  console.count("ItemsBanner");
 
-  const { name, roles, address } = user;
+  const { name, roles, address } = userData || { name: "", roles:"Buyer",address: "" };
+
   const isVerified = useMemo(() => roles?.includes('Seller') ?? false, [roles]);
 
   return (
@@ -63,9 +64,9 @@ const ItemsBanner = ({ username,userData }: { username?: string,userData:Data}) 
   );
 };
 
-export default ItemsBanner;
+export default React.memo(ItemsBanner);
 
-export const IsVerified = React.memo(
+ const IsVerified = React.memo(
   ({ isVerified, name }: { isVerified: boolean; name: string }) => {
     return (
       <div className="text-white flex items-center gap-1">

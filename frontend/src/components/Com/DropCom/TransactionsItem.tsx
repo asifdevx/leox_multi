@@ -87,14 +87,14 @@ const TransactionsItem = ({ item, isDesktop }: { item: NFT; isDesktop?: boolean 
             <div className="flex items-center gap-2 text-left text-xs sm:text-xs">
               {/* Status Dot */}
               <span
-                className={`w-2.5 h-2.5 rounded-full ${
-                  item.isListed ? 'bg-green-400' : 'bg-red-400'
-                }`}
+                className={`w-2.5 h-2.5 rounded-full
+                  bg-green-400
+                `}
               />
 
               {/* Status Text */}
-              <p className={`font-medium ${item.isListed ? 'text-green-300' : 'text-red-300'}`}>
-                {item.isListed ? 'Available' : 'Sold Out'}
+              <p className={`font-medium text-green-300`}>
+                Available
               </p>
             </div>
 
@@ -109,11 +109,9 @@ const TransactionsItem = ({ item, isDesktop }: { item: NFT; isDesktop?: boolean 
           // Mobile layout
           <div className="flex items-center justify-between mt-2 px-1">
             <p className="flex items-center gap-1 text-xs">
-              {item.isListed ? (
+             
                 <span className="text-green-300 font-semibold">Now</span>
-              ) : (
-                <span className="text-red-400 font-medium">Sold</span>
-              )}
+           
             </p>
             <p className="font-semibold text-[12px] text-cyan-400">
               {ShortenPrecisionPrice(item.price)} ETH

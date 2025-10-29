@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useAccount } from 'wagmi';
 import { cn } from '@/utils/cn';
 
-const ProfileIcon = ({className,width,height,address}:{className?:string,address:string,width:number,height:number}) => {
+const ProfileIcon = ({className,width,height,address,border=true}:{className?:string,address:string,width:number,height:number ,border?:boolean }) => {
  
   const icon = useMemo(() => {
     if (!address) return null;
@@ -12,7 +12,7 @@ const ProfileIcon = ({className,width,height,address}:{className?:string,address
   }, [address]);
 
   return (
-    <div className={cn("p-2 bg-gray-800  rounded-full",className)}>
+    <div className={cn( border && "p-2 bg-gray-800  rounded-full",className)}>
       <Image
         src={icon || "/eth.svg"}
         width={width}

@@ -112,7 +112,7 @@ const AuctionCollection = ({ nft }: { nft: NFT }) => {
       {/* Auction Info Card */}
       <div className="relative bg-[#151c36]/80 backdrop-blur-xl border border-[#6934d3]/40 rounded-2xl shadow-[0_0_25px_rgba(105,52,211,0.3)] p-6 md:p-8 mb-8 transition-all duration-300 hover:shadow-[0_0_35px_rgba(105,52,211,0.5)]">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+        <div className="flex flex-col md:items-center md:justify-between mb-4">
           <p className="text-sm text-gray-400 uppercase tracking-wide font-semibold">
             Auction {isAuctionEnded ? "Ended" : "Ends In"}:
           </p>

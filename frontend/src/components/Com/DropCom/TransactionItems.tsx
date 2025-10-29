@@ -11,7 +11,7 @@ import TransactionsItem from "./TransactionsItem";
 
 export default function LatestTransaction() {
   
-  console.count("transaction items rendered");
+  console.count("LatestTransaction");
 
   const dispatch = useDispatch<AppDispatch>();
   const isDesktop = useMediaQuery("(min-width: 450px)");
@@ -50,7 +50,7 @@ export default function LatestTransaction() {
           ))}
 
         {/* 🧱 Case 2: Loaded items */}
-        {listings.map((item, index) => (
+        {listings.filter((e)=>e.isListed===true).map((item, index) => (
           <div
             key={`${item.tokenId}-${item.seller}-${index}`}
             className="transition-all duration-300 cursor-pointer"

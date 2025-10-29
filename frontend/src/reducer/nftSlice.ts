@@ -77,16 +77,22 @@ const nftSlice = createSlice({
       }
     },
     updateAuctionEnd(state, { payload }) {
-      const { tokenId, seller, claim } = payload;
+      const { tokenId, seller } = payload;
+      console.log(seller,"s");
       const listing = state.listings.find(
-        (e) => e.tokenId == tokenId && e.seller.toLowerCase() === seller.toLowerCase()
+        (e) => e.tokenId == tokenId.toString() && e.seller.toLowerCase() === seller.toLowerCase()
       );
       if (listing) {
+      console.log(listing.isListed,"s");
+
         Object.assign(listing, {
-          claimed: claim,
+          claimed: true,
           isListed: false,
           updatedAt: new Date().toISOString(),
         });
+
+      console.log(listing.isListed,"s");
+
       }
     },
     updateBidInfo(state, { payload }) {
