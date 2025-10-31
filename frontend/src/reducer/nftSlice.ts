@@ -1,30 +1,44 @@
 import dotenv from "dotenv";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
-import abi from "@/components/ABI/abi.json";
-import { CreateNFTArgs, NFT, NftState } from "@/types";
+import { CreateNFTArgs, NFT, NftState, reSellNftProps } from "@/types";
 import { fetchGraphQL } from "@/api/graphql";
 import { GET_NFT } from "@/config/graphql";
+import { createEthContract } from "@/hooks/CreateEthContract";
 
 dotenv.config();
 
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
-
-
-
 // 🪙 Create or reuse contract instance
-export const createEthContract = async () => {
-  if (!window.ethereum) throw new Error("MetaMask not found");
 
-  // ✅ Return cached contract if already exists
 
-  const provider = new ethers.BrowserProvider(window.ethereum);
-  await provider.send("eth_requestAccounts", []); // ensure connection once
-  const signer = await provider.getSigner();
+export const reSellNft =createAsyncThunk("nft/resell",async({tokenId,quantity,newPrice}:reSellNftProps)=>{
+  const contract = await createEthContract();
+  const tx = await contract.resellToken(tokenId,quantity,ethers.parseEther(newPrice.toString()));
+  await tx.wait(1);
+  return { success: true, txHash: tx.hash };
+})
 
- return new ethers.Contract(CONTRACT_ADDRESS!, abi, signer);
-  
-};
+export const unlist =createAsyncThunk("nft/unlist",async({tokenId,seller}:{tokenId:number,seller:string})=>{
+  const contract = await createEthContract();
+  const tx = await contract.unlist(tokenId,seller);
+  await tx.wait(1);
+  return { success: true, txHash: tx.hash };
+})
+
+export const startAuctionNft = createAsyncThunk(
+  "nft/startAuctionNft",
+  async ({ tokenId,minPrice ,auctionDuration }: {tokenId:number,minPrice:number,auctionDuration:number}) => {
+    const contract = await createEthContract();
+    const duration = Math.floor(auctionDuration);
+    const tx = await contract.startAuction(
+      tokenId,
+      ethers.parseEther(minPrice.toString()),
+      duration
+    );
+    await tx.wait(1);
+    return { success: true, txHash: tx.hash };
+  }
+);
 
 // 🧱 Mint NFT
 export const createNFT = createAsyncThunk(
@@ -147,8 +161,8 @@ const nftSlice = createSlice({
       })
       .addCase(fetchNFT.fulfilled, (s, { payload }) => {
         s.loading = false;
-        const newItems = (payload || []).filter(
-          (item) => !s.listings.some((i) => `${i.tokenId}-${i.seller}` === `${item.tokenId}-${item.seller}`)
+        const newItems = payload.filter(
+          item => !s.listings.some(i => `${i.tokenId}-${i.seller}` === `${item.tokenId}-${item.seller}`)
         );
         s.listings.push(...newItems);
         s.offset += newItems.length;
@@ -157,7 +171,8 @@ const nftSlice = createSlice({
       .addCase(fetchNFT.rejected, (s) => {
         s.loading = false;
         s.error = "Failed to fetch listings";
-      });
+      })
+      
   },
 });
 

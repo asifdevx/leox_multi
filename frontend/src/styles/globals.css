@@ -17,6 +17,15 @@
 
 
 
+.mainHeader {
+ 
+  @apply sticky top-0 w-full z-40 transition-all;
+
+}
+
+.mainHeader.scrolled {
+ @apply bg-nft-dark-gradient  bg-[#0f172a]/60 backdrop-blur-xl
+}
 
 
 

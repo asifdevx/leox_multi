@@ -97,6 +97,7 @@ const FeePage = () => {
                   : "bg-blue-600 hover:bg-blue-500"
               }`}
               loading={loading}
+              disable={loading}
             />
           </div>
         </div>

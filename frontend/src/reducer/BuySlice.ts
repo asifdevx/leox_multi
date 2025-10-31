@@ -1,9 +1,9 @@
 import { fetchGraphQL } from '@/api/graphql';
 import { GET_BID_HISTORY } from '@/config/graphql';
+import { createEthContract } from '@/hooks/CreateEthContract';
 import * as t from '@/types';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ethers } from 'ethers';
-import { createEthContract } from './nftSlice';
 
 
 export const buyToken = createAsyncThunk(

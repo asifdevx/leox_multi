@@ -1,21 +1,23 @@
+import React, { useCallback, useMemo, useState } from 'react';
+import { useAccount } from 'wagmi';
+import { AnimatePresence } from 'framer-motion';
+
 import Button from '@/components/ui/Button';
 import { NFT } from '@/types';
-import React, { useCallback, useMemo } from 'react';
-import { useAccount } from 'wagmi';
+import ListInView from "./ListInView";
 type HandleNftButtonProps = {
   specificNft: NFT;
 };
 const HandleNftButton = ({ specificNft }: HandleNftButtonProps) => {
     console.count("HandleNftButton")
   const { address } = useAccount();
-  const isOwner = useMemo(
-    () => address?.toLowerCase() === specificNft?.seller,
-    [address, specificNft?.seller],
-  );
-
+  const [isModalOpen,setIsModalOpen] = useState<boolean>(false);
+  
+  const isOwner = useMemo(() => address?.toLowerCase() === specificNft?.seller, [address, specificNft?.seller]);
+  
   const cancelListing = useCallback(() => {}, []);
   const cancelAuction = useCallback(() => {}, []);
-  const openListModal = useCallback(() => {}, []);
+  const openListModal = useCallback(() =>setIsModalOpen(true) , [isModalOpen]);
   const goToMarketplace = useCallback(() => {}, []);
 
   const getButtonProps = () => {
@@ -50,10 +52,21 @@ const HandleNftButton = ({ specificNft }: HandleNftButtonProps) => {
         title={title}
         handleClick={action || (() => {})}
         othercss="w-full"
-        loading={disabled}
+        disable={disabled!}
+        
+        
       />
+      <AnimatePresence mode="wait">
+  {isModalOpen && (
+    <ListInView setIsModalOpen={setIsModalOpen} specificNft={specificNft}/>
+  )}
+</AnimatePresence>
+
     </div>
   );
 };
 
 export default HandleNftButton;
+
+
+

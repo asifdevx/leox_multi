@@ -52,15 +52,14 @@ export default function SocketListener() {
 
     socket.on('AuctionClaimed', ({ tokenId, seller, caller, highestBidder, buyerNFT }) => {
       if (!tokenId || !seller || !caller) return;
-
+      
       if (caller == highestBidder || caller == seller) {
         dispatch(updateAuctionEnd({ tokenId, seller, claim: true }));
         if (highestBidder !== null) {
           dispatch(addNewNFT(buyerNFT));
         }
       }
-
-      dispatch(updateBidder({ tokenId, seller, bidder: caller, claim: true }));
+      if(!caller ===seller) dispatch(updateBidder({ tokenId, seller, bidder: caller, claim: true }));
     });
     socket.on('BidRefunded', (data) => {
       if (!data.tokenId || !data.seller || !data.caller) return;

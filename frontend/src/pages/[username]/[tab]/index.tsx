@@ -14,7 +14,7 @@ const BATCH_SIZE = 20;
 
 
 
-const IndexPage = () => {
+const index = () => {
   console.count("nfts")
   const router = useRouter();
   const { username, tab } = router.query;
@@ -95,4 +95,4 @@ const IndexPage = () => {
   );
 };
 
-export default React.memo(IndexPage);
+export default React.memo(index);

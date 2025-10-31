@@ -82,7 +82,7 @@ const AddUserName = ({
                 !!validateUsername(userName) ? "opacity-50 cursor-not-allowed" : ""
               }`}
               handleClick={handleClick}
-              loading={!!validateUsername(userName)}
+              disable={!!validateUsername(userName)}
             />
           </div>
         </Dialog.Panel>

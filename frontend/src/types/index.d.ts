@@ -71,6 +71,7 @@ declare type customBtnProps = {
   othercss: string;
   handleClick?: () => void;
   loading?: boolean;
+  disable?: boolean;
   isLink?: boolean;
   linkUrl?: string;
   icon?: ReactNode;
@@ -88,6 +89,7 @@ interface InputProps {
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   icon?: ReactNode | string;
   onFocus?:()=>void
+  onBlur?:()=>void
 }
 
 type FormInputProps = {
@@ -97,8 +99,11 @@ type FormInputProps = {
   value?: string;
   icon?: string;
   inputClass?: string;
+  error?:string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?:()=>void
+  onBlur?:()=>void
+
 };
 
 type SideBarItem = {
@@ -267,3 +272,12 @@ interface getBidsProps {
  bids:SingleBids[];
 }
 
+
+
+////////////////////rese;ll 
+
+interface reSellNftProps {
+  tokenId:number,
+  quantity:number,
+  newPrice:number
+}

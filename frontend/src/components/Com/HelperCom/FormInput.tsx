@@ -12,8 +12,11 @@ const FormInput: React.FC<FormInputProps> = ({
     value,
     icon,
     inputClass = "",
+    error,
     onChange,
-    onFocus
+    onFocus,
+    onBlur
+
   }) => {
     return (
       <div className="w-full flex flex-col gap-2">
@@ -26,7 +29,9 @@ const FormInput: React.FC<FormInputProps> = ({
           icon={icon}
           handleChange={onChange}
           onFocus={onFocus}
+          onBlur={onBlur}
         />
+         {error && <p className="text-red-400 text-xs mt-1">{error}</p>} {/* ✅ */}
       </div>
     );
   };

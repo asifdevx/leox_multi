@@ -26,7 +26,19 @@ export async function startNFTListener() {
       console.error('❌ Error syncing new NFT:', error);
     }
   });
-
+  contract.on('AuctionStarted', async (tokenId, minPrice, endTime, event) => {
+    try {
+      const seller = (await event.log.getTransaction()).from.toLowerCase();
+      console.log(`🎨 New NFT Listed! Token ID: ${tokenId}, Seller: ${seller}, Price: ${minPrice}`);
+      const transformedNFT = await syncSingleNFT({
+        tokenId: tokenId.toString(),
+        address: seller,
+      });
+      io.emit('newNFTListed', transformedNFT);
+    } catch (error) {
+      console.error('❌ Error syncing new NFT:', error);
+    }
+  });
   //  update fee listen
 
   contract.on('UpdateFee', async (newFee, timestamp, event) => {
@@ -86,7 +98,7 @@ export async function startNFTListener() {
       }
       const tokenStr = tokenId.toString();
       const newRemaining = nft.remainingSupply - Number(quantity);
-
+//update nft data 
       const update = {
         $set: {
           remainingSupply: newRemaining,

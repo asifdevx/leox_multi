@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { notFound, useParams } from "next/navigation";
 import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,38 +8,48 @@ import FixedCollection from "./FixedCollection";
 import { getNftData } from "@/api/api";
 import { Poperties } from "@/config/Nft";
 import ExpandableText from "@/components/Com/HelperCom/ExpandableText";
+import { useRouter } from "next/router";
+import { useToast } from "@/hooks/useToast";
 
 
 
 export default function NftDetail() {
-  const params = useParams<{ tokenId: string; seller: string }>();
+
+  const router = useRouter();
+  const {seller,tokenId} = router.query;
+
+  const strTokenId = useMemo(() => tokenId?.toString(), [tokenId]);
+  const lowerSeller = useMemo(() => typeof seller === "string" ? seller.toLowerCase():"", [seller]);
+  
   const [fetchedNft, setFetchedNft] = useState<any>(null);
+  const [fetching, setFetching] = useState(false);
+
+  const toast = useToast();
 
   const nft = useSelector((state: RootState) =>
   state.nft.listings.find(
     (e) =>
-      e.tokenId.toString() === params?.tokenId &&
-      e.seller.toLowerCase() === params?.seller.toLowerCase()
+      e.tokenId.toString() === tokenId &&
+      e.seller.toLowerCase() === lowerSeller
   )
 );
 
   useEffect(() => {
-    if (!nft && params?.tokenId && params?.seller) {
-      (async () => {
-        const data = await getNftData({
-          tokenId: params.tokenId,
-          seller: params.seller,
-        });
-        setFetchedNft(data);
-      })();
-    }
-    
-    
-  }, [nft, params?.tokenId, params?.seller]);
+    if (!tokenId || !seller || nft || fetching) return; 
+    setFetching(true)
+    getNftData({ tokenId:strTokenId!, seller:lowerSeller })
+    .then((data) => {
+      if (data) setFetchedNft(data);
+    })
+    .catch(() => toast.error("❌ NFT fetch failed"))
+    .finally(() => setFetching(false));
+  }, [tokenId, seller, nft, fetching]);
 
   const activeNft = nft || fetchedNft;
+  console.log("activeNft",activeNft);
+  
   if (!activeNft) return <div className="text-white p-8">Loading...</div>;
-
+ 
   const isAuction =
     activeNft.saleType === 1 || activeNft.saleType === "Auction";
 
@@ -93,7 +103,7 @@ export default function NftDetail() {
           {/* Title */}
           <div>
             <h1 className="text-4xl md:text-5xl font-extrabold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 drop-shadow-lg mb-3">
-              {activeNft.name} #{params?.tokenId}
+              {activeNft.name} #{strTokenId}
             </h1>
             <p className="text-gray-400 mb-8 text-sm md:text-base break-words">
                <ExpandableText text={activeNft.description} maxChars={200} />  

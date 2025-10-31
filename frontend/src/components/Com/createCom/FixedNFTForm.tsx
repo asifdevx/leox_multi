@@ -2,15 +2,17 @@ import FormInput from "../HelperCom/FormInput";
 import { ShortenPrecisionPrice } from "@/utils/ShortenPrecisionPrice";
 
 interface FixedNFTFormProps {
-  value: { price: string; fee: number; supply: string };
+  value: { price: string; fee: number; supply: string ,priceError?:string,supplyError?:string};
   setValue: {
     setPrice: (price: string) => void;
     setSupply: (supply: string) => void;
+    priceRequire?:()=>void;
+    supplyRequire?:()=>void;
   };
 }
 const FixedNFTForm = ({
-  value: { price, supply, fee },
-  setValue: { setPrice, setSupply },
+  value: { price, supply, fee ,supplyError,priceError},
+  setValue: { setPrice, setSupply,priceRequire, supplyRequire},
 }: FixedNFTFormProps) => {
   return (
     <>
@@ -19,18 +21,18 @@ const FixedNFTForm = ({
         placeholder="Enter price"
         type="text"
         value={price}
+        onBlur={priceRequire}
+        error={priceError}
         icon="ETH"
         onChange={(e) => {
           let value = e.target.value.replace(/[^0-9.]/g, ""); 
           if ((value.match(/\./g) || []).length > 1) return; 
-      
- 
           const parts = value.split(".");
           if (parts[1]?.length > 5) parts[1] = parts[1].slice(0, 5); 
           value = parts.join(".");
-      
           setPrice(value);
         }}
+
       />
 
       {/* Summary Box */}
@@ -61,10 +63,12 @@ const FixedNFTForm = ({
         </div>
       </div>
       <FormInput
-        label="Supply"
+        label="supply"
         placeholder="10"
         type="text"
         value={supply}
+        onBlur={supplyRequire}
+        error={supplyError}
         onChange={(e) => {
           const value = e.target.value.replace(/[^0-9.]/g, "");
           if ((value.match(/\./g) || []).length <= 1) setSupply(value);

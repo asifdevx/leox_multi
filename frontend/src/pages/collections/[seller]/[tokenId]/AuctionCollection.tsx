@@ -178,7 +178,7 @@ const AuctionCollection = ({ nft }: { nft: NFT }) => {
               : "AUCTION ENDED"
               : "PLACE BID"
           }
-          loading={(isAuctionEnded && !canClaim) || loading}
+          disable={(isAuctionEnded && !canClaim) || loading }
           handleClick={isAuctionEnded ? onClaim : onPlaceBid}
           othercss={cn(
             "w-full py-3 text-lg font-bold rounded-xl transition-all duration-300 shadow-lg",

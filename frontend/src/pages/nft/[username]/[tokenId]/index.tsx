@@ -30,10 +30,6 @@ const IndexPage: React.FC = () => {
   const { profile, loading, error, retry } = useUserProfile(username as string);
   const specificNft = profile?.nfts?.owned?.find((e) => e.tokenId === tokenId);
 
-
-
-
-
   const { user, nfts } = profile || {};
   return (
     <ProfileStatusWrapper loading={loading} error={error} profile={profile} onRetry={retry}>

@@ -78,7 +78,8 @@ const FixedCollection = ({ nft }: { nft: NFT }) => {
     <Button
       othercss="w-full mt-3 bg-gradient-to-r from-purple-600 to-indigo-500 hover:from-purple-700 hover:to-indigo-600 text-white font-bold py-3 px-6 rounded-xl text-lg shadow-md transition-all"
       handleClick={buyNft}
-      loading={loading || userAddress?.toLowerCase() === nft.seller.toLowerCase()}
+      disable={loading || userAddress?.toLowerCase() === nft.seller.toLowerCase()}
+      loading={loading}
       title={
         loading ? (
           <>

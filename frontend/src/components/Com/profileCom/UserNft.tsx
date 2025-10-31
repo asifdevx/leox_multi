@@ -30,6 +30,11 @@ const UserNft = ({ item }: UserNftsProps) => {
     >
       {/* Image Section */}
       <div className="relative w-full aspect-square overflow-hidden">
+      {item.saleType === 0 && item.remainingSupply > 0 && (
+    <div className="absolute z-30 bg-white/70 text-black bottom-2 left-2 px-2 py-1 rounded text-xs font-semibold ">
+       {item.remainingSupply}
+    </div>
+  )}
         <Image
           fill
           src={item.image || '/eth.svg'}

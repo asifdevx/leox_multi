@@ -13,16 +13,16 @@ const RootLayout = (props: any) => {
       <Header />
       {asPath.startsWith('/items') && (
         <>
-          <ItemsBanner userData={{
-            name: undefined,
+          {/* <ItemsBanner userData={{
+            name:,
             roles: undefined,
             address: ''
-          }} />
+          }} /> */}
           <ProfileNav username={'items'} />
           <div className="w-[98%] h-[2px] mx-auto bg-gradient-to-r from-purple-800 via-purple-500 to-indigo-800 " />
         </>
       )}
-      <div className="mt-20 ">{props.children}</div>
+      <div className="mt-2 ">{props.children}</div>
       <Footer />
     </div>
   );

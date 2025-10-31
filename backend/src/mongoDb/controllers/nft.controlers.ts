@@ -1,7 +1,7 @@
 import { NFT } from '../schemas/marketplace.schema';
 import { createEthContract } from '../../config/bsc.service';
 import { fetchMetadata } from '../../config/ipfs.service';
-import { ethers } from 'ethers';
+import { ethers,BigNumberish } from 'ethers';
 import { findNFT} from './userInfo.controlers';
 import {findNameByNftAddress} from "../../utils";
 
@@ -60,7 +60,7 @@ interface NewBuyerProps {
 
 export const newBuyer = async ({ tokenId, buyer, seller, quantity }: NewBuyerProps) => {
   const contract = await createEthContract();
-  const balanceOfBuyer = await contract.balanceOf(buyer, Number(tokenId));
+  const balanceOfBuyer:bigint = await contract.balanceOf(buyer, Number(tokenId));
 
   const lowerBuyer = buyer.toLowerCase();
   const tokenStr = tokenId.toString();
@@ -98,8 +98,7 @@ export const newBuyer = async ({ tokenId, buyer, seller, quantity }: NewBuyerPro
     resultNFT = await NFT.create(newBuyerNFT);
     console.log(`🟢 Created buyer record for ${buyer} (tokenId: ${tokenStr})`);
   } else {
-    const newSupply = Number(buyerNft.remainingSupply || 0) + quantity;
-    buyerNft.remainingSupply = newSupply;
+    buyerNft.remainingSupply = Number(balanceOfBuyer);
     buyerNft.updatedAt = new Date();
     resultNFT = await buyerNft.save()
     console.log(`🟢 Updated buyer record for ${buyer} (tokenId: ${tokenStr})`);
@@ -126,7 +125,7 @@ export const getNFTs = async (start: number, limit: number, sortBy: sortByProps)
       break;
   }
 
-  const nfts = await NFT.find({}).sort(sortOptions).skip(start).limit(limit).lean().exec();
+  const nfts = await NFT.find({isListed:true}).sort(sortOptions).skip(start).limit(limit).lean().exec();
 
   const normalized = nfts.map((n: any) => ({
     ...n,
