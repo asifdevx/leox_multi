@@ -27,6 +27,7 @@ interface NFT {
   tokenId: string;
   name: string;
   description: string;
+  username:string;
   image: string;
   seller: string;
   owner: string;
@@ -70,6 +71,7 @@ declare type customBtnProps = {
   othercss: string;
   handleClick?: () => void;
   loading?: boolean;
+  disable?: boolean;
   isLink?: boolean;
   linkUrl?: string;
   icon?: ReactNode;
@@ -87,6 +89,7 @@ interface InputProps {
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   icon?: ReactNode | string;
   onFocus?:()=>void
+  onBlur?:()=>void
 }
 
 type FormInputProps = {
@@ -96,8 +99,11 @@ type FormInputProps = {
   value?: string;
   icon?: string;
   inputClass?: string;
+  error?:string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?:()=>void
+  onBlur?:()=>void
+
 };
 
 type SideBarItem = {
@@ -128,20 +134,15 @@ declare type SearchBarProps = {
 
 export type Role = "Admin" | "Moderator"  | "Seller" | "Buyer"| "Ban"; // Added "Ban" role
 
- interface UserInfoType  {
-  address: string;
-  name?: string;
-  gmail?: string | null;
-  roles?: Role[];
-  isFirstTime?: boolean;
-};
 
-declare type updateUserInfoType = {
+declare type UserInfoType = {
   address: string;
   name?: string;
   gmail?: string | null;
   roles?: Role[];
   isFirstTime?: boolean;
+  follower?:number;
+  following?:number;
 
 };
 
@@ -150,6 +151,31 @@ interface AddUserNameProps {
   isFirstTimeLogin: boolean;
 }
 
+
+// ---------------------- USER PROFILE   ------------------------
+
+
+interface ProfileData {
+  user : {name:string,address:string,roles:Role[],follower:number,following:number},
+  nfts: {
+    owned:NFT[],
+    sale:NFT[],
+    created:NFT[],
+    sold:NFT[],
+  }
+}
+
+interface ProfilePageProps {
+  username?:string,
+  
+}
+
+interface UserProfileState {
+  cache: Record<string, ProfileData>;
+  current: ProfileData | null;
+  loading: boolean;
+  error: string | null;
+}
 // ---------------------- ADMIN / ROLE ------------------------
 
 interface User {
@@ -246,3 +272,12 @@ interface getBidsProps {
  bids:SingleBids[];
 }
 
+
+
+////////////////////rese;ll 
+
+interface reSellNftProps {
+  tokenId:number,
+  quantity:number,
+  newPrice:number
+}

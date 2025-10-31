@@ -1,7 +1,7 @@
 import { getFeeHistory } from "@/api/api";
 import {  createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createEthContract } from "./nftSlice";
 import { FeeState } from "@/types";
+import { createEthContract } from "@/hooks/CreateEthContract";
 
 
 export const fatchFee = createAsyncThunk(

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Dialog } from "@headlessui/react";
-import * as t from "../../types";
+import {  Dialog } from "@headlessui/react";
+import * as t from "../../../types"
 import FormInput from "./FormInput";
-import Button from "../ui/Button";
+
 import { useAccount } from "wagmi";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store/store";
+
 import { updateUserInfo } from "@/reducer/userSlice";
+import { AppDispatch } from "@/components/store/store";
+import Button from "@/components/ui/Button";
 
 const AddUserName = ({
   setIsFirstTimeLogin,
@@ -80,7 +82,7 @@ const AddUserName = ({
                 !!validateUsername(userName) ? "opacity-50 cursor-not-allowed" : ""
               }`}
               handleClick={handleClick}
-              loading={!!validateUsername(userName)}
+              disable={!!validateUsername(userName)}
             />
           </div>
         </Dialog.Panel>

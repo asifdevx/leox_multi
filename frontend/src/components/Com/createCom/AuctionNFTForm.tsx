@@ -1,4 +1,4 @@
-import FormInput from '@/components/HelperCom/FormInput';
+import FormInput from '../HelperCom/FormInput';
 import AuctionDurationPicker from '@/components/ui/AuctionDurationPicker';
 import React, { useState, useRef, useEffect } from 'react';
 import { format } from 'date-fns';

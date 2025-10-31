@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const nftSchema = new mongoose.Schema({
   tokenId: { type: String, required: true },
   seller: { type: String, lowercase: true },
-  owner: { type: String },
+  username: String,
+  owner: { type: String,lowercase: true },
   name: String,
   description: String,
   image: String,
@@ -21,16 +22,18 @@ const nftSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 nftSchema.index({ tokenId: 1, seller: 1 }, { unique: true });
+nftSchema.index({ owner: 1 });
+nftSchema.index({ seller: 1, isListed: 1 });
 
 const feeSchema = new mongoose.Schema({
-  fee: { type: Number, require: true },
+  fee: { type: Number, required: true },
   updateAt: { type: Date, default: Date.now },
-  txhase: { type: Number, require: true },
+  txhase: { type: Number, required: true },
 });
 
 const UserInfo = new mongoose.Schema(
   {
-    name: { type: String, trim: true },
+    name: { type: String, trim: true,lowercase:true },
     gmail: {
       type: String,
       trim: true,
@@ -48,6 +51,9 @@ const UserInfo = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    follower:{type:Number,default:0},
+    following:{type:Number,default:0},
+    
   },
   { timestamps: true }
 );

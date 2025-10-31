@@ -1,5 +1,6 @@
-import SideBar from "@/components/adminCom/SideBar";
-import MobileSideBar from "@/components/HelperCom/MobileSideBar";
+
+import SideBar from "@/components/Com/adminCom/SideBar";
+import MobileSideBar from "@/components/Com/HelperCom/MobileSideBar";
 import { sidebarLinks } from "@/config/HeaderLists";
 import { useFetchUserRole } from "@/hooks/fatchUserRole";
 import { useRouter } from "next/router";
@@ -12,9 +13,7 @@ export default function AdminLayout(props: any) {
   const router = useRouter();
   const { roles,fetched } = useFetchUserRole();
 
-  const isAdmin = roles?.includes("Admin") || roles?.includes("Moderator");
-  console.log("roles",roles);
-  
+  const isAdmin = roles?.includes("Admin") || roles?.includes("Moderator");  
 
 
   useEffect(() => {

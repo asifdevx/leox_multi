@@ -138,6 +138,8 @@ const ManageUserRole = () => {
           <Button
             handleClick={handleSearch}
             title="Search"
+            loading={loadingUserData}
+            disable={loadingUserData}
             othercss="bg-blue-500 hover:bg-blue-400 px-4 py-2 rounded-lg"
           />
         </div>
@@ -219,7 +221,7 @@ const ManageUserRole = () => {
               title="Apply Change"
               handleClick={changeUserRole}
               othercss="bg-green-600 text-white font-bold"
-              loading={!isRolesChanged()} // disable when roles not changed
+              disable={!isRolesChanged()} // disable when roles not changed
             />
           </div>
         </div>

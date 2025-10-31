@@ -6,30 +6,32 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
-} from "graphql";
-import { NftType, UserInfoType,BidType } from "../types/nft.type";
-import { getNFTs } from "../../mongoDb/controllers/nft.controlers";
+} from 'graphql';
+import { NftType, UserInfoType, BidType, userProfile } from '../types/nft.type';
+import { getNFTs } from '../../mongoDb/controllers/nft.controlers';
 import {
   createUser,
   findUser,
-} from "../../mongoDb/controllers/userInfo.controlers";
-import {bids, findAuctionNft} from "../../mongoDb/controllers/AuctionBid.controlers";
+  userProfileInfo,
+} from '../../mongoDb/controllers/userInfo.controlers';
+import { findAuctionNft } from '../../mongoDb/controllers/AuctionBid.controlers';
+import { NFT, UsersInfo } from '../../mongoDb/schemas/marketplace.schema';
 
 const RootQuery = new GraphQLObjectType({
-  name: "Query",
+  name: 'Query',
   fields: {
     nfts: {
       type: new GraphQLList(NftType),
       args: {
         start: { type: GraphQLInt },
         limit: { type: GraphQLInt },
-        sortBy:{type :GraphQLString}
+        sortBy: { type: GraphQLString },
       },
       resolve: async (_, args) => {
         const start = Number.isInteger(args?.start) ? args.start : 0;
         const limit = Number.isInteger(args?.limit) ? args.limit : 10;
-        const sortBy = args?.sortBy || "recent";
-        return await getNFTs(start, limit,sortBy);
+        const sortBy = args?.sortBy || 'recent';
+        return await getNFTs(start, limit, sortBy);
       },
     },
     getUserInfo: {
@@ -37,21 +39,22 @@ const RootQuery = new GraphQLObjectType({
       args: { address: { type: new GraphQLNonNull(GraphQLString) } },
       resolve: async (_, { address }) => {
         const normalizedAddress = address.toLowerCase();
-        
+
         let user = await findUser(normalizedAddress);
-  
+
         if (!user) {
           user = await createUser({
-            name: "Anonymous",
+            name: 'Anonymous',
             address: normalizedAddress,
-            roles: ["Buyer"],
-            isFirstTime:true
+            roles: ['Buyer'],
+            isFirstTime: true,
+            follower: 0,
+            following: 0,
           });
         }
-        console.log("User",user);
-        
+        console.log('User', user);
+
         return user.toObject ? user.toObject() : user;
-       
       },
     },
     getBids: {
@@ -60,16 +63,24 @@ const RootQuery = new GraphQLObjectType({
         tokenId: { type: new GraphQLNonNull(GraphQLString) },
         seller: { type: new GraphQLNonNull(GraphQLString) },
       },
-      resolve: async (_, { tokenId, seller}) => {
+      resolve: async (_, { tokenId, seller }) => {
         const bidDoc = await findAuctionNft({ tokenId, seller });
-       
-        return bidDoc; 
+
+        return bidDoc;
       },
-    }
-  }
+    },
+
+    userProfile: {
+      type: userProfile,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve: async (_, { name }) => await userProfileInfo(name),
+    },
+  },
 });
 const Mutation = new GraphQLObjectType({
-  name: "mutation",
+  name: 'mutation',
   fields: {
     updateInfo: {
       type: UserInfoType,
@@ -86,31 +97,34 @@ const Mutation = new GraphQLObjectType({
           // create new user
           user = await createUser({
             address,
-            name: name || "Anonymous",
+            name: name || 'Anonymous',
             gmail: gmail || null,
-            roles: roles?.length ? roles : ["Buyer"],
+            roles: roles?.length ? roles : ['Buyer'],
           });
         } else {
           // update existing user
           if (name) user.name = name;
           if (gmail) user.gmail = gmail;
-          if ((name && name !== "Anonymous") || gmail) user.isFirstTime = false;
+          if ((name && name !== 'Anonymous') || gmail) user.isFirstTime = false;
 
           if (roles?.length) {
             user.roles = roles;
           }
-          if (!user.roles?.length) user.roles.push("Buyer");
+          if (!user.roles?.length) user.roles.push('Buyer');
         }
 
         await user.save();
-        console.log("user", user.toObject());
+
+        if (name) {
+          await NFT.updateMany({ seller: address.toLowerCase() }, { $set: { username: name } });
+          console.log(`✅ Updated NFTs for ${address} with new username ${name}`);
+        }
 
         return user.toObject ? user.toObject() : user;
       },
     },
   },
 });
-
 
 export const marketplace = new GraphQLSchema({
   query: RootQuery,

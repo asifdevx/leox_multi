@@ -3,7 +3,12 @@ import { createEthContract } from '../../config/bsc.service';
 import { io } from '../../index';
 import { newBuyer, syncSingleNFT } from './nft.controlers';
 import { findNFT } from './userInfo.controlers';
-import { bids, changeHigestBiderInfo, handleAuctionClaimed, handleBidRefunded } from './AuctionBid.controlers';
+import {
+  bids,
+  changeHigestBiderInfo,
+  handleAuctionClaimed,
+  handleBidRefunded,
+} from './AuctionBid.controlers';
 import { ethers } from 'ethers';
 
 export async function startNFTListener() {
@@ -21,7 +26,19 @@ export async function startNFTListener() {
       console.error('❌ Error syncing new NFT:', error);
     }
   });
-
+  contract.on('AuctionStarted', async (tokenId, minPrice, endTime, event) => {
+    try {
+      const seller = (await event.log.getTransaction()).from.toLowerCase();
+      console.log(`🎨 New NFT Listed! Token ID: ${tokenId}, Seller: ${seller}, Price: ${minPrice}`);
+      const transformedNFT = await syncSingleNFT({
+        tokenId: tokenId.toString(),
+        address: seller,
+      });
+      io.emit('newNFTListed', transformedNFT);
+    } catch (error) {
+      console.error('❌ Error syncing new NFT:', error);
+    }
+  });
   //  update fee listen
 
   contract.on('UpdateFee', async (newFee, timestamp, event) => {
@@ -46,7 +63,7 @@ export async function startNFTListener() {
         tokenId: tokenId.toString(),
         seller,
         bidder,
-        claim:false,
+        claim: false,
         totalBid: parseFloat(ethers.formatEther(bid)),
         txHash: event.transactionHash,
       });
@@ -81,7 +98,7 @@ export async function startNFTListener() {
       }
       const tokenStr = tokenId.toString();
       const newRemaining = nft.remainingSupply - Number(quantity);
-
+//update nft data 
       const update = {
         $set: {
           remainingSupply: newRemaining,
@@ -108,31 +125,21 @@ export async function startNFTListener() {
         quantity: quantity.toString(),
         totalPrice: totalPrice.toString(),
         remainingSupply: newRemaining,
-        buyerNFT
+        buyerNFT,
       });
       console.log('updatedNFT', updatedNFT);
-
     } catch (error) {
       console.error('❌ Error handling TokenBought:', error);
     }
   });
 
-  contract.on(
-    'AuctionClaimed',
-    async (tokenId, seller, winner, amount, event) => {
-      const caller = (await event.getTransaction()).from.toLowerCase();
+  contract.on('AuctionClaimed', async (tokenId, seller, winner, amount, event) => {
+    const caller = (await event.getTransaction()).from.toLowerCase();
 
-      await handleAuctionClaimed(tokenId, seller, winner, caller,io);
+    await handleAuctionClaimed(tokenId, seller, winner, caller, io);
+  });
 
-     
-    },
-  );
-
-
-
-  contract.on("BidRefunded",async(tokenId,seller,bidder)=>{
-    await handleBidRefunded(tokenId,seller,bidder,io)
-  })
-  
-  
+  contract.on('BidRefunded', async (tokenId, seller, bidder) => {
+    await handleBidRefunded(tokenId, seller, bidder, io);
+  });
 }

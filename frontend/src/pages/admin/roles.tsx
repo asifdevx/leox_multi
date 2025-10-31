@@ -4,7 +4,7 @@ import Button from "@/components/ui/Button";
 import ShowDetails from "@/components/ui/ShowDetails";
 import { InteractiveCard } from "@/components/ui/InteractiveCard";
 import { RoleCatagories } from "@/config/RoleList";
-import ManageUserRole from "@/components/adminCom/Role/ManageUserRole";
+import ManageUserRole from "@/components/Com/adminCom/Role/ManageUserRole";
 
 const Roles = () => {
   return (

@@ -1,16 +1,18 @@
 // TimerDisplay.tsx
 import React, { useEffect, useState } from "react";
 
-const TimerDisplay = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
+const TimerDisplay = ({ startTime, endTime,onAuctionEnd }: { startTime: number; endTime: number;onAuctionEnd:()=>void }) => {
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0, progress: 0 });
 
   useEffect(() => {
+
     const timer = setInterval(() => {
       const now = Date.now();
       const remaining = endTime - now;
       if (remaining <= 0) {
         clearInterval(timer);
         setTimeLeft({ hours: 0, minutes: 0, seconds: 0, progress: 100 });
+        if (onAuctionEnd) onAuctionEnd();
         return;
       }
 

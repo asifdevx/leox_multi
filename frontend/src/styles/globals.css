@@ -9,6 +9,30 @@
   scroll-behavior: smooth;
 }
 
+/* font for price  */
+@import url('https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&display=swap');
+
+
+
+
+
+
+.mainHeader {
+ 
+  @apply sticky top-0 w-full z-40 transition-all;
+
+}
+
+.mainHeader.scrolled {
+ @apply bg-nft-dark-gradient  bg-[#0f172a]/60 backdrop-blur-xl
+}
+
+
+
+
+
+
+
 .fi {
   filter: opacity(30);
 }

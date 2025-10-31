@@ -1,8 +1,9 @@
 import Image from "next/image";
 import React from "react";
-import Button from "../ui/Button";
+
 import { useRouter } from "next/navigation";
-import AnimatedBorder from "../ui/MovingBorder";
+import AnimatedBorder from "@/components/ui/MovingBorder";
+
 const HomeBanner = () => {
   const router = useRouter();
   return (

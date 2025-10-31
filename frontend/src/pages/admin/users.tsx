@@ -11,8 +11,6 @@ import { getUserByAddress } from "@/api/api";
 import { RoleCatagories } from "@/config/RoleList";
 
 const Users = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const [walletAddress, setWalletAddress] = useState("");
   const [userRoles, setUserRoles] = useState<string[]>([]);
   const [newRole, setNewRole] = useState("");
   const [userAddress, setuserAddress] = useState<string>("");

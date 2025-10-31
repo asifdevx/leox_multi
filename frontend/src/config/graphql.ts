@@ -3,6 +3,7 @@ query GetNFTs($start:Int!,$limit:Int!,$sortBy: String) {
   nfts(start:$start,limit:$limit,sortBy: $sortBy) {
     tokenId
     name
+    username
     description
     image
     seller
@@ -30,6 +31,8 @@ query GetUserData($address:String!){
     address
     roles
     isFirstTime
+    follower
+    following
   }
 }
 `;
@@ -42,6 +45,9 @@ mutation addRole($name:String,$gmail:String,$address:String!,$roles:[String]){
     address
     roles
     isFirstTime
+    follower
+    following
+    
   }
 }
 `;
@@ -61,3 +67,93 @@ query GetBidHistory($tokenId:String!,$seller:String!){
   }
 }
 `;
+
+export const GET_USER_PROFILE = `
+
+query userProfile($name:String!){
+  userProfile(name:$name){
+    user{
+      name
+      address
+      roles
+      follower
+      following
+    }
+    nfts{
+      owned {
+  tokenId
+  name
+  username
+  description
+  image
+  seller
+  owner
+  price
+  supply
+  remainingSupply
+  isListed
+  saleType
+  auctionStartTime
+  auctionEndTime
+  highestBidder
+  highestBid
+  claimed
+  updatedAt}
+      sale {tokenId
+  name
+  username
+  description
+  image
+  seller
+  owner
+  price
+  supply
+  remainingSupply
+  isListed
+  saleType
+  auctionStartTime
+  auctionEndTime
+  highestBidder
+  highestBid
+  claimed
+  updatedAt}
+      created {tokenId
+  name
+  username
+  description
+  image
+  seller
+  owner
+  price
+  supply
+  remainingSupply
+  isListed
+  saleType
+  auctionStartTime
+  auctionEndTime
+  highestBidder
+  highestBid
+  claimed
+  updatedAt}
+      sold {tokenId
+  name
+  username
+  description
+  image
+  seller
+  owner
+  price
+  supply
+  remainingSupply
+  isListed
+  saleType
+  auctionStartTime
+  auctionEndTime
+  highestBidder
+  highestBid
+  claimed
+  updatedAt}
+      
+    }
+  }
+}`;

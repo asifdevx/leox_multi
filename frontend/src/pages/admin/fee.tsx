@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ShowConfirmation from "@/components/adminCom/ShowConfirmation";
+
 import { AppDispatch, RootState } from "@/components/store/store";
 import Button from "@/components/ui/Button";
 import FeeSlider from "@/components/ui/feeSlider";
 import { changeFee, fatchFee } from "@/reducer/feeSlice";
+import ShowConfirmation from "@/components/Com/adminCom/ShowConfirmation";
 
 const FeePage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -96,6 +97,7 @@ const FeePage = () => {
                   : "bg-blue-600 hover:bg-blue-500"
               }`}
               loading={loading}
+              disable={loading}
             />
           </div>
         </div>

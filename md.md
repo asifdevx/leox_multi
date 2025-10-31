@@ -9,3 +9,7 @@ editor.parameterHints.enabled
 
 
 
+//items/owned
+
+in rootLayout ====banner then props.childer (itemsBanner.tsx)
+then every nav 

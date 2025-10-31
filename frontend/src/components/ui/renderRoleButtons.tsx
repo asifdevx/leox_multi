@@ -27,9 +27,8 @@ export const renderRoleButtons = (
         }`}
         icon={icon}
         iconClass="text-[14px] hover:text-[16px] transition-all"
-        handleClick={() => {
-          if (!isDisabled) handleClick(role);
-        }}
+        handleClick={() => handleClick(role)}
+        disable={isDisabled}
       />
     );
   });

@@ -6,7 +6,8 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
 
-const socket = io('http://192.168.1.100:8000', {
+// const socket = io(`wss://leox-backend.onrender.com`, {
+const socket = io(`http://192.168.1.100:8000`, {
   withCredentials: true,
   transports: ['websocket'],
 });
@@ -31,12 +32,12 @@ export default function SocketListener() {
         ? data.bids.map((b: any) => ({
             bidder: b.bidder,
             bid: b.bid || b.totalBid,
-            claim:b.claim,
+            claim: b.claim,
             createdAt: b.createdAt || new Date().toISOString(),
           }))
         : [];
       dispatch(addBidEvent({ tokenId, seller, bids }));
-          
+
       if (bids.length > 0) {
         const sorted = [...bids].sort((a, b) => parseFloat(b.bid) - parseFloat(a.bid));
         const { bidder, bid } = sorted[0];
@@ -49,22 +50,29 @@ export default function SocketListener() {
       if (data.buyerNFT) dispatch(addNewNFT(data.buyerNFT));
     });
 
-    socket.on('AuctionClaimed', ({tokenId,seller,caller,highestBidder,buyerNFT}) => {
-      if(!tokenId || !seller || !caller || !highestBidder) return;
-      if(caller == highestBidder || caller==seller){
-        dispatch(updateAuctionEnd({tokenId,seller,claim:true}))
-        dispatch(addNewNFT(buyerNFT))
+    socket.on('AuctionClaimed', ({ tokenId, seller, caller, highestBidder, buyerNFT }) => {
+      if (!tokenId || !seller || !caller) return;
+      
+      if (caller == highestBidder || caller == seller) {
+        dispatch(updateAuctionEnd({ tokenId, seller, claim: true }));
+        if (highestBidder !== null) {
+          dispatch(addNewNFT(buyerNFT));
+        }
       }
-      dispatch(updateBidder({tokenId,seller,bidder:caller,claim:true}));
-      
-    });  
-      socket.on('BidRefunded', (data) => {
-      if(!data.tokenId || !data.seller || !data.caller ) return;
-      
-      dispatch(updateBidder({tokenId:data.tokenId,seller:data.seller,bidder:data.caller,claim:true}));
-      
+      if(!caller ===seller) dispatch(updateBidder({ tokenId, seller, bidder: caller, claim: true }));
     });
- 
+    socket.on('BidRefunded', (data) => {
+      if (!data.tokenId || !data.seller || !data.caller) return;
+
+      dispatch(
+        updateBidder({
+          tokenId: data.tokenId,
+          seller: data.seller,
+          bidder: data.caller,
+          claim: true,
+        }),
+      );
+    });
 
     return () => {
       socket.off('updateFee');
