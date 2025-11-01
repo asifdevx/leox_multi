@@ -1,57 +1,77 @@
-import { useState, useEffect, useMemo } from "react";
-import { notFound, useParams } from "next/navigation";
-import Image from "next/image";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/components/store/store";
-import AuctionCollection from "./AuctionCollection";
-import FixedCollection from "./FixedCollection";
-import { getNftData } from "@/api/api";
-import { Poperties } from "@/config/Nft";
-import ExpandableText from "@/components/Com/HelperCom/ExpandableText";
-import { useRouter } from "next/router";
-import { useToast } from "@/hooks/useToast";
-
-
+import { useState, useEffect, useMemo } from 'react';
+import { notFound, useParams } from 'next/navigation';
+import Image from 'next/image';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/components/store/store';
+import AuctionCollection from './AuctionCollection';
+import FixedCollection from './FixedCollection';
+import { getNftData } from '@/api/api';
+import { Poperties } from '@/config/Nft';
+import ExpandableText from '@/components/Com/HelperCom/ExpandableText';
+import { useRouter } from 'next/router';
+import { useToast } from '@/hooks/useToast';
+import { NFT } from '@/types';
 
 export default function NftDetail() {
-
   const router = useRouter();
-  const {seller,tokenId} = router.query;
-
-  const strTokenId = useMemo(() => tokenId?.toString(), [tokenId]);
-  const lowerSeller = useMemo(() => typeof seller === "string" ? seller.toLowerCase():"", [seller]);
-  
-  const [fetchedNft, setFetchedNft] = useState<any>(null);
-  const [fetching, setFetching] = useState(false);
-
+  const { seller, tokenId } = router.query;
   const toast = useToast();
 
+  const [ready,setReady]= useState(false);
+
+  const [fetchedNft, setFetchedNft] = useState<NFT | null>(null);
+  const [fetching, setFetching] = useState(false);
+  const [hasFetched, setHasFetched] = useState(false);
+  
+  const strTokenId = useMemo(() => {
+    if (Array.isArray(tokenId)) return tokenId[0];
+    return tokenId?.toString() || '';
+  }, [tokenId]);
+
+  const lowerSeller = useMemo(() => {
+    if (Array.isArray(seller)) return seller[0].toLowerCase();
+    return typeof seller === 'string' ? seller.toLowerCase() : '';
+  }, [seller]);
+
+  
+
   const nft = useSelector((state: RootState) =>
-  state.nft.listings.find(
-    (e) =>
-      e.tokenId.toString() === tokenId &&
-      e.seller.toLowerCase() === lowerSeller
-  )
-);
+    state.nft.listings.find(
+      (e) => e.tokenId.toString() === strTokenId && e.seller.toLowerCase() === lowerSeller,
+    ),
+  );
 
   useEffect(() => {
-    if (!tokenId || !seller || nft || fetching) return; 
-    setFetching(true)
-    getNftData({ tokenId:strTokenId!, seller:lowerSeller })
-    .then((data) => {
-      if (data) setFetchedNft(data);
-    })
-    .catch(() => toast.error("❌ NFT fetch failed"))
+    if (!ready && router.isReady && seller && tokenId) {
+      setReady(true);
+    }
+  }, [ready, router.isReady, seller, tokenId]);
+  
+useEffect(() => {
+  if (!router.isReady || !strTokenId || !lowerSeller || hasFetched || nft) return;
+
+  setHasFetched(true);
+  setFetching(true);
+
+  getNftData({ tokenId: strTokenId, seller: lowerSeller })
+    .then((data) => data && setFetchedNft(data))
+    .catch(() => toast.error('❌ NFT fetch failed'))
     .finally(() => setFetching(false));
-  }, [tokenId, seller, nft, fetching]);
+}, [router.isReady, strTokenId, lowerSeller]);
+  
+  // ✅ now we can conditionally return
+  if (!router.isReady || fetching) {
+    return <div className="text-white p-8">Loading...</div>;
+  }
 
   const activeNft = nft || fetchedNft;
-  console.log("activeNft",activeNft);
-  
-  if (!activeNft) return <div className="text-white p-8">Loading...</div>;
- 
-  const isAuction =
-    activeNft.saleType === 1 || activeNft.saleType === "Auction";
+  console.log('activeNft', activeNft);
+
+  if (!activeNft) {
+    return <div className="text-white p-8">NFT not found.</div>;
+  }
+
+  const isAuction = activeNft.saleType === 1;
 
   return (
     <div className="relative flex justify-center items-center min-h-screen px-6 py-12 overflow-hidden bg-[#060b1a]">
@@ -77,18 +97,14 @@ export default function NftDetail() {
 
           {/* Properties */}
           <div>
-            <h3 className="text-lg font-semibold tracking-wide text-gray-300 mb-4">
-              PROPERTIES
-            </h3>
+            <h3 className="text-lg font-semibold tracking-wide text-gray-300 mb-4">PROPERTIES</h3>
             <div className="flex flex-wrap gap-3">
               {Poperties.map((prop, i) => (
                 <div
                   key={i}
                   className="min-w-[110px] bg-gradient-to-br from-[#1a1f38] to-[#232b4a] border border-[#3b4566] rounded-lg p-3 text-center shadow-md hover:shadow-purple-600/30 transition-all"
                 >
-                  <p className="text-gray-400 text-xs uppercase font-medium">
-                    {prop.trait}
-                  </p>
+                  <p className="text-gray-400 text-xs uppercase font-medium">{prop.trait}</p>
                   <p className="text-white font-bold mt-1 text-sm tracking-wide text-glow-purple">
                     {prop.value}
                   </p>
@@ -106,19 +122,19 @@ export default function NftDetail() {
               {activeNft.name} #{strTokenId}
             </h1>
             <p className="text-gray-400 mb-8 text-sm md:text-base break-words">
-               <ExpandableText text={activeNft.description} maxChars={200} />  
+              <ExpandableText text={activeNft.description} maxChars={200} />
             </p>
 
             {/* Meta Info */}
             <div className="space-y-3 text-sm mb-8">
               <p>
-                <span className="text-gray-400">OWNED BY:</span>{" "}
+                <span className="text-gray-400">OWNED BY:</span>{' '}
                 <span className="text-purple-400 hover:text-purple-300 break-words transition-colors cursor-pointer">
                   {activeNft.seller}
                 </span>
               </p>
               <p>
-                <span className="text-gray-400">ARTIST:</span>{" "}
+                <span className="text-gray-400">ARTIST:</span>{' '}
                 <span className="text-cyan-400 hover:text-cyan-300 text-glow-purple cursor-pointer">
                   {activeNft.name}
                 </span>
