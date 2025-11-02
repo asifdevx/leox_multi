@@ -21,7 +21,6 @@ export default function NftDetail() {
 
   const [fetchedNft, setFetchedNft] = useState<NFT | null>(null);
   const [fetching, setFetching] = useState(false);
-  const [hasFetched, setHasFetched] = useState(false);
   
   const strTokenId = useMemo(() => {
     if (Array.isArray(tokenId)) return tokenId[0];
@@ -48,16 +47,17 @@ export default function NftDetail() {
   }, [ready, router.isReady, seller, tokenId]);
   
 useEffect(() => {
-  if (!router.isReady || !strTokenId || !lowerSeller || hasFetched || nft) return;
+  if (!router.isReady || !strTokenId || !lowerSeller || ready || nft) return;
 
-  setHasFetched(true);
+  setReady(true);
+ 
   setFetching(true);
 
   getNftData({ tokenId: strTokenId, seller: lowerSeller })
     .then((data) => data && setFetchedNft(data))
     .catch(() => toast.error('❌ NFT fetch failed'))
     .finally(() => setFetching(false));
-}, [router.isReady, strTokenId, lowerSeller]);
+}, [router.isReady, strTokenId, lowerSeller,ready]);
   
   // ✅ now we can conditionally return
   if (!router.isReady || fetching) {

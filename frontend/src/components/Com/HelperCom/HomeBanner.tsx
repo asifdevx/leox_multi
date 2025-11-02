@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import React, { useCallback } from "react";
 
 import { useRouter } from "next/navigation";
 import AnimatedBorder from "@/components/ui/MovingBorder";
@@ -14,18 +14,21 @@ const HomeBanner = () => {
         alt="Home background"
         fill
         priority
-        className="object-cover blur-sm"
+        sizes="100vw"
+        className="object-cover rounded-lg"
       />
+        <div className="absolute inset-0 bg-black/10 backdrop-blur-md" />
 
       {/* Overlay Content */}
       <div className="absolute inset-0 flex flex-col  px-10 md:flex-row items-center justify-center gap-7 md:gap-14 text-center md:text-left bg-black/40 py-6">
         {/* Left Image */}
-        <div className="relative w-full px-10  aspect-square md:lg-w-[25rem] lg:w-[28rem]  rounded-lg overflow-hidden">
+        <div className="relative w-full px-10  aspect-square md:w-[25rem] lg:w-[28rem]  rounded-lg overflow-hidden">
           <Image
             src="/bg.png"
             alt="Background small"
             fill
             priority
+            sizes="(max-width: 768px) 60vw, (max-width: 1200px) 40vw, 30vw"
             className="object-cover pointer-events-none"
           />
         </div>
@@ -44,7 +47,7 @@ const HomeBanner = () => {
             <AnimatedBorder title="Learn More" arrow="&rarr;" buttonClass="text-sm lg:text-xl"/>
             <AnimatedBorder
               title="Create NFT"
-              handleClick={() => router.push("/create")}
+              handleClick={useCallback(() => router.push("/create"),[router])}
               arrow="&rarr;"
             />
           </div>

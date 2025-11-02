@@ -1,8 +1,8 @@
 import { AppDispatch, RootState } from "@/components/store/store";
 import { fetchNFT } from "@/reducer/nftSlice";
 import { NftState } from "@/types";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState,useMemo } from "react";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Virtual, Navigation, Pagination } from "swiper/modules";
@@ -24,17 +24,18 @@ export default function LatestTransaction() {
 
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const { listings, loading, limit } = useSelector(
-    (state: RootState) => state.nft as NftState
+  const { listings, loading } = useSelector(
+    (state: RootState) => state.nft as NftState,shallowEqual
   );
+  const listedNFTs = useMemo(() => listings.filter((e) => e.isListed), [listings]);
 
   const [swiperRef, setSwiperRef] = useState<any>(null);
 
   useEffect(() => {
-    if (listings.length === 0) {
+    if (listedNFTs.length === 0) {
       dispatch(fetchNFT({ start: 0, limit: 10, sortBy: "recent" }));
     }
-  }, []);
+  }, [listedNFTs,dispatch]);
 
   return (
     <div className="mx-auto px-0 md:px-4 py-8  text-white ">
@@ -82,7 +83,7 @@ export default function LatestTransaction() {
           }}
           className="w-full h-full transition-transform duration-300 pt-3"
         >
-          {listings.slice(0,10).map((item, index) => (
+          {listedNFTs.slice(0,10).map((item, index) => (
             <SwiperSlide
               key={`${item.tokenId}-${item.seller}-${index}`}
               virtualIndex={index}
@@ -92,7 +93,7 @@ export default function LatestTransaction() {
             </SwiperSlide>
           ))}
           {loading &&
-            listings.length === 0 &&
+            listedNFTs.length === 0 &&
             Array.from({ length: 10 }).map((_, idx) => (
               <SwiperSlide key={idx}>
                 <SkeletonCom />
@@ -103,11 +104,11 @@ export default function LatestTransaction() {
 
       {/* Desktop Grid */}
       <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 ">
-        {loading && listings.length === 0
-          ? Array.from({ length: limit }).map((_, idx) => (
+        {loading && listedNFTs.length === 0
+          ? Array.from({ length: 10 }).map((_, idx) => (
               <SkeletonCom key={idx} />
             ))
-          : listings.slice(0,10).map((item, index) => (
+          : listedNFTs.slice(0,10).map((item, index) => (
               <div
                 key={`${item.tokenId}-${item.seller}-${index}`}
                 className=""

@@ -38,7 +38,7 @@ const ListInView = ({ setIsModalOpen, specificNft }: ListInViewProps) => {
     if (Number(quantity) <= specificNft.remainingSupply) setsupplyError(`you have ${specificNft.remainingSupply}`);
   }, [quantity,supplyError]);
 
-  const reSell = useCallback(() => {
+  const reSell = useCallback(async() => {
     setresellLoading(true);
 
     if (!price || !quantity  ) {
@@ -47,7 +47,7 @@ const ListInView = ({ setIsModalOpen, specificNft }: ListInViewProps) => {
       return;
     }
     try {
-      const response = dispatch(
+      const response =await dispatch(
         reSellNft({
           tokenId: Number(specificNft.tokenId),
           quantity: Number(quantity),
@@ -64,7 +64,7 @@ const ListInView = ({ setIsModalOpen, specificNft }: ListInViewProps) => {
     }
   }, [price,quantity,resellLoading]);
 
-  const startAuction = useCallback(() => {
+  const startAuction = useCallback(async() => {
     setresellLoading(true);
 
     if (!startingBid || !duration  ) {
@@ -73,7 +73,7 @@ const ListInView = ({ setIsModalOpen, specificNft }: ListInViewProps) => {
       return;
     }
     try {
-      const response = dispatch(
+      const response =await dispatch(
         startAuctionNft({
           tokenId: Number(specificNft.tokenId),
           minPrice:Number(startingBid),

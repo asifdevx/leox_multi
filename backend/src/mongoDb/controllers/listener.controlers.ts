@@ -125,6 +125,7 @@ export async function startNFTListener() {
         quantity: quantity.toString(),
         totalPrice: totalPrice.toString(),
         remainingSupply: newRemaining,
+        isListed : updatedNFT.isListed,
         buyerNFT,
       });
       console.log('updatedNFT', updatedNFT);

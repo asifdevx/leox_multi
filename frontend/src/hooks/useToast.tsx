@@ -18,7 +18,7 @@ const baseConfig: ToastOptions = {
   transition: Slide,
   progressClassName: "!bg-gradient-to-r from-cyan-300 via-cyan-600 to-blue-500",
   className:
-    "!bg-white text-black font-medium rounded-xl shadow-lg border border-gray-100",
+    "!bg-white  text-black font-medium rounded-xl shadow-lg border border-gray-100",
 };
 
 // helper: toast message with icon

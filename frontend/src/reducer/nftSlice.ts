@@ -82,11 +82,12 @@ const nftSlice = createSlice({
   initialState,
   reducers: {
     updateListing(state, { payload }) {
-      const { tokenId, seller, remainingSupply, isListed } = payload;
+      const { tokenId, seller, remainingSupply,isListed } = payload;
       const listing = state.listings.find(
         (e) => e.tokenId == tokenId && e.seller.toLowerCase() === seller.toLowerCase()
       );
       if (listing) {
+    
         Object.assign(listing, { remainingSupply, isListed });
       }
     },

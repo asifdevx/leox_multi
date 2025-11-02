@@ -33,10 +33,10 @@ export const userProfileInfo = async (name:string)=>{
   if (!user) return null;
 
   const result = await Promise.allSettled([
-    s.NFT.find({ seller: address }).lean(), //owned
-    s.NFT.find({ seller: address, isListed: true }).lean(), //sale
+    s.NFT.find({ seller: address }).sort({updateAt:1}).lean(), //owned
+    s.NFT.find({ seller: address, isListed: true }).sort({updateAt:1}).lean(), //sale
     s.NFT.find({ owner: address }).lean(), //created
-    s.NFT.find({ seller: address, isListed: true, claimed: true }).lean(), // sold
+    s.NFT.find({ seller: address, isListed: false, claimed: true }).lean(), // sold
   ]);
   const [owned, sale, created, sold] = result.map((e) => e.status === 'fulfilled' ? e.value : [] )
 

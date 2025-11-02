@@ -1,10 +1,12 @@
 import ProfileStatusWrapper from '@/components/Com/HelperCom/ProfileStatusWrapper';
 import UserNft from '@/components/Com/profileCom/UserNft';
+import { RootState } from '@/components/store/store';
 import { TransactionSkeleton } from '@/components/ui/skeleton';
 import useUserProfile from '@/hooks/useUserProfile';
 import { NFT } from '@/types';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 type Tab = 'owned' | 'sold' | 'created' | 'sale';
 const BATCH_SIZE = 20;
@@ -13,11 +15,13 @@ const IndexPage = () => {
   console.count('render -> nfts');
   const router = useRouter();
   const { username, tab } = router.query;
+  const { name: loggedUser } = useSelector((s: RootState) => s.userInfo);
 
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     if (!ready && router.isReady && username && tab) {
+ 
       setReady(true);
     }
   }, [ready, router.isReady, username, tab]);

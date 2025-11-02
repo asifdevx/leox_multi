@@ -5,12 +5,12 @@ import { NftState } from '@/types';
 import { useEffect, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMediaQuery } from 'usehooks-ts';
-import Button from '../../ui/Button';
+
 import { TransactionSkeleton } from '../../ui/skeleton';
 import TransactionsItem from './TransactionsItem';
 
 export default function LatestTransaction() {
-  console.count('LatestTransaction');
+  console.count('Drops');
 
   const dispatch = useDispatch<AppDispatch>();
   const isDesktop = useMediaQuery('(min-width: 450px)');
@@ -18,9 +18,9 @@ export default function LatestTransaction() {
   const { listings, loading, error, offset, limit, sortBy } = useSelector(
     (state: RootState) => state.nft as NftState,
   );
-
+  
   const listedNFTs = useMemo(() => listings.filter((e) => e.isListed), [listings]);
-  console.log("listedNFTs.length",listedNFTs.length);
+
   
   const skeletons = useMemo(() => Array.from({ length: limit }), [limit]);
 // ===================hooks ==================
@@ -28,6 +28,7 @@ export default function LatestTransaction() {
     items: listedNFTs,
     batchSize: limit,
   });
+
 // ===================loadMore ==================
   const loadMore = useCallback(() => {
     if (!loading) {
@@ -37,10 +38,8 @@ export default function LatestTransaction() {
 
   
   useEffect(() => {
-    if (listings.length === 0) {
-      dispatch(fetchNFT({ start: 0, limit, sortBy }));
-    }
-  }, [dispatch, listings.length, limit, sortBy]);
+    dispatch(fetchNFT({ start: 0, limit, sortBy }));
+  }, [dispatch, limit, sortBy]);
 
   useEffect(() => {
     if (hasMore && displayedItems.length === listings.length) {
