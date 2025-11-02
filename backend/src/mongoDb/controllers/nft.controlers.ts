@@ -1,9 +1,9 @@
 import { NFT } from '../schemas/marketplace.schema';
 import { createEthContract } from '../../config/bsc.service';
 import { fetchMetadata } from '../../config/ipfs.service';
-import { ethers,BigNumberish } from 'ethers';
-import { findNFT} from './userInfo.controlers';
-import {findNameByNftAddress} from "../../utils";
+import { ethers, BigNumberish } from 'ethers';
+import { findNFT } from './userInfo.controlers';
+import { findNameByNftAddress } from '../../utils';
 
 type sortByProps = 'highestPrice' | 'lowestPrice' | 'recent' | 'oldest';
 
@@ -15,7 +15,7 @@ export const syncSingleNFT = async ({ tokenId, address }: { tokenId: string; add
     const tokenURI = await contract.uri(tokenId);
     const meta = await fetchMetadata(tokenURI);
 
-   const username = await findNameByNftAddress(nft[2]);
+    const username = await findNameByNftAddress(nft[2]);
 
     const transformedNFT = {
       tokenId,
@@ -60,7 +60,7 @@ interface NewBuyerProps {
 
 export const newBuyer = async ({ tokenId, buyer, seller, quantity }: NewBuyerProps) => {
   const contract = await createEthContract();
-  const balanceOfBuyer:bigint = await contract.balanceOf(buyer, Number(tokenId));
+  const balanceOfBuyer: bigint = await contract.balanceOf(buyer, Number(tokenId));
 
   const lowerBuyer = buyer.toLowerCase();
   const tokenStr = tokenId.toString();
@@ -70,7 +70,7 @@ export const newBuyer = async ({ tokenId, buyer, seller, quantity }: NewBuyerPro
     seller: seller.toLowerCase(),
   });
   const buyerNft = await findNFT({ tokenId: tokenStr, seller: buyer });
-  const username = await findNameByNftAddress(lowerBuyer)
+  const username = await findNameByNftAddress(lowerBuyer);
   let resultNFT;
 
   if (!buyerNft) {
@@ -100,7 +100,7 @@ export const newBuyer = async ({ tokenId, buyer, seller, quantity }: NewBuyerPro
   } else {
     buyerNft.remainingSupply = Number(balanceOfBuyer);
     buyerNft.updatedAt = new Date();
-    resultNFT = await buyerNft.save()
+    resultNFT = await buyerNft.save();
     console.log(`🟢 Updated buyer record for ${buyer} (tokenId: ${tokenStr})`);
   }
   return resultNFT.toObject ? resultNFT.toObject() : resultNFT;
@@ -125,7 +125,12 @@ export const getNFTs = async (start: number, limit: number, sortBy: sortByProps)
       break;
   }
 
-  const nfts = await NFT.find({isListed:true}).sort(sortOptions).skip(start).limit(limit).lean().exec();
+  const nfts = await NFT.find({ isListed: true })
+    .sort(sortOptions)
+    .skip(start)
+    .limit(limit)
+    .lean()
+    .exec();
 
   const normalized = nfts.map((n: any) => ({
     ...n,
@@ -134,4 +139,21 @@ export const getNFTs = async (start: number, limit: number, sortBy: sortByProps)
   }));
 
   return normalized;
+};
+
+export const unListedNFT = async ({ tokenId, seller }: { tokenId: string, seller: string }) => {
+  try {
+    return NFT.findOneAndUpdate(
+      { tokenId, seller: seller.toLowerCase() },
+      {
+        $set: {
+          isListed: false,
+          updatedAt: Date.now(),
+        },
+      },
+      { new: true },
+    );
+  } catch (error) {
+    console.error(`❌ Failed to unListedNFT ${tokenId}:`, error);
+  }
 };

@@ -27,10 +27,9 @@ const HandleNftButton = ({ specificNft }: HandleNftButtonProps) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const isOwner = useMemo(() => address?.toLowerCase() === seller, [address, seller]);
 
-  const cancelListing = useCallback(async() => {
+  const cancelListing = useCallback(async () => {
     await dispatch(unlist({ tokenId: Number(tokenId), seller: seller.toLowerCase() }));
     toast.success('NFT unListed!');
-
   }, []);
   const openListModal = useCallback(() => setIsModalOpen(true), [isModalOpen]);
   const goToMarketplace = useCallback(() => {
@@ -44,8 +43,7 @@ const HandleNftButton = ({ specificNft }: HandleNftButtonProps) => {
 
   const AuctionEnd = useMemo(() => Date.now() > auctionEndTime * 1000, [auctionEndTime]);
 
-  
-  const getButtonProps = () => {
+  const getButtonProps = useCallback(() => {
     if (!specificNft) return { title: 'Loading...', disabled: true };
 
     if (isOwner) {
@@ -63,7 +61,7 @@ const HandleNftButton = ({ specificNft }: HandleNftButtonProps) => {
       if (saleType === 1) return { title: 'Place Bid', action: goToMarketplace };
     }
     return { title: 'Not Listed', action: null, disabled: true };
-  };
+  }, [specificNft, isOwner, isListed, isListed, AuctionEnd, saleType]);
 
   const { title, action, disabled } = getButtonProps();
   return (

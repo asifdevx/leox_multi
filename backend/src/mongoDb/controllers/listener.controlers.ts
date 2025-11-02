@@ -1,7 +1,7 @@
 import { Bid, Fee, NFT } from '../schemas/marketplace.schema';
 import { createEthContract } from '../../config/bsc.service';
 import { io } from '../../index';
-import { newBuyer, syncSingleNFT } from './nft.controlers';
+import { newBuyer, syncSingleNFT, unListedNFT } from './nft.controlers';
 import { findNFT } from './userInfo.controlers';
 import {
   bids,
@@ -22,6 +22,20 @@ export async function startNFTListener() {
         address: seller,
       });
       io.emit('newNFTListed', transformedNFT);
+    } catch (error) {
+      console.error('❌ Error syncing new NFT:', error);
+    }
+  });
+  contract.on('TokenUnlisted', async (tokenId, seller,event) => {
+    try {
+      console.log(`🎨 nft unListed: ${tokenId}, Seller: ${seller}`);
+      const tranformedNft = await unListedNFT({tokenId:tokenId.toString(),seller});
+      io.emit("unListed",{
+        tokenId:tranformedNft.tokenId,
+        seller:tranformedNft.seller,
+        isListed:tranformedNft.isListed,
+        
+      })
     } catch (error) {
       console.error('❌ Error syncing new NFT:', error);
     }
