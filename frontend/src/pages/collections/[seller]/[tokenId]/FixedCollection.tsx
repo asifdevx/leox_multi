@@ -3,29 +3,38 @@ import Button from "@/components/ui/Button";
 import { buyToken } from "@/reducer/BuySlice";
 import { NFT } from "@/types";
 import { ShortenPrecisionPrice } from "@/utils/ShortenPrecisionPrice";
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useAccount } from "wagmi";
+import { useToast } from "@/hooks/useToast";
 
 const FixedCollection = ({ nft }: { nft: NFT }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { error, loading } = useSelector((state: RootState) => state.buyOrBid);
   const [quantity, setQuantity] = useState(1);
   const { address: userAddress } = useAccount(); 
-  const totalPrice = Number(nft.price) * quantity;
+  
+  const totalPrice =useMemo(() => Number(nft.price) * quantity, [nft.price,quantity]);
+  const toast = useToast();
 
-  const handleQuantityChange = (delta: number) => {
+  const handleQuantityChange = useCallback((delta: number) => {
     const newQty = quantity + delta;
     if (newQty >= 1 && newQty <= nft.remainingSupply) setQuantity(newQty);
-  };
-  const buyNft = () => {
+  },[quantity,nft.remainingSupply,quantity]);
+
+  const buyNft = useCallback(async() => {
     if(userAddress?.toLowerCase() == nft.seller.toLowerCase()){
-      alert("cannot buy own token")
+      toast.warning("cannot buy own token")
       return; 
     }
-    dispatch(buyToken({tokenId:Number(nft.tokenId),seller:nft.seller,quantity,totalPrice}));
-  };
+    try {
+      await dispatch(buyToken({tokenId:Number(nft.tokenId),seller:nft.seller,quantity,totalPrice}));
+      toast.success(`You buy ${quantity} Token`)
+    } catch{
+      toast.error("Failed to buy")
+    }
+  },[])
 
   return (
     <div className="bg-gradient-to-br from-[#111933] to-[#181f3f] p-6 rounded-2xl border border-purple-700/40 shadow-lg space-y-4 hover:shadow-purple-600/40 transition-all duration-300">
@@ -80,16 +89,7 @@ const FixedCollection = ({ nft }: { nft: NFT }) => {
       handleClick={buyNft}
       disable={loading || userAddress?.toLowerCase() === nft.seller.toLowerCase()}
       loading={loading}
-      title={
-        loading ? (
-          <>
-            <AiOutlineLoading3Quarters className="text-white animate-spin inline-block mr-2" />
-            Purchasing...
-          </>
-        ) : (
-          `BUY ${quantity} NFT${quantity > 1 ? 's' : ''}`
-        )
-      }
+      title={`BUY ${quantity} NFT${quantity > 1 ? 's' : ''}`}
     />
   </div>
   );

@@ -16,7 +16,7 @@ const UserNft = ({ item }: UserNftsProps) => {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isOwner, setIsOwner] = useState<boolean>(false);
+ 
 
   const handleMintClick = () => {
     router.push(`/nft/${item.username}/${item.tokenId}`)

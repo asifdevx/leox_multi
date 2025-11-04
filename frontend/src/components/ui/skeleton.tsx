@@ -57,7 +57,6 @@ export function TransactionSkeleton (){
         <div className="relative w-full aspect-square">
           <Skeleton className="w-full h-full rounded-lg" />
         </div>
-  
         {/* Text Skeletons */}
         <div className="mt-2 space-y-2">
         <Skeleton className="h-3 w-[35%] rounded" />

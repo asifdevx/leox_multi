@@ -82,13 +82,24 @@ const nftSlice = createSlice({
   initialState,
   reducers: {
     updateListing(state, { payload }) {
-      const { tokenId, seller, remainingSupply, isListed } = payload;
+      const { tokenId, seller, remainingSupply,isListed } = payload;
       const listing = state.listings.find(
         (e) => e.tokenId == tokenId && e.seller.toLowerCase() === seller.toLowerCase()
       );
       if (listing) {
+    
         Object.assign(listing, { remainingSupply, isListed });
       }
+    },
+    updateUnListed (s,{payload}){
+      const { tokenId, seller, isListed } = payload;
+      const listing = s.listings.find(
+        (e) => e.tokenId == tokenId && e.seller.toLowerCase() === seller.toLowerCase()
+      );
+      if (listing) {
+      Object.assign(listing,{isListed, updatedAt: new Date().toISOString()})
+      }
+
     },
     updateAuctionEnd(state, { payload }) {
       const { tokenId, seller } = payload;
@@ -97,8 +108,7 @@ const nftSlice = createSlice({
         (e) => e.tokenId == tokenId.toString() && e.seller.toLowerCase() === seller.toLowerCase()
       );
       if (listing) {
-      console.log(listing.isListed,"s");
-
+  
         Object.assign(listing, {
           claimed: true,
           isListed: false,
@@ -183,6 +193,7 @@ export const {
   updateListing,
   updateBidInfo,
   updateAuctionEnd,
+  updateUnListed
 } = nftSlice.actions;
 
 export default nftSlice.reducer;

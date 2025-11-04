@@ -2,9 +2,6 @@
 import React, { useEffect } from 'react';
 import Header from '@/components/Header';
 
-import { AppDispatch, RootState } from '@/components/store/store';
-import { getUserProfile } from '@/reducer/userProfile';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import ItemsBanner from '@/components/Com/itemsComponents/ItemsBanner';
 import ProfileNav from '@/components/Com/HelperCom/ProfileNav';
 import ProfileStatusWrapper from '@/components/Com/HelperCom/ProfileStatusWrapper';
@@ -26,7 +23,7 @@ const ProfileLayout = ({ username, children }: ProfileLayoutProps) => {
       <ItemsBanner username={username} userData={profile?.user}/>
       <ProfileNav username={username} userData={profile?.nfts}/>
       <div className="w-[97%] h-[2px] mx-auto bg-gradient-to-r from-purple-800/50 via-purple-500/50 to-indigo-800 relative inset-0 top-0" />
-      <div className="mt-14">{children}</div>
+      <div className="mt-2">{children}</div>
     </div>
     </ProfileStatusWrapper>
   );
